@@ -16,13 +16,17 @@ struct ContentView: View {
                 .tabItem { Label("Counter", systemImage: "timer") }
                 .tag(0)
 
+            JournalView()
+                .tabItem { Label("Journal", systemImage: "square.and.pencil") }
+                .tag(1)
+
             MeditationView()
                 .tabItem { Label("Meditate", systemImage: "brain.head.profile") }
-                .tag(1)
+                .tag(2)
 
             MoreView()
                 .tabItem { Label("More", systemImage: "ellipsis.circle") }
-                .tag(2)
+                .tag(3)
         }
         .tint(.white)
     }
@@ -31,4 +35,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(StreakStore())
+        .environmentObject(JournalStore())
 }

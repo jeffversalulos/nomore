@@ -10,10 +10,12 @@ import SwiftUI
 @main
 struct nomoreApp: App {
     @StateObject private var streakStore = StreakStore()
+    @StateObject private var journalStore = JournalStore()
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(streakStore)
+                .environmentObject(journalStore)
                 .onAppear(perform: configureAppearance)
         }
     }
