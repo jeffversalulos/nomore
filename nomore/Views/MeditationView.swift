@@ -27,7 +27,7 @@ private struct SoothingOrb: View {
     let progress: Double // 0...1 within current phase
 
     private var scale: CGFloat {
-        let baseScale: CGFloat = 0.85
+        let baseScale: CGFloat = 0.65
         let amplitude: CGFloat = 0.25
         
         switch phase {
@@ -62,20 +62,7 @@ private struct SoothingOrb: View {
         .scaleEffect(scale)
         .frame(width: 260, height: 260)
         .animation(.easeInOut(duration: 0.25), value: scale)
-        .overlay(
-            ZStack {
-                Circle()
-                    .stroke(Theme.textPrimary.opacity(0.15), lineWidth: 16)
-                // Progress ring within the current phase
-                Circle()
-                    .trim(from: 0, to: max(0.001, min(progress, 1)))
-                    .stroke(
-                        AngularGradient(gradient: Gradient(colors: [Theme.purple, Theme.accent, Theme.indigo]), center: .center),
-                        style: StrokeStyle(lineWidth: 16, lineCap: .round)
-                    )
-                    .rotationEffect(.degrees(-90))
-            }
-        )
+        // Removed line progress overlay
         .accessibilityHidden(true)
     }
 }
