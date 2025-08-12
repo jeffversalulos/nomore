@@ -78,15 +78,7 @@ struct CounterView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [
-                    Color(#colorLiteral(red: 0.73, green: 0.0, blue: 1.0, alpha: 1.0)),
-                    Color(#colorLiteral(red: 0.18, green: 0.09, blue: 0.54, alpha: 1.0))
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
+            Theme.backgroundGradient.ignoresSafeArea()
 
             VStack(spacing: 28) {
                 Spacer(minLength: 24)
@@ -100,7 +92,7 @@ struct CounterView: View {
                 VStack(spacing: 10) {
                     Text("Your streak")
                         .font(.title2.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.9))
+                        .foregroundStyle(Theme.textSecondary)
 
                     let components = calculateTimeComponents(from: streakStore.lastRelapseDate, to: now)
                     HStack(spacing: 16) {
@@ -120,11 +112,11 @@ struct CounterView: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(.white.opacity(0.15))
-                        .foregroundStyle(.white)
+                        .background(Theme.surface)
+                        .foregroundStyle(Theme.textPrimary)
                         .overlay(
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .stroke(Color.white.opacity(0.25), lineWidth: 1)
+                                .stroke(Theme.surfaceStroke, lineWidth: 1)
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }

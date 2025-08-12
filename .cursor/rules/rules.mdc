@@ -1,5 +1,5 @@
 ---
-description:
+description: Use the Swift, SwiftUI and Design Guidleines docs at all times unless otherwise specified.
 globs:
 alwaysApply: false
 ---

@@ -13,23 +13,18 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             CounterView(selectedTab: $selectedTab)
-                .tabItem {
-                    Label("Counter", systemImage: "timer")
-                }
+                .tabItem { Label("Counter", systemImage: "timer") }
                 .tag(0)
 
             MeditationView()
-                .tabItem {
-                    Label("Meditate", systemImage: "brain.head.profile")
-                }
+                .tabItem { Label("Meditate", systemImage: "brain.head.profile") }
                 .tag(1)
 
             MoreView()
-                .tabItem {
-                    Label("More", systemImage: "ellipsis.circle")
-                }
+                .tabItem { Label("More", systemImage: "ellipsis.circle") }
                 .tag(2)
         }
+        .tint(.white)
     }
 }
 
