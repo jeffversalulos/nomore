@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct nomoreApp: App {
+    @StateObject private var streakStore = StreakStore()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(streakStore)
         }
     }
 }
