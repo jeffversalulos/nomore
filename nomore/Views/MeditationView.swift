@@ -81,6 +81,14 @@ struct MeditationView: View {
         min(1.0, max(0.0, phaseElapsedSeconds / phaseDurationSeconds))
     }
 
+    private var nextPhase: BreathPhase {
+        switch currentPhase {
+        case .inhale: return .hold
+        case .hold: return .exhale
+        case .exhale: return .inhale
+        }
+    }
+
     var body: some View {
         ZStack {
             Theme.backgroundGradient.ignoresSafeArea()
@@ -100,6 +108,11 @@ struct MeditationView: View {
                         .foregroundStyle(Theme.textSecondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
+                    Text("Next: \(nextPhase.displayName)")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.textSecondary)
+                        .accessibilityLabel("Next: \(nextPhase.displayName)")
+                        .accessibilityHint("Upcoming phase")
                 }
 
                 HStack(spacing: 12) {
