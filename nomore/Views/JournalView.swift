@@ -51,7 +51,6 @@ struct JournalView: View {
                                 .background(Theme.surface)
                                 .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
                                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                                .softShadow()
                                 .contextMenu {
                                     Button(role: .destructive) {
                                         if let index = journalStore.entries.firstIndex(of: entry) {
@@ -103,7 +102,6 @@ struct JournalView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     .foregroundStyle(Theme.textPrimary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .softShadow()
             }
             .padding()
             .toolbar {

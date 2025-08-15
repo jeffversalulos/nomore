@@ -32,21 +32,9 @@ extension View {
         background(
             ZStack {
                 Theme.backgroundGradient
-                // Subtle colored glows
-                RadialGradient(colors: [Theme.accent.opacity(0.35), .clear], center: .topLeading, startRadius: 8, endRadius: 420)
-                    .blur(radius: 20)
-                    .offset(x: -40, y: -60)
-                RadialGradient(colors: [Theme.aqua.opacity(0.35), .clear], center: .bottomTrailing, startRadius: 8, endRadius: 520)
-                    .blur(radius: 20)
-                    .offset(x: 60, y: 80)
-                // Gentle vignette for depth
+                // Very subtle vignette for depth (kept minimal for a refined look)
                 LinearGradient(
-                    colors: [Color.black.opacity(0.35), .clear, .clear, Color.black.opacity(0.35)],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-                LinearGradient(
-                    colors: [Color.black.opacity(0.35), .clear, Color.black.opacity(0.35)],
+                    colors: [Color.black.opacity(0.12), .clear, Color.black.opacity(0.12)],
                     startPoint: .top,
                     endPoint: .bottom
                 )
@@ -59,7 +47,7 @@ extension View {
 extension View {
     /// Consistent soft shadow used across frosted cards and controls
     func softShadow() -> some View {
-        shadow(color: .black.opacity(0.25), radius: 20, x: 0, y: 10)
+        shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 6)
     }
 }
 

@@ -124,7 +124,6 @@ struct MeditationView: View {
                             .foregroundStyle(Theme.textPrimary)
                             .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                            .softShadow()
                     }
                     .accessibilityLabel(isRunning ? "Pause" : "Start")
                     .accessibilityHint("Toggles the meditation guidance")
@@ -138,7 +137,6 @@ struct MeditationView: View {
                             .foregroundStyle(Theme.textPrimary)
                             .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                            .softShadow()
                     }
                     .accessibilityHint("Resets to the beginning of the breathing cycle")
                 }

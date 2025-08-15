@@ -54,11 +54,7 @@ private struct StreakRingView: View {
                 .trim(from: 0, to: max(0.001, min(progress, 1)))
                 .stroke(
                     AngularGradient(
-                        gradient: Gradient(colors: [
-                            Theme.mint,
-                            Theme.aqua,
-                            Theme.accent
-                        ]),
+                        gradient: Gradient(colors: [Theme.aqua, Theme.accent]),
                         center: .center
                     ),
                     style: StrokeStyle(lineWidth: 22, lineCap: .round)
@@ -94,7 +90,7 @@ struct CounterView: View {
                         .foregroundStyle(Theme.textSecondary)
 
                     let components = calculateTimeComponents(from: streakStore.lastRelapseDate, to: now)
-                    HStack(spacing: 16) {
+                    HStack(spacing: 12) {
                         CounterPill(value: components.months, unit: "Months")
                         CounterPill(value: components.days, unit: "Days")
                         CounterPill(value: components.hours, unit: "Hours")
@@ -118,7 +114,6 @@ struct CounterView: View {
                                 .stroke(Theme.surfaceStroke, lineWidth: 1)
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                        .softShadow()
                 }
                 .padding(.horizontal)
 
@@ -145,14 +140,13 @@ private struct CounterPill: View {
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(.white.opacity(0.8))
         }
-        .frame(width: 78, height: 78)
-        .background(.ultraThinMaterial)
+        .frame(width: 74, height: 74)
+        .background(Theme.surface)
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(Color.white.opacity(0.2), lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .softShadow()
     }
 }
 
