@@ -11,11 +11,14 @@ import SwiftUI
 struct nomoreApp: App {
     @StateObject private var streakStore = StreakStore()
     @StateObject private var journalStore = JournalStore()
+    @StateObject private var goalsStore = GoalsStore()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(streakStore)
                 .environmentObject(journalStore)
+                .environmentObject(goalsStore)
                 .onAppear(perform: configureAppearance)
         }
     }
@@ -28,7 +31,19 @@ extension nomoreApp {
         tabBarAppearance.configureWithTransparentBackground()
         tabBarAppearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
         tabBarAppearance.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-
+        
+        // Set unselected tab item color to light gray for better readability
+        UITabBar.appearance().unselectedItemTintColor = UIColor.lightGray.withAlphaComponent(0.7)
+        
+        // Force override any default blue tint
+        let itemAppearance = UITabBarItemAppearance()
+        itemAppearance.normal.iconColor = UIColor.lightGray.withAlphaComponent(0.7)
+        itemAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.lightGray.withAlphaComponent(0.7)]
+        
+        tabBarAppearance.stackedLayoutAppearance = itemAppearance
+        tabBarAppearance.inlineLayoutAppearance = itemAppearance
+        tabBarAppearance.compactInlineLayoutAppearance = itemAppearance
+        
         UITabBar.appearance().standardAppearance = tabBarAppearance
         if #available(iOS 15.0, *) {
             UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance

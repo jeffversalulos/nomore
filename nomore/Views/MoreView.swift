@@ -7,6 +7,12 @@ struct MoreView: View {
 
             NavigationStack {
                 List {
+                    Section("Recovery Tools") {
+                        NavigationLink(destination: GoalsView()) {
+                            Label("Your Goals", systemImage: "target")
+                        }
+                    }
+                    
                     Section("Coming soon") {
                         Label("Community", systemImage: "person.3")
                         Label("Insights", systemImage: "chart.xyaxis.line")

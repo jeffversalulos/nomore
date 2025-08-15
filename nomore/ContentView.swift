@@ -10,6 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @State private var selectedTab: Int = 0
 
+    init() {
+        // Force unselected tabs to be gray instead of default blue
+        UITabBar.appearance().unselectedItemTintColor = UIColor.lightGray.withAlphaComponent(0.7)
+    }
+
     var body: some View {
         TabView(selection: $selectedTab) {
             CounterView(selectedTab: $selectedTab)
@@ -24,8 +29,8 @@ struct ContentView: View {
                 .tabItem { Label("Meditate", systemImage: "brain.head.profile") }
                 .tag(2)
 
-            MoreView()
-                .tabItem { Label("More", systemImage: "ellipsis.circle") }
+            GoalsView()
+                .tabItem { Label("Purpose", systemImage: "ellipsis.circle") }
                 .tag(3)
         }
         .tint(.white)
@@ -36,4 +41,5 @@ struct ContentView: View {
     ContentView()
         .environmentObject(StreakStore())
         .environmentObject(JournalStore())
+        .environmentObject(GoalsStore())
 }
