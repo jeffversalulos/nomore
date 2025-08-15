@@ -2,7 +2,7 @@ import SwiftUI
 
 enum Theme {
     // Brand colors
-    static let purple = Color(#colorLiteral(red: 0.73, green: 0.0, blue: 1.0, alpha: 1.0))
+    static let purple = Color(#colorLiteral(red: 0.1353843808, green: 0.01142665092, blue: 0.4896459579, alpha: 1))
     static let indigo = Color(#colorLiteral(red: 0.18, green: 0.09, blue: 0.54, alpha: 1.0))
     static let accent = Color(#colorLiteral(red: 0.55, green: 0.2, blue: 0.98, alpha: 1.0))
     static let aqua = Color(#colorLiteral(red: 0.0, green: 0.86, blue: 0.98, alpha: 1.0))
