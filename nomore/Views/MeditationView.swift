@@ -91,7 +91,6 @@ struct MeditationView: View {
 
     var body: some View {
         ZStack {
-            Theme.backgroundGradient.ignoresSafeArea()
 
             VStack(spacing: 28) {
                 Spacer(minLength: 24)
@@ -125,6 +124,7 @@ struct MeditationView: View {
                             .foregroundStyle(Theme.textPrimary)
                             .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .softShadow()
                     }
                     .accessibilityLabel(isRunning ? "Pause" : "Start")
                     .accessibilityHint("Toggles the meditation guidance")
@@ -138,6 +138,7 @@ struct MeditationView: View {
                             .foregroundStyle(Theme.textPrimary)
                             .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .softShadow()
                     }
                     .accessibilityHint("Resets to the beginning of the breathing cycle")
                 }
@@ -146,6 +147,7 @@ struct MeditationView: View {
                 Spacer()
             }
         }
+        .appBackground()
         .onReceive(timer) { _ in
             guard isRunning else { return }
             advanceTimer()

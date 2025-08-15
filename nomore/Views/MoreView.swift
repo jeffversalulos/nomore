@@ -3,7 +3,6 @@ import SwiftUI
 struct MoreView: View {
     var body: some View {
         ZStack {
-            Theme.backgroundGradient.ignoresSafeArea()
 
             NavigationStack {
                 List {
@@ -25,6 +24,7 @@ struct MoreView: View {
                 .navigationTitle("More")
             }
         }
+        .appBackground()
     }
 }
 

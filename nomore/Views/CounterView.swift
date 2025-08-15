@@ -55,9 +55,9 @@ private struct StreakRingView: View {
                 .stroke(
                     AngularGradient(
                         gradient: Gradient(colors: [
-                            Color.purple,
-                            Color(#colorLiteral(red: 0.388, green: 0.145, blue: 0.78, alpha: 1)),
-                            Color.blue
+                            Theme.mint,
+                            Theme.aqua,
+                            Theme.accent
                         ]),
                         center: .center
                     ),
@@ -78,7 +78,6 @@ struct CounterView: View {
 
     var body: some View {
         ZStack {
-            Theme.backgroundGradient.ignoresSafeArea()
 
             VStack(spacing: 28) {
                 Spacer(minLength: 24)
@@ -119,12 +118,14 @@ struct CounterView: View {
                                 .stroke(Theme.surfaceStroke, lineWidth: 1)
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .softShadow()
                 }
                 .padding(.horizontal)
 
                 Spacer()
             }
         }
+        .appBackground()
         .onReceive(timer) { value in
             now = value
         }
@@ -145,12 +146,13 @@ private struct CounterPill: View {
                 .foregroundStyle(.white.opacity(0.8))
         }
         .frame(width: 78, height: 78)
-        .background(.white.opacity(0.1))
+        .background(.ultraThinMaterial)
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(Color.white.opacity(0.2), lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .softShadow()
     }
 }
 

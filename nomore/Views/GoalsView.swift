@@ -16,7 +16,6 @@ struct GoalsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Theme.backgroundGradient.ignoresSafeArea()
                 
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 24) {
@@ -177,6 +176,7 @@ struct GoalsView: View {
                     .stroke(Theme.surfaceStroke, lineWidth: 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .softShadow()
         }
         .padding(.top, 8)
     }
@@ -234,6 +234,7 @@ struct GoalCard: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .scaleEffect(isSelected ? 1.02 : 1.0)
+            .softShadow()
         }
         .buttonStyle(.plain)
     }
