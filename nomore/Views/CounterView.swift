@@ -99,6 +99,14 @@ struct CounterView: View {
                     .padding(.horizontal)
                 }
 
+                // Panic Button
+                PanicButton {
+                    // Navigate to Journal view
+                    selectedTab = 1
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+
                 Button {
                     streakStore.resetRelapseDate()
                     selectedTab = 1
