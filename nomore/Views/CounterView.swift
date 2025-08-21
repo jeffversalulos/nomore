@@ -42,28 +42,7 @@ private func calculateTimeComponents(from startDate: Date, to endDate: Date = Da
     return TimeComponents(months: months, days: days, hours: hours, minutes: minutes)
 }
 
-private struct StreakRingView: View {
-    let progress: Double // 0...1
 
-    var body: some View {
-        ZStack {
-            Circle()
-                .stroke(Color.white.opacity(0.25), lineWidth: 22)
-
-            Circle()
-                .trim(from: 0, to: max(0.001, min(progress, 1)))
-                .stroke(
-                    AngularGradient(
-                        gradient: Gradient(colors: [Theme.aqua, Theme.accent]),
-                        center: .center
-                    ),
-                    style: StrokeStyle(lineWidth: 22, lineCap: .round)
-                )
-                .rotationEffect(.degrees(-90))
-        }
-        .frame(width: 220, height: 220)
-    }
-}
 
 struct CounterView: View {
     @EnvironmentObject var streakStore: StreakStore
