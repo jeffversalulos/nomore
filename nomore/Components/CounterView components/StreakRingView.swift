@@ -19,7 +19,7 @@ struct StreakRingView: View {
                 .trim(from: 0, to: max(0.001, min(progress, 1)))
                 .stroke(
                     AngularGradient(
-                        gradient: Gradient(colors: [Theme.aqua, Theme.accent]),
+                        gradient: Gradient(colors: [Theme.aqua, Theme.accent, Theme.aqua]),
                         center: .center
                     ),
                     style: StrokeStyle(lineWidth: 22, lineCap: .round)
@@ -33,6 +33,6 @@ struct StreakRingView: View {
 #Preview {
     ZStack {
         Theme.backgroundGradient
-        StreakRingView(progress: 0)
+        StreakRingView(progress: 0.3)
     }
 }
