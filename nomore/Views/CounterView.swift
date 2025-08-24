@@ -1,49 +1,5 @@
 import SwiftUI
 
-struct TimeComponents {
-    let months: Int
-    let days: Int
-    let hours: Int
-    let minutes: Int
-}
-
-/// Calculates rough calendar-based difference between two dates in months, days, hours, minutes.
-private func calculateTimeComponents(from startDate: Date, to endDate: Date = Date(), calendar: Calendar = .current) -> TimeComponents {
-    var from = startDate
-    var months = 0
-    var days = 0
-    var hours = 0
-    var minutes = 0
-
-    // Count months by adding months until we exceed endDate
-    while let next = calendar.date(byAdding: .month, value: 1, to: from), next <= endDate {
-        from = next
-        months += 1
-    }
-
-    // Days
-    while let next = calendar.date(byAdding: .day, value: 1, to: from), next <= endDate {
-        from = next
-        days += 1
-    }
-
-    // Hours
-    while let next = calendar.date(byAdding: .hour, value: 1, to: from), next <= endDate {
-        from = next
-        hours += 1
-    }
-
-    // Minutes
-    while let next = calendar.date(byAdding: .minute, value: 1, to: from), next <= endDate {
-        from = next
-        minutes += 1
-    }
-
-    return TimeComponents(months: months, days: days, hours: hours, minutes: minutes)
-}
-
-
-
 struct CounterView: View {
     @EnvironmentObject var streakStore: StreakStore
     @Binding var selectedTab: Int
@@ -114,28 +70,7 @@ struct CounterView: View {
     }
 }
 
-private struct CounterPill: View {
-    let value: Int
-    let unit: String
 
-    var body: some View {
-        VStack(spacing: 4) {
-            Text("\(value)")
-                .font(.system(size: 28, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
-            Text(unit)
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.8))
-        }
-        .frame(width: 74, height: 74)
-        .background(Theme.surface)
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Color.white.opacity(0.2), lineWidth: 1)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-    }
-}
 
 #Preview {
     @State var tab = 0

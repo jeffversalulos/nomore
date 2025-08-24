@@ -107,6 +107,12 @@ struct JournalView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { isPresentingComposer = false }
+                        .foregroundStyle(.white)
+                }
+                ToolbarItem(placement: .principal) {
+                    Text("New Entry")
+                        .font(.headline.bold())
+                        .foregroundStyle(.white)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
@@ -116,13 +122,18 @@ struct JournalView: View {
                         isPresentingComposer = false
                     }
                     .bold()
+                    .foregroundStyle(.white)
                 }
             }
-            .navigationTitle("New Entry")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.clear, for: .navigationBar)
         }
         .presentationDetents([.medium, .large])
-        .presentationBackground(.ultraThinMaterial)
+        .presentationBackground(Material.ultraThinMaterial.opacity(0))
+        .background {
+            Theme.backgroundGradient
+                .ignoresSafeArea()
+        }
     }
 }
 
