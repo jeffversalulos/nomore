@@ -4,12 +4,14 @@ private enum BreathPhase: String, CaseIterable {
     case inhale
     case hold
     case exhale
+    case rest
 
     var displayName: String {
         switch self {
         case .inhale: return "Inhale"
         case .hold: return "Hold"
         case .exhale: return "Exhale"
+        case .rest: return "Rest"
         }
     }
 
@@ -18,6 +20,7 @@ private enum BreathPhase: String, CaseIterable {
         case .inhale: return "Inhale gently through your nose"
         case .hold: return "Hold your breath softly"
         case .exhale: return "Exhale slowly through your mouth"
+        case .rest: return "Rest and prepare for the next breath"
         }
     }
 }
@@ -37,6 +40,8 @@ private struct SoothingOrb: View {
             return baseScale + amplitude
         case .exhale:
             return baseScale + amplitude * CGFloat(1 - progress)
+        case .rest:
+            return baseScale
         }
     }
 
@@ -68,7 +73,7 @@ private struct SoothingOrb: View {
 }
 
 struct MeditationView: View {
-    // Assumption: 4-4-4 box breathing (inhale-hold-exhale). You can adjust below if desired.
+    // 4-4-4-4 box breathing (inhale-hold-exhale-rest). You can adjust below if desired.
     private let phaseDurationSeconds: Double = 4
 
     @State private var isRunning: Bool = false
@@ -85,7 +90,8 @@ struct MeditationView: View {
         switch currentPhase {
         case .inhale: return .hold
         case .hold: return .exhale
-        case .exhale: return .inhale
+        case .exhale: return .rest
+        case .rest: return .inhale
         }
     }
 
@@ -178,7 +184,8 @@ struct MeditationView: View {
         switch currentPhase {
         case .inhale: currentPhase = .hold
         case .hold: currentPhase = .exhale
-        case .exhale: currentPhase = .inhale
+        case .exhale: currentPhase = .rest
+        case .rest: currentPhase = .inhale
         }
     }
 }
