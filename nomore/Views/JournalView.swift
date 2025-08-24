@@ -31,41 +31,52 @@ struct JournalView: View {
                     emptyState
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    ScrollView {
-                        LazyVStack(spacing: 12) {
-                            ForEach(journalStore.entries) { entry in
-                                HStack(alignment: .top, spacing: 12) {
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        Text(entry.date, style: .date)
-                                            .font(.footnote)
-                                            .foregroundStyle(Theme.textSecondary)
-                                        Text(entry.text)
-                                            .font(.body)
-                                            .foregroundStyle(Theme.textPrimary)
-                                            .multilineTextAlignment(.leading)
-                                    }
-                                    Spacer(minLength: 0)
+                    List {
+                        ForEach(journalStore.entries) { entry in
+                            HStack(alignment: .top, spacing: 12) {
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text(entry.date, style: .date)
+                                        .font(.footnote)
+                                        .foregroundStyle(Theme.textSecondary)
+                                    Text(entry.text)
+                                        .font(.body)
+                                        .foregroundStyle(Theme.textPrimary)
+                                        .multilineTextAlignment(.leading)
                                 }
-                                .padding(14)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Theme.surface)
-                                .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
-                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                                .contextMenu {
-                                    Button(role: .destructive) {
-                                        if let index = journalStore.entries.firstIndex(of: entry) {
-                                            journalStore.deleteEntry(at: IndexSet(integer: index))
-                                        }
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
+                                Spacer(minLength: 0)
+                            }
+                            .padding(14)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Theme.surface)
+                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                            .listRowBackground(Color.clear)
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    if let index = journalStore.entries.firstIndex(of: entry) {
+                                        journalStore.deleteEntry(at: IndexSet(integer: index))
                                     }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
                             }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button(role: .destructive) {
+                                    if let index = journalStore.entries.firstIndex(of: entry) {
+                                        journalStore.deleteEntry(at: IndexSet(integer: index))
+                                    }
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: 16, weight: .semibold))
+                                }
+                                .tint(.red)
+                            }
                         }
-                        .padding(.horizontal)
-                        .padding(.top, 12)
-                        .padding(.bottom, 24)
                     }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .padding(.top, 12)
                 }
             }
         }
@@ -141,5 +152,3 @@ struct JournalView: View {
     JournalView()
         .environmentObject(JournalStore())
 }
-
-
