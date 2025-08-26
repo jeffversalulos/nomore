@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct MoreView: View {
+    @EnvironmentObject var onboardingManager: OnboardingManager
+    
     var body: some View {
         ZStack {
 
@@ -17,6 +19,15 @@ struct MoreView: View {
                         Label("Insights", systemImage: "chart.xyaxis.line")
                         Label("Settings", systemImage: "gear")
                     }
+                    
+                    #if DEBUG
+                    Section("Debug") {
+                        Button("Reset Onboarding") {
+                            onboardingManager.resetOnboarding()
+                        }
+                        .foregroundColor(.red)
+                    }
+                    #endif
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(.insetGrouped)

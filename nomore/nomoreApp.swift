@@ -12,14 +12,25 @@ struct nomoreApp: App {
     @StateObject private var streakStore = StreakStore()
     @StateObject private var journalStore = JournalStore()
     @StateObject private var goalsStore = GoalsStore()
+    @StateObject private var onboardingManager = OnboardingManager()
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(streakStore)
-                .environmentObject(journalStore)
-                .environmentObject(goalsStore)
+            if onboardingManager.hasCompletedOnboarding {
+                ContentView()
+                    .environmentObject(streakStore)
+                    .environmentObject(journalStore)
+                    .environmentObject(goalsStore)
+                    .environmentObject(onboardingManager)
+                    .onAppear(perform: configureAppearance)
+            } else {
+                OnboardingView {
+                    // This closure is called when onboarding is completed
+                    onboardingManager.hasCompletedOnboarding = true
+                }
+                .environmentObject(onboardingManager)
                 .onAppear(perform: configureAppearance)
+            }
         }
     }
 }
