@@ -14,33 +14,26 @@ struct GoalsView: View {
     @State private var showingSelectedGoals = false
     
     var body: some View {
-        NavigationView {
-            ZStack {
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 24) {
+                headerSection
                 
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 24) {
-                        headerSection
-                        
-                        if !goalsStore.selectedGoals.isEmpty {
-                            selectedGoalsSection
-                        }
-                        
-                        availableGoalsSection
-                        
-                        addCustomGoalButton
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                    .padding(.bottom, 20)
+                if !goalsStore.selectedGoals.isEmpty {
+                    selectedGoalsSection
                 }
+                
+                availableGoalsSection
+                
+                addCustomGoalButton
             }
-            .navigationTitle("Your Goals")
-            .navigationBarTitleDisplayMode(.large)
-            .preferredColorScheme(.dark)
-            .sheet(isPresented: $showingAddGoal) {
-                AddGoalSheet()
-                    .environmentObject(goalsStore)
-            }
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+            .padding(.bottom, 100) // Add bottom padding to account for the custom tab bar
+        }
+        .preferredColorScheme(.dark)
+        .sheet(isPresented: $showingAddGoal) {
+            AddGoalSheet()
+                .environmentObject(goalsStore)
         }
     }
     
@@ -250,11 +243,21 @@ struct AddGoalSheet: View {
     @State private var imageData: Data?
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.backgroundGradient.ignoresSafeArea()
-                
-                VStack(spacing: 24) {
+        ZStack {
+            // Background image applied at the root level
+            Image("BG")
+                .resizable()
+                .scaledToFit()
+                .scaledToFill()
+                .ignoresSafeArea()
+            
+            NavigationView {
+                ZStack {
+                    // Clear color background to ensure no white shows
+                    Color.clear
+                        .ignoresSafeArea()
+                    
+                    VStack(spacing: 24) {
                     // Image selection
                     VStack(spacing: 16) {
                         if let imageData = imageData,
@@ -320,16 +323,17 @@ struct AddGoalSheet: View {
                     .disabled(title.isEmpty)
                 }
                 .padding(20)
-            }
-            .navigationTitle("Add Custom Goal")
-            .navigationBarTitleDisplayMode(.inline)
-            .preferredColorScheme(.dark)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
+                }
+                .navigationTitle("Add Custom Goal")
+                .navigationBarTitleDisplayMode(.inline)
+                .preferredColorScheme(.dark)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel") {
+                            dismiss()
+                        }
+                        .foregroundStyle(Theme.textSecondary)
                     }
-                    .foregroundStyle(Theme.textSecondary)
                 }
             }
         }
