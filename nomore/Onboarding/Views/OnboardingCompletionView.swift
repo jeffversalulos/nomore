@@ -21,25 +21,28 @@ struct OnboardingCompletionView: View {
             // Success animation
             ZStack {
                 // Pulsing background circle
-                Circle()
-                    .fill(Theme.mint.opacity(0.2))
-                    .frame(width: pulseAnimation ? 200 : 160, height: pulseAnimation ? 200 : 160)
-                    .animation(
-                        .easeInOut(duration: 2.0).repeatForever(autoreverses: true),
-                        value: pulseAnimation
-                    )
-                
-                // Inner circle
-                Circle()
-                    .fill(Theme.mint.opacity(0.3))
-                    .frame(width: 120, height: 120)
-                
-                // Checkmark
-                Image(systemName: "checkmark")
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.white)
-                    .scaleEffect(showContent ? 1.0 : 0.5)
-                    .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.3), value: showContent)
+                ZStack {
+                    Circle()
+                        .fill(Theme.mint.opacity(0.2))
+                        .frame(width: pulseAnimation ? 200 : 160, height: pulseAnimation ? 200 : 160)
+                        .animation(
+                            .easeInOut(duration: 2.0).repeatForever(autoreverses: true),
+                            value: pulseAnimation
+                        )
+                    
+                    // Inner circle
+                    Circle()
+                        .fill(Theme.mint.opacity(0.3))
+                        .frame(width: 120, height: 120)
+                    
+                    // Checkmark
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 48, weight: .bold))
+                        .foregroundColor(.white)
+                        .scaleEffect(showContent ? 1.0 : 0.5)
+                        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.3), value: showContent)
+                }
+                .frame(width: 200, height: 200) // Fixed container size
             }
             .padding(.bottom, 40)
             
