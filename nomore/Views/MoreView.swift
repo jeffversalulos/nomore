@@ -41,6 +41,10 @@ struct MoreView: View {
 
 #Preview {
     MoreView()
+        .environmentObject(OnboardingManager())
+        .environmentObject(StreakStore())
+        .environmentObject(JournalStore())
+        .environmentObject(GoalsStore())
 }
 
 

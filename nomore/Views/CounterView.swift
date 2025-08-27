@@ -3,13 +3,37 @@ import SwiftUI
 struct CounterView: View {
     @EnvironmentObject var streakStore: StreakStore
     @Binding var selectedTab: Int
-
+    
+    @State private var showingMoreView = false //Remove
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ZStack {
-
+            // More button in top right
+            VStack { //Remove
+                HStack {
+                    Spacer()
+                    Button {
+                        showingMoreView = true
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.system(size: 22))
+                            .foregroundStyle(Theme.textPrimary)
+                            .padding(8)
+                            .background(Theme.surface)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Theme.surfaceStroke, lineWidth: 1)
+                            )
+                    }
+                    .padding(.trailing, 16)
+                }
+                .padding(.top, 8)
+                Spacer()
+            }
+            
             VStack(spacing: 28) {
                 Spacer(minLength: 24)
 
@@ -67,6 +91,9 @@ struct CounterView: View {
         .onReceive(timer) { value in
             now = value
         }
+        .sheet(isPresented: $showingMoreView) { //Remove
+            MoreView() //Remove
+        } //Remove
     }
 }
 
@@ -77,6 +104,9 @@ struct CounterView: View {
     let store = StreakStore()
     return CounterView(selectedTab: .constant(0))
         .environmentObject(store)
+        .environmentObject(OnboardingManager()) //Remove
+        .environmentObject(JournalStore()) //Remove
+        .environmentObject(GoalsStore()) //Remove
         .padding()
 }
 
