@@ -174,8 +174,7 @@ class OnboardingManager: ObservableObject {
                 OnboardingOption(id: 2, text: "Support groups or online communities", value: "support_groups", impactLevel: .low),
                 OnboardingOption(id: 3, text: "Self-help books or apps", value: "self_help", impactLevel: .medium),
                 OnboardingOption(id: 4, text: "Nothing formal - just willpower", value: "willpower_only", impactLevel: .high)
-            ],
-            isMultiSelect: true
+            ]
         )
     ]
     

@@ -20,8 +20,8 @@ struct OnboardingView: View {
                     onContinue: onComplete
                 )
                 .transition(.asymmetric(
-                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                    removal: .move(edge: .leading).combined(with: .opacity)
+                    insertion: .scale(scale: 0.8).combined(with: .opacity),
+                    removal: .scale(scale: 1.1).combined(with: .opacity)
                 ))
             } else {
                 OnboardingQuestionView(
@@ -34,11 +34,12 @@ struct OnboardingView: View {
                 ))
             }
         }
+        .appBackground()
         .animation(.easeInOut(duration: 0.4), value: manager.currentQuestionIndex)
-        .animation(.easeInOut(duration: 0.4), value: showingCompletion)
+        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showingCompletion)
         .onChange(of: manager.hasCompletedOnboarding) { completed in
             if completed {
-                withAnimation(.easeInOut(duration: 0.5)) {
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                     showingCompletion = true
                 }
             }

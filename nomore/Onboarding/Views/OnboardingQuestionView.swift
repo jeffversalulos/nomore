@@ -135,7 +135,6 @@ struct OnboardingQuestionView: View {
                 }
             }
         }
-        .appBackground()
         .onAppear {
             updateSelectedOptions()
         }

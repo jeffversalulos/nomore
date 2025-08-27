@@ -130,7 +130,6 @@ struct OnboardingCompletionView: View {
             .offset(y: showContent ? 0 : 30)
             .animation(.easeOut(duration: 0.6).delay(1.5), value: showContent)
         }
-        .appBackground()
         .onAppear {
             showContent = true
             pulseAnimation = true
