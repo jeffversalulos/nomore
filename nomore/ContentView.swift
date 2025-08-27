@@ -26,7 +26,7 @@ struct ContentView: View {
                         MeditationView()
                             .transition(.opacity)
                     } else if selectedTab == 3 {
-                        MoreView()
+                        GoalsView()
                             .transition(.opacity)
                     }
                 }
