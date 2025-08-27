@@ -36,12 +36,16 @@ struct CounterView: View {
             
             VStack(spacing: 28) {
                 Spacer(minLength: 24)
+                
+                // Weekly Progress Tracker
+                WeeklyProgressTracker()
+                    .padding(.horizontal, 24)
 
                 // Decorative progress ring (30-day horizon)
                 let secondsSince = now.timeIntervalSince(streakStore.lastRelapseDate)
                 let progress = min(max(secondsSince / (30 * 24 * 3600), 0), 1)
                 StreakRingView(progress: progress)
-                    .padding(.top, 16)
+                    .padding(.top, 8)
 
                 VStack(spacing: 10) {
                     Text("Your streak")
