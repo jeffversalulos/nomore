@@ -13,6 +13,7 @@ func calculateTimeComponents(from startDate: Date, to endDate: Date = Date(), ca
     var days = 0
     var hours = 0
     var minutes = 0
+    var seconds = 0
 
     // Count months by adding months until we exceed endDate
     while let next = calendar.date(byAdding: .month, value: 1, to: from), next <= endDate {
@@ -38,5 +39,11 @@ func calculateTimeComponents(from startDate: Date, to endDate: Date = Date(), ca
         minutes += 1
     }
 
-    return TimeComponents(months: months, days: days, hours: hours, minutes: minutes)
+    // Seconds
+    while let next = calendar.date(byAdding: .second, value: 1, to: from), next <= endDate {
+        from = next
+        seconds += 1
+    }
+
+    return TimeComponents(months: months, days: days, hours: hours, minutes: minutes, seconds: seconds)
 }

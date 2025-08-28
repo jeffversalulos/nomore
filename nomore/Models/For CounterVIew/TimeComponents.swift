@@ -12,6 +12,7 @@ struct TimeComponents {
     let days: Int
     let hours: Int
     let minutes: Int
+    let seconds: Int
 }
 
 
