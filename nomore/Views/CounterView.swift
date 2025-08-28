@@ -14,13 +14,20 @@ struct CounterView: View {
 
     var body: some View {
         ZStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 32) {
-                    Spacer(minLength: 20)
-                    
-                    // Weekly Progress Tracker
-                    WeeklyProgressTracker()
-                        .padding(.horizontal, 24)
+            VStack {
+                // Fixed header at top
+                HeaderView()
+                    .padding(.horizontal, 24)
+                    .padding(.top, 8)
+                
+                // Scrollable content
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 32) {
+                        Spacer(minLength: 20)
+                        
+                        // Weekly Progress Tracker
+                        WeeklyProgressTracker()
+                            .padding(.horizontal, 24)
 
                     // Decorative progress ring (30-day horizon)
                     let secondsSince = now.timeIntervalSince(streakStore.lastRelapseDate)
@@ -71,6 +78,7 @@ struct CounterView: View {
                     // Add some bottom padding for better scrolling experience
                     Spacer(minLength: 50)
                 }
+            }
             }
             
             // More button in top right - positioned above ScrollView
