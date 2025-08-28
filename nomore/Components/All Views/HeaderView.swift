@@ -25,14 +25,6 @@ struct HeaderView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Theme.surface)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(Theme.surfaceStroke, lineWidth: 0.5)
-                )
-        )
     }
 }
 
