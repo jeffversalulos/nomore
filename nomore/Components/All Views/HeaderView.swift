@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HeaderView: View {
     @Binding var showingStreakModal: Bool
+    @Binding var showingAchievementsModal: Bool
     
     var body: some View {
         HStack {
@@ -23,10 +24,14 @@ struct HeaderView: View {
                         .foregroundStyle(Theme.accent)
                 }
                 
-                // Trophy symbol
-                Image(systemName: "trophy.fill")
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(Theme.mint)
+                // Trophy symbol - tappable
+                Button {
+                    showingAchievementsModal = true
+                } label: {
+                    Image(systemName: "trophy.fill")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(Theme.mint)
+                }
             }
         }
         .padding(.horizontal, 20)
@@ -35,7 +40,7 @@ struct HeaderView: View {
 }
 
 #Preview {
-    HeaderView(showingStreakModal: .constant(false))
+    HeaderView(showingStreakModal: .constant(false), showingAchievementsModal: .constant(false))
         .padding()
         .appBackground()
 }

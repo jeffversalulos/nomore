@@ -14,6 +14,7 @@ struct nomoreApp: App {
     @StateObject private var goalsStore = GoalsStore()
     @StateObject private var onboardingManager = OnboardingManager()
     @StateObject private var dailyUsageStore = DailyUsageStore()
+    @StateObject private var achievementStore = AchievementStore()
     
     var body: some Scene {
         WindowGroup {
@@ -24,6 +25,7 @@ struct nomoreApp: App {
                     .environmentObject(goalsStore)
                     .environmentObject(onboardingManager)
                     .environmentObject(dailyUsageStore)
+                    .environmentObject(achievementStore)
                     .onAppear(perform: configureAppearance)
             } else {
                 OnboardingView {

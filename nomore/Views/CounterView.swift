@@ -6,10 +6,12 @@ struct CounterView: View {
     @EnvironmentObject var journalStore: JournalStore
     @EnvironmentObject var goalsStore: GoalsStore
     @EnvironmentObject var dailyUsageStore: DailyUsageStore
+    @EnvironmentObject var achievementStore: AchievementStore
     @Binding var selectedTab: Int
     
     @State private var showingMoreView = false
     @State private var showingStreakModal = false
+    @State private var showingAchievementsModal = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -17,7 +19,7 @@ struct CounterView: View {
         ZStack {
             VStack {
                 // Fixed header at top
-                HeaderView(showingStreakModal: $showingStreakModal)
+                HeaderView(showingStreakModal: $showingStreakModal, showingAchievementsModal: $showingAchievementsModal)
                     .padding(.horizontal, 24)
                     .padding(.top, 8)
                 
@@ -125,6 +127,12 @@ struct CounterView: View {
             showingStreakModal ? StreakModal(isPresented: $showingStreakModal)
                 .environmentObject(streakStore) : nil
         )
+        .overlay(
+            // Achievements modal overlay
+            showingAchievementsModal ? AchievementsModal(isPresented: $showingAchievementsModal)
+                .environmentObject(streakStore)
+                .environmentObject(achievementStore) : nil
+        )
     }
 }
 
@@ -133,12 +141,14 @@ struct CounterView: View {
 #Preview {
     @State var tab = 0
     let store = StreakStore()
+    let achievementStore = AchievementStore()
     return CounterView(selectedTab: .constant(0))
         .environmentObject(store)
         .environmentObject(OnboardingManager())
         .environmentObject(JournalStore())
         .environmentObject(GoalsStore())
         .environmentObject(DailyUsageStore())
+        .environmentObject(achievementStore)
         
 }
 
