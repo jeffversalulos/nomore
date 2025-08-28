@@ -4,14 +4,14 @@ struct CounterView: View {
     @EnvironmentObject var streakStore: StreakStore
     @Binding var selectedTab: Int
     
-    @State private var showingMoreView = false //Remove
+    @State private var showingMoreView = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ZStack {
             // More button in top right
-            VStack { //Remove
+            VStack {
                 HStack {
                     Spacer()
                     Button {
@@ -92,9 +92,9 @@ struct CounterView: View {
                 now = value
             }
         }
-        .sheet(isPresented: $showingMoreView) { //Remove
-            MoreView() //Remove
-        } //Remove
+        .sheet(isPresented: $showingMoreView) {
+            MoreView()
+        }
     }
 }
 
@@ -105,9 +105,9 @@ struct CounterView: View {
     let store = StreakStore()
     return CounterView(selectedTab: .constant(0))
         .environmentObject(store)
-        .environmentObject(OnboardingManager()) //Remove
-        .environmentObject(JournalStore()) //Remove
-        .environmentObject(GoalsStore()) //Remove
+        .environmentObject(OnboardingManager())
+        .environmentObject(JournalStore())
+        .environmentObject(GoalsStore())
         
 }
 
