@@ -34,53 +34,56 @@ struct CounterView: View {
                 Spacer()
             }
             
-            VStack(spacing: 32) {
-                Spacer(minLength: 20)
-                
-                // Weekly Progress Tracker
-                WeeklyProgressTracker()
-                    .padding(.horizontal, 24)
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 32) {
+                    Spacer(minLength: 20)
+                    
+                    // Weekly Progress Tracker
+                    WeeklyProgressTracker()
+                        .padding(.horizontal, 24)
 
-                // Decorative progress ring (30-day horizon)
-                let secondsSince = now.timeIntervalSince(streakStore.lastRelapseDate)
-                let progress = min(max(secondsSince / (30 * 24 * 3600), 0), 1)
-                StreakRingView(progress: progress)
+                    // Decorative progress ring (30-day horizon)
+                    let secondsSince = now.timeIntervalSince(streakStore.lastRelapseDate)
+                    let progress = min(max(secondsSince / (30 * 24 * 3600), 0), 1)
+                    StreakRingView(progress: progress)
 
-                let components = calculateTimeComponents(from: streakStore.lastRelapseDate, to: now)
-                StreakCounter(components: components)
+                    let components = calculateTimeComponents(from: streakStore.lastRelapseDate, to: now)
+                    StreakCounter(components: components)
 
-                // Action buttons section
-                VStack(spacing: 16) {
-                    // Panic Button
-                    PanicButton {
-                        // Navigate to Journal view
-                        selectedTab = 1
+                    // Action buttons section
+                    VStack(spacing: 16) {
+                        // Panic Button
+                        PanicButton {
+                            // Navigate to Journal view
+                            selectedTab = 1
+                        }
+                        .padding(.horizontal)
+
+                        // Relapse button - more subtle and refined
+                        Button {
+                            streakStore.resetRelapseDate()
+                            selectedTab = 1
+                        } label: {
+                            Text("Reset Streak")
+                                .font(.system(size: 16, weight: .medium))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                                .padding(.horizontal, 24)
+                                .background(.white.opacity(0.04))
+                                .foregroundStyle(.white.opacity(0.7))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                        .stroke(.white.opacity(0.1), lineWidth: 0.5)
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
+                    .padding(.top, 32)
 
-                    // Relapse button - more subtle and refined
-                    Button {
-                        streakStore.resetRelapseDate()
-                        selectedTab = 1
-                    } label: {
-                        Text("Reset Streak")
-                            .font(.system(size: 16, weight: .medium))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .padding(.horizontal, 24)
-                            .background(.white.opacity(0.04))
-                            .foregroundStyle(.white.opacity(0.7))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .stroke(.white.opacity(0.1), lineWidth: 0.5)
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    }
-                    .padding(.horizontal)
+                    // Add some bottom padding for better scrolling experience
+                    Spacer(minLength: 50)
                 }
-                .padding(.top, 32)
-
-                Spacer()
             }
         }
         .appBackground()
