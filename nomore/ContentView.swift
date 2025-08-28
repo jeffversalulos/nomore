@@ -67,4 +67,5 @@ struct ContentView: View {
         .environmentObject(JournalStore())
         .environmentObject(GoalsStore())
         .environmentObject(OnboardingManager())
+        .environmentObject(DailyUsageStore())
 }

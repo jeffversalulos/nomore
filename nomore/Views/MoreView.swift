@@ -45,6 +45,7 @@ struct MoreView: View {
         .environmentObject(StreakStore())
         .environmentObject(JournalStore())
         .environmentObject(GoalsStore())
+        .environmentObject(DailyUsageStore())
 }
 
 

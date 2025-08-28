@@ -5,6 +5,7 @@ struct CounterView: View {
     @EnvironmentObject var onboardingManager: OnboardingManager
     @EnvironmentObject var journalStore: JournalStore
     @EnvironmentObject var goalsStore: GoalsStore
+    @EnvironmentObject var dailyUsageStore: DailyUsageStore
     @Binding var selectedTab: Int
     
     @State private var showingMoreView = false
@@ -101,6 +102,7 @@ struct CounterView: View {
                 .environmentObject(streakStore)
                 .environmentObject(journalStore)
                 .environmentObject(goalsStore)
+                .environmentObject(dailyUsageStore)
         }
     }
 }
@@ -115,6 +117,7 @@ struct CounterView: View {
         .environmentObject(OnboardingManager())
         .environmentObject(JournalStore())
         .environmentObject(GoalsStore())
+        .environmentObject(DailyUsageStore())
         
 }
 

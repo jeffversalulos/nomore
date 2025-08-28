@@ -13,6 +13,7 @@ struct nomoreApp: App {
     @StateObject private var journalStore = JournalStore()
     @StateObject private var goalsStore = GoalsStore()
     @StateObject private var onboardingManager = OnboardingManager()
+    @StateObject private var dailyUsageStore = DailyUsageStore()
     
     var body: some Scene {
         WindowGroup {
@@ -22,6 +23,7 @@ struct nomoreApp: App {
                     .environmentObject(journalStore)
                     .environmentObject(goalsStore)
                     .environmentObject(onboardingManager)
+                    .environmentObject(dailyUsageStore)
                     .onAppear(perform: configureAppearance)
             } else {
                 OnboardingView {

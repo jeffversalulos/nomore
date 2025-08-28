@@ -2,6 +2,7 @@ import SwiftUI
 
 struct WeeklyProgressTracker: View {
     @EnvironmentObject var streakStore: StreakStore
+    @EnvironmentObject var dailyUsageStore: DailyUsageStore
     @State private var currentWeekDays: [WeekDay] = []
     
     private let timer = Timer.publish(every: 3600, on: .main, in: .common).autoconnect() // Update hourly
@@ -106,19 +107,8 @@ struct WeeklyProgressTracker: View {
             return false
         }
         
-        // For today, check if the app has been used (opened)
-        // Since we don't have usage tracking yet, we'll assume if the user
-        // has maintained their streak for that day, they've used the app
-        if calendar.isDate(date, inSameDayAs: today) {
-            // App is being used right now, so today counts as completed
-            return true
-        }
-        
-        // For past dates, check if it's within the streak period
-        let daysSinceLastRelapse = calendar.dateComponents([.day], from: streakStore.lastRelapseDate, to: date).day ?? 0
-        
-        // If the date is after the last relapse date, consider it a successful day
-        return date >= streakStore.lastRelapseDate && daysSinceLastRelapse >= 0
+        // Use the DailyUsageStore to check if the app was used on this date
+        return dailyUsageStore.hasUsageOnDate(date)
     }
 }
 
@@ -133,6 +123,7 @@ struct WeekDay {
 #Preview {
     WeeklyProgressTracker()
         .environmentObject(StreakStore())
+        .environmentObject(DailyUsageStore())
         .padding()
         .appBackground()
 }
