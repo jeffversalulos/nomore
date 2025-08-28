@@ -14,6 +14,7 @@ enum Theme {
 
     // Surfaces
     static let surface = Color.white.opacity(0.10)
+    static let surfaceTwo = Color.black.opacity(0.75)
     static let surfaceStroke = Color.white.opacity(0.20)
 
     // Background

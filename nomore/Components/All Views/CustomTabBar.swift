@@ -42,7 +42,7 @@ struct CustomTabBar: View {
         .padding(.horizontal, 16)
         .background(
             Capsule()
-                .fill(Theme.surface)
+                .fill(Theme.surfaceTwo)
                 .overlay(
                     Capsule()
                         .stroke(Theme.surfaceStroke, lineWidth: 1)

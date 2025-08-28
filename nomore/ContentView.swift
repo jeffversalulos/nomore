@@ -39,7 +39,8 @@ struct ContentView: View {
                 LinearGradient(
                     gradient: Gradient(stops: [
                         .init(color: .clear, location: 0.0),
-                        .init(color: .black.opacity(0.8), location: 0.6),
+                        .init(color: .black.opacity(0.4), location: 0.3),
+                        .init(color: .black.opacity(0.8), location: 0.7),
                         .init(color: .black.opacity(0.95), location: 1.0)
                     ]),
                     startPoint: .top,
