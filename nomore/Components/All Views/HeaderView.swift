@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct HeaderView: View {
+    @Binding var showingStreakModal: Bool
+    
     var body: some View {
         HStack {
             // Logo/Brand name on the left
@@ -12,10 +14,14 @@ struct HeaderView: View {
             
             // Symbols on the right
             HStack(spacing: 16) {
-                // Fire symbol
-                Image(systemName: "flame.fill")
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(Theme.accent)
+                // Fire symbol - tappable
+                Button {
+                    showingStreakModal = true
+                } label: {
+                    Image(systemName: "flame.fill")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(Theme.accent)
+                }
                 
                 // Trophy symbol
                 Image(systemName: "trophy.fill")
@@ -29,7 +35,7 @@ struct HeaderView: View {
 }
 
 #Preview {
-    HeaderView()
+    HeaderView(showingStreakModal: .constant(false))
         .padding()
         .appBackground()
 }

@@ -9,6 +9,7 @@ struct CounterView: View {
     @Binding var selectedTab: Int
     
     @State private var showingMoreView = false
+    @State private var showingStreakModal = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -16,7 +17,7 @@ struct CounterView: View {
         ZStack {
             VStack {
                 // Fixed header at top
-                HeaderView()
+                HeaderView(showingStreakModal: $showingStreakModal)
                     .padding(.horizontal, 24)
                     .padding(.top, 8)
                 
@@ -119,6 +120,11 @@ struct CounterView: View {
                 .environmentObject(goalsStore)
                 .environmentObject(dailyUsageStore)
         }
+        .overlay(
+            // Streak modal overlay
+            showingStreakModal ? StreakModal(isPresented: $showingStreakModal)
+                .environmentObject(streakStore) : nil
+        )
     }
 }
 
