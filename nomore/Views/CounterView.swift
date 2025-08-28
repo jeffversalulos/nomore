@@ -29,6 +29,13 @@ struct CounterView: View {
 
                     let components = calculateTimeComponents(from: streakStore.lastRelapseDate, to: now)
                     StreakCounter(components: components)
+                    
+                    // Brain Rewiring Progress Bar (100-day goal)
+                    let secondsSinceRelapse = now.timeIntervalSince(streakStore.lastRelapseDate)
+                    let daysSinceRelapse = secondsSinceRelapse / (24 * 3600)
+                    let brainRewiringProgress = min(max(daysSinceRelapse / 100.0, 0), 1)
+                    BrainRewiringProgressBar(progress: brainRewiringProgress)
+                        .padding(.horizontal, 24)
 
                     // Action buttons section
                     VStack(spacing: 16) {
