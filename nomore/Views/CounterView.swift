@@ -2,6 +2,9 @@ import SwiftUI
 
 struct CounterView: View {
     @EnvironmentObject var streakStore: StreakStore
+    @EnvironmentObject var onboardingManager: OnboardingManager
+    @EnvironmentObject var journalStore: JournalStore
+    @EnvironmentObject var goalsStore: GoalsStore
     @Binding var selectedTab: Int
     
     @State private var showingMoreView = false
@@ -10,30 +13,6 @@ struct CounterView: View {
 
     var body: some View {
         ZStack {
-            // More button in top right
-            VStack {
-                HStack {
-                    Spacer()
-                    Button {
-                        showingMoreView = true
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
-                            .font(.system(size: 22))
-                            .foregroundStyle(Theme.textPrimary)
-                            .padding(8)
-                            .background(Theme.surface)
-                            .clipShape(Circle())
-                            .overlay(
-                                Circle()
-                                    .stroke(Theme.surfaceStroke, lineWidth: 1)
-                            )
-                    }
-                    .padding(.trailing, 16)
-                }
-                .padding(.top, 8)
-                Spacer()
-            }
-            
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 32) {
                     Spacer(minLength: 20)
@@ -85,6 +64,30 @@ struct CounterView: View {
                     Spacer(minLength: 50)
                 }
             }
+            
+            // More button in top right - positioned above ScrollView
+            VStack {
+                HStack {
+                    Spacer()
+                    Button {
+                        showingMoreView = true
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.system(size: 22))
+                            .foregroundStyle(Theme.textPrimary)
+                            .padding(8)
+                            .background(Theme.surface)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Theme.surfaceStroke, lineWidth: 1)
+                            )
+                    }
+                    .padding(.trailing, 16)
+                }
+                .padding(.top, 8)
+                Spacer()
+            }
         }
         .appBackground()
         .onReceive(timer) { value in
@@ -94,6 +97,10 @@ struct CounterView: View {
         }
         .sheet(isPresented: $showingMoreView) {
             MoreView()
+                .environmentObject(onboardingManager)
+                .environmentObject(streakStore)
+                .environmentObject(journalStore)
+                .environmentObject(goalsStore)
         }
     }
 }
