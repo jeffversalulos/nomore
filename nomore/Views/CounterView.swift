@@ -111,7 +111,7 @@ struct CounterView: View {
         .environmentObject(OnboardingManager()) //Remove
         .environmentObject(JournalStore()) //Remove
         .environmentObject(GoalsStore()) //Remove
-        .padding()
+        
 }
 
 
