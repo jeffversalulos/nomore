@@ -13,10 +13,11 @@ struct TemptationCard: View {
                 Spacer(minLength: 24)
                 
                 VStack(spacing: 8) {
-                    Text("Tempted to Relapse:")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.8))
-                        .multilineTextAlignment(.center)
+                                    Text("Tempted to Relapse:")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(1)
                     
                     Text(isTempted ? "True" : "False")
                         .font(.system(size: 24, weight: .bold))
@@ -27,7 +28,7 @@ struct TemptationCard: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: 110)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 12)
             .padding(.vertical, 16)
             .background(.white.opacity(0.08))
             .overlay(

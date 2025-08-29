@@ -85,6 +85,7 @@ struct CounterView: View {
                     // Add some bottom padding for better scrolling experience
                     Spacer(minLength: 50)
                 }
+                    .padding(.bottom, 20)
             }
             }
             

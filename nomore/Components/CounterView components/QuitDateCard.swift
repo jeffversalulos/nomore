@@ -21,10 +21,12 @@ struct QuitDateCard: View {
                 Spacer(minLength: 24)
                 
                 VStack(spacing: 8) {
-                    Text("You're on track to quit by:")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.8))
-                        .multilineTextAlignment(.center)
+                                    Text("You're on track to quit by:")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
                     
                     Text(formattedQuitDate)
                         .font(.system(size: 20, weight: .bold))
@@ -37,7 +39,7 @@ struct QuitDateCard: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: 110)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 12)
             .padding(.vertical, 16)
             .background(.white.opacity(0.08))
             .overlay(
