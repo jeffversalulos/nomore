@@ -26,7 +26,7 @@ struct TemptationCard: View {
                 
                 Spacer()
             }
-            .frame(maxWidth: .infinity, minHeight: 110)
+            .frame(maxWidth: .infinity, maxHeight: 110)
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
             .background(.white.opacity(0.08))
