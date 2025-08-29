@@ -77,6 +77,10 @@ struct CounterView: View {
                         .padding(.horizontal)
                     }
                     .padding(.top, 32)
+                    
+                    // Tracking Cards Section
+                    TrackingCards(startDate: streakStore.lastRelapseDate)
+                        .padding(.top, 24)
 
                     // Add some bottom padding for better scrolling experience
                     Spacer(minLength: 50)
