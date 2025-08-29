@@ -21,7 +21,7 @@ struct HeaderView: View {
                 } label: {
                     Image(systemName: "flame.fill")
                         .font(.system(size: 18, weight: .medium))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Color.orange)
                 }
                 
                 // Trophy symbol - tappable

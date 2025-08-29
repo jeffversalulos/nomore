@@ -29,7 +29,7 @@ struct SoothingOrb: View {
     
     private var borderWidth: CGFloat {
         let minBorderWidth: CGFloat = 2
-        let maxBorderWidth: CGFloat = 10
+        let maxBorderWidth: CGFloat = 14
         let borderAmplitude = maxBorderWidth - minBorderWidth
         
         switch phase {
