@@ -29,7 +29,7 @@ struct QuitDateCard: View {
                     .fixedSize(horizontal: false, vertical: true)
                     
                     Text(formattedQuitDate)
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.system(size: 25, weight: .bold))
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
                         .lineLimit(1)
