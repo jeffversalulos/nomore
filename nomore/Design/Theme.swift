@@ -30,8 +30,21 @@ enum Theme {
 extension View {
     /// Apply the app's gradient as a full-screen background behind the view.
     ///
-    
+    ///
     func appBackground() -> some View {
+        background(
+            ZStack {
+                Image("BG")
+                            .resizable()
+                            .scaledToFit()
+                            .scaledToFill()
+                            .ignoresSafeArea() // makes sure it goes edge-to-edge
+            }
+            .ignoresSafeArea()
+        )
+    }
+    
+    func appBackgroundT() -> some View {
         background(
             ZStack {
                 Image("BG")
