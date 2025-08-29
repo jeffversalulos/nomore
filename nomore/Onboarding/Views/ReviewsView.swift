@@ -155,7 +155,7 @@ struct ReviewsView: View {
                     onContinue()
                 }
             }) {
-                Text("Next")
+                Text("Rate Us!")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
