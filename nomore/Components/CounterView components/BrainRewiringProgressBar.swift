@@ -42,6 +42,7 @@ struct BrainRewiringProgressBar: View {
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 16)
+        //this:
         .background(.white.opacity(0.05))
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
