@@ -1,5 +1,5 @@
 //
-//  StreakRingView.swift
+//  SobrietyRing.swift
 //  nomore
 //
 //  Created by Aa on 2025-08-16.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StreakRingView: View {
+struct SobrietyRing: View {
     let progress: Double // 0...1
 
     var body: some View {
@@ -33,6 +33,6 @@ struct StreakRingView: View {
 #Preview {
     ZStack {
         Theme.backgroundGradient
-        StreakRingView(progress: 0.3)
+        SobrietyRing(progress: 0.3)
     }
 }
