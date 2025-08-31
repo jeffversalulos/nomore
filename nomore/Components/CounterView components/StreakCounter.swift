@@ -20,8 +20,8 @@ struct StreakCounter: View {
             // Main counter display - ultra clean and minimal
             MainTimeCounter(components: components)
             
-            // Dedicated seconds counter - clean and minimal
-            SecondsCounter(seconds: components.seconds)
+            // Dedicated bubble counter - shows appropriate units based on time
+            SecondsCounter(components: components)
                 .padding(.top, 8)
         }
     }
