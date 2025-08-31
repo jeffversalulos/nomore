@@ -1,5 +1,5 @@
 //
-//  SecondsCounter.swift
+//  SmallerUnitsCounter.swift
 //  nomore
 //
 //  Created by Aa on 2025-08-21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SecondsCounter: View {
+struct SmallerUnitsCounter: View {
     let components: TimeComponents
     
     var body: some View {
@@ -116,7 +116,7 @@ struct SecondsCounter: View {
 
 #Preview {
     let sampleComponents = TimeComponents(months: 0, days: 0, hours: 4, minutes: 28, seconds: 35)
-    return SecondsCounter(components: sampleComponents)
+    return SmallerUnitsCounter(components: sampleComponents)
         .padding()
         .background(Color.black)
 }

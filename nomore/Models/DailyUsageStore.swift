@@ -22,6 +22,8 @@ final class DailyUsageStore: ObservableObject {
             usageDates.insert(today)
             saveUsageDates()
             objectWillChange.send()
+            // Notify other stores that daily usage has changed
+            NotificationCenter.default.post(name: NSNotification.Name("DailyUsageChanged"), object: nil)
         }
     }
     
@@ -62,6 +64,8 @@ final class DailyUsageStore: ObservableObject {
             usageDates.insert(dateStr)
             saveUsageDates()
             objectWillChange.send()
+            // Notify other stores that daily usage has changed
+            NotificationCenter.default.post(name: NSNotification.Name("DailyUsageChanged"), object: nil)
         }
     }
     

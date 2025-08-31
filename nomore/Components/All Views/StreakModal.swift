@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct StreakModal: View {
-    @EnvironmentObject var streakStore: StreakStore
+    @EnvironmentObject var appStreakStore: AppStreakStore
     @Binding var isPresented: Bool
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -62,27 +62,26 @@ struct StreakModal: View {
                         
                         // Streak information
                         VStack(spacing: 16) {
-                            let components = calculateTimeComponents(from: streakStore.lastRelapseDate, to: now)
+                            let streak = appStreakStore.consecutiveDaysStreak
                             
                             // Main streak count
-                            Text("\(components.days) Day Streak")
+                            Text("\(streak) Day Streak")
                                 .font(.system(size: 32, weight: .bold, design: .rounded))
                                 .foregroundStyle(Theme.textPrimary)
                             
-                            // Detailed time breakdown
-                            if components.hours > 0 || components.minutes > 0 || components.seconds > 0 {
-                                Text("\(components.hours)h \(components.minutes)m \(components.seconds)s")
-                                    .font(.system(size: 20, weight: .medium))
-                                    .foregroundStyle(Theme.textSecondary)
-                            }
+                            // Streak explanation
+                            Text("Consecutive days you've opened QUITTR")
+                                .font(.system(size: 18, weight: .medium))
+                                .foregroundStyle(Theme.textSecondary)
+                                .multilineTextAlignment(.center)
                             
                             // Motivational message
                             Text("Gain a streak for every consecutive day you login to QUITTR.")
-                                .font(.system(size: 18, weight: .regular))
+                                .font(.system(size: 16, weight: .regular))
                                 .foregroundStyle(Theme.textSecondary)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 16)
-                                .padding(.top, 16)
+                                .padding(.top, 8)
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -113,9 +112,10 @@ struct StreakModal: View {
 
 #Preview {
     @State var isPresented = true
-    let store = StreakStore()
+    let dailyUsageStore = DailyUsageStore()
+    let appStreakStore = AppStreakStore(dailyUsageStore: dailyUsageStore)
     
     return StreakModal(isPresented: .constant(true))
-        .environmentObject(store)
+        .environmentObject(appStreakStore)
         .appBackground()
 }

@@ -16,6 +16,9 @@ struct nomoreApp: App {
     @StateObject private var dailyUsageStore = DailyUsageStore()
     @StateObject private var achievementStore = AchievementStore()
     
+    // Initialize app streak store after dailyUsageStore is created
+    @State private var appStreakStore: AppStreakStore?
+    
     var body: some Scene {
         WindowGroup {
             if onboardingManager.hasCompletedOnboarding {
@@ -26,6 +29,7 @@ struct nomoreApp: App {
                     .environmentObject(onboardingManager)
                     .environmentObject(dailyUsageStore)
                     .environmentObject(achievementStore)
+                    .environmentObject(getAppStreakStore())
                     .onAppear(perform: configureAppearance)
             } else {
                 OnboardingView {
@@ -36,6 +40,13 @@ struct nomoreApp: App {
                 .onAppear(perform: configureAppearance)
             }
         }
+    }
+    
+    private func getAppStreakStore() -> AppStreakStore {
+        if appStreakStore == nil {
+            appStreakStore = AppStreakStore(dailyUsageStore: dailyUsageStore)
+        }
+        return appStreakStore!
     }
 }
 

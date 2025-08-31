@@ -7,6 +7,7 @@ struct CounterView: View {
     @EnvironmentObject var goalsStore: GoalsStore
     @EnvironmentObject var dailyUsageStore: DailyUsageStore
     @EnvironmentObject var achievementStore: AchievementStore
+    @EnvironmentObject var appStreakStore: AppStreakStore
     @Binding var selectedTab: Int
     
     @State private var showingMoreView = false
@@ -130,7 +131,7 @@ struct CounterView: View {
         .overlay(
             // Streak modal overlay
             showingStreakModal ? StreakModal(isPresented: $showingStreakModal)
-                .environmentObject(streakStore) : nil
+                .environmentObject(appStreakStore) : nil
         )
         .overlay(
             // Achievements modal overlay
@@ -147,13 +148,16 @@ struct CounterView: View {
     @State var tab = 0
     let store = StreakStore()
     let achievementStore = AchievementStore()
+    let dailyUsageStore = DailyUsageStore()
+    let appStreakStore = AppStreakStore(dailyUsageStore: dailyUsageStore)
     return CounterView(selectedTab: .constant(0))
         .environmentObject(store)
         .environmentObject(OnboardingManager())
         .environmentObject(JournalStore())
         .environmentObject(GoalsStore())
-        .environmentObject(DailyUsageStore())
+        .environmentObject(dailyUsageStore)
         .environmentObject(achievementStore)
+        .environmentObject(appStreakStore)
         
 }
 
