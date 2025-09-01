@@ -15,29 +15,30 @@ struct WeeklyProgressTracker: View {
                         // Day circle indicator
                         ZStack {
                             Circle()
-                                .fill(weekDay.isCompleted ? Theme.accent : Theme.surface)
+                                .fill(getCircleFillColor(for: weekDay))
                                 .frame(width: 38, height: 38)
                                 .overlay(
                                     Circle()
                                         .stroke(
                                             weekDay.isToday ? Theme.accent.opacity(0.6) : 
-                                            (weekDay.isCompleted ? Theme.accent : Theme.surfaceStroke),
+                                            getCircleStrokeColor(for: weekDay),
                                             lineWidth: weekDay.isToday ? 2 : 1
                                         )
                                 )
                                 .softShadow()
                             
-                            if weekDay.isCompleted {
+                            if weekDay.isFuture {
+                                // Future days remain empty
+                            } else if weekDay.isCompleted {
+                                // Checkmark for days when app was opened
                                 Image(systemName: "checkmark")
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundStyle(.white)
-                            } else if weekDay.isToday {
-                                // Today indicator when not completed - subtle pulsing dot
-                                Circle()
-                                    .fill(Theme.accent.opacity(0.4))
-                                    .frame(width: 6, height: 6)
-                                    .scaleEffect(weekDay.isToday ? 1.2 : 1.0)
-                                    .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: weekDay.isToday)
+                            } else {
+                                // X symbol for days when app was not opened (past days only)
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundStyle(Theme.textSecondary)
                             }
                         }
                         .scaleEffect(weekDay.isToday ? 1.08 : 1.0)
@@ -67,13 +68,12 @@ struct WeeklyProgressTracker: View {
         let calendar = Calendar.current
         let today = Date()
         
-        // Get the start of the current week (Monday)
-        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: today)?.start ?? today
-        
+        // Create a sliding window of 7 days where today is always the 6th position (index 5)
+        // This means we show 5 days before today, today, and 1 day after today
         var weekDays: [WeekDay] = []
         
-        for i in 0..<7 {
-            guard let date = calendar.date(byAdding: .day, value: i, to: startOfWeek) else { continue }
+        for i in -5...1 {
+            guard let date = calendar.date(byAdding: .day, value: i, to: today) else { continue }
             
             let dayLetter = getDayLetter(for: date)
             let isToday = calendar.isDate(date, inSameDayAs: today)
@@ -109,6 +109,24 @@ struct WeeklyProgressTracker: View {
         
         // Use the DailyUsageStore to check if the app was used on this date
         return dailyUsageStore.hasUsageOnDate(date)
+    }
+    
+    private func getCircleFillColor(for weekDay: WeekDay) -> Color {
+        if weekDay.isFuture {
+            return Theme.surface
+        } else if weekDay.isCompleted {
+            return Theme.accent
+        } else {
+            return Theme.surface
+        }
+    }
+    
+    private func getCircleStrokeColor(for weekDay: WeekDay) -> Color {
+        if weekDay.isCompleted {
+            return Theme.accent
+        } else {
+            return Theme.surfaceStroke
+        }
     }
 }
 
