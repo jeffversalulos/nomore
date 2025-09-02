@@ -19,8 +19,9 @@ struct nomoreApp: App {
                     .onAppear(perform: AppearanceConfigurator.configure)
             } else {
                 OnboardingView {
-                    // This closure is called when onboarding is completed
-                    appContainer.onboardingManager.hasCompletedOnboarding = true
+                    // This closure is called when "Begin Your Recovery" button is pressed
+                    // Now we actually complete the onboarding process
+                    appContainer.onboardingManager.completeOnboarding()
                 }
                 .environmentObject(appContainer.onboardingManager)
                 .onAppear(perform: AppearanceConfigurator.configure)

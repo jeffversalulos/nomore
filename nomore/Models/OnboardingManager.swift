@@ -11,6 +11,7 @@ class OnboardingManager: ObservableObject {
     @Published var currentQuestionIndex = 0
     @Published var profile = OnboardingProfile()
     @Published var hasCompletedOnboarding = false
+    @Published var showingCompletionView = false
     
     private let userDefaults = UserDefaults.standard
     private let onboardingCompletedKey = "hasCompletedOnboarding"
@@ -183,7 +184,7 @@ class OnboardingManager: ObservableObject {
         if currentQuestionIndex < questions.count - 1 {
             currentQuestionIndex += 1
         } else {
-            completeOnboarding()
+            showCompletionView()
         }
     }
     
@@ -224,9 +225,13 @@ class OnboardingManager: ObservableObject {
     }
     
     // MARK: - Completion
-    private func completeOnboarding() {
+    private func showCompletionView() {
         profile.isCompleted = true
         profile.personalizedMessage = generatePersonalizedMessage()
+        showingCompletionView = true
+    }
+    
+    func completeOnboarding() {
         hasCompletedOnboarding = true
         saveOnboardingStatus()
     }
@@ -257,8 +262,9 @@ class OnboardingManager: ObservableObject {
     
     func resetOnboarding() {
         hasCompletedOnboarding = false
+        showingCompletionView = false
         profile = OnboardingProfile()
         currentQuestionIndex = 0
-        userDefaults.removeObject(forKey: onboardingCompletedKey)
+        saveOnboardingStatus()
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 /// Central container that manages all app-level dependencies and their initialization
 final class AppContainer: ObservableObject {
@@ -19,6 +20,9 @@ final class AppContainer: ObservableObject {
     @Published private(set) var dailyUsageStore: DailyUsageStore
     @Published private(set) var achievementStore: AchievementStore
     @Published private(set) var appStreakStore: AppStreakStore
+    
+    // MARK: - Private Properties
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     init() {
@@ -41,7 +45,20 @@ final class AppContainer: ObservableObject {
     // MARK: - Private Methods
     private func setupDependencies() {
         // Configure any relationships between stores here
-        // For example, if stores need to communicate with each other
+        // Forward OnboardingManager changes to trigger AppContainer updates
+        onboardingManager.$hasCompletedOnboarding
+            .sink { [weak self] _ in
+                // This will trigger objectWillChange for AppContainer
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+            
+        onboardingManager.$showingCompletionView
+            .sink { [weak self] _ in
+                // This will trigger objectWillChange for AppContainer
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
     }
 }
 

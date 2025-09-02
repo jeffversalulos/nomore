@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @StateObject private var manager = OnboardingManager()
+    @EnvironmentObject var manager: OnboardingManager
     @State private var showingCompletion = false
     let onComplete: () -> Void
     
@@ -37,8 +37,8 @@ struct OnboardingView: View {
         .appBackground()
         .animation(.easeInOut(duration: 0.4), value: manager.currentQuestionIndex)
         .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showingCompletion)
-        .onChange(of: manager.hasCompletedOnboarding) { completed in
-            if completed {
+        .onChange(of: manager.showingCompletionView) { showingCompletionView in
+            if showingCompletionView {
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                     showingCompletion = true
                 }
