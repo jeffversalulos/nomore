@@ -81,18 +81,7 @@ class OnboardingManager: ObservableObject {
     }
     
     private func generatePersonalizedMessage() -> String {
-        let riskScore = profile.riskScore
-        
-        switch riskScore {
-        case 0...20:
-            return "You're taking the right steps toward a healthier relationship with technology. This app will help you build stronger habits and maintain your progress."
-        case 21...40:
-            return "You've recognized important patterns in your life. This app provides the tools and support you need to break free and build a better future."
-        case 41...60:
-            return "Your courage to seek change is admirable. This addiction has impacted your life significantly, but recovery is absolutely possible with the right support and tools."
-        default:
-            return "Taking this step shows incredible strength. You've been fighting this battle for too long alone. This app will be your companion in reclaiming your life, relationships, and self-worth."
-        }
+        return "Taking this step shows incredible strength. You've been fighting this battle for too long alone. This app will be your companion in reclaiming your life, relationships, and self-worth."
     }
     
     // MARK: - Persistence
