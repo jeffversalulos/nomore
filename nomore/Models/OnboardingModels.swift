@@ -62,40 +62,11 @@ struct OnboardingResponse {
 struct OnboardingProfile {
     var responses: [OnboardingResponse] = []
     var isCompleted: Bool = false
-    var riskScore: Int = 0
     var personalizedMessage: String = ""
     
     mutating func addResponse(_ response: OnboardingResponse) {
         // Remove existing response for this question if any
         responses.removeAll { $0.questionId == response.questionId }
         responses.append(response)
-        calculateRiskScore()
-    }
-    
-    private mutating func calculateRiskScore() {
-        // Calculate risk score based on responses
-        // Higher scores indicate more severe addiction patterns
-        riskScore = responses.reduce(0) { total, response in
-            let questionWeight = getQuestionWeight(response.questionId)
-            let optionWeight = response.selectedOptions.reduce(0) { $0 + getOptionWeight(response.questionId, $1) }
-            return total + (questionWeight * optionWeight)
-        }
-    }
-    
-    private func getQuestionWeight(_ questionId: Int) -> Int {
-        // Weight questions based on their importance for addiction assessment
-        switch questionId {
-        case 1, 2, 3: return 3 // Frequency and compulsive behavior
-        case 4, 5, 6: return 4 // Impact on life and relationships
-        case 7, 8, 9: return 2 // Emotional triggers
-        case 10, 11, 12: return 2 // Recovery motivation and support
-        default: return 1
-        }
-    }
-    
-    private func getOptionWeight(_ questionId: Int, _ optionId: Int) -> Int {
-        // Higher weights for more concerning responses
-        // This would be customized based on the specific question and option
-        return optionId // Simplified for now
     }
 }
