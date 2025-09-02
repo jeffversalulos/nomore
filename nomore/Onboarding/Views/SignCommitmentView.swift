@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignCommitmentView: View {
-    @Environment(\.dismiss) private var dismiss
+    @ObservedObject var manager: OnboardingManager
     let onFinish: () -> Void
     
     @State private var signature = Path()
@@ -19,7 +19,9 @@ struct SignCommitmentView: View {
         VStack(spacing: 0) {
             // Navigation bar
             HStack {
-                Button(action: { dismiss() }) {
+                Button(action: {
+                    manager.goBackFromCommitment()
+                }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 20, weight: .medium))
                         .foregroundColor(.white)
@@ -231,7 +233,11 @@ class DrawingView: UIView {
 }
 
 #Preview {
-    SignCommitmentView {
-        print("Finish tapped")
-    }
+    let manager = OnboardingManager()
+    return SignCommitmentView(
+        manager: manager,
+        onFinish: {
+            print("Finish tapped")
+        }
+    )
 }

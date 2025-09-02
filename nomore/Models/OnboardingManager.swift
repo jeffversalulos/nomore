@@ -78,6 +78,12 @@ class OnboardingManager: ObservableObject {
         showingCommitmentView = true
     }
     
+    func goBackFromCommitment() {
+        showingCommitmentView = false
+        // Go back to the last question (which should be the last question since we just finished them all)
+        currentQuestionIndex = questions.count - 1
+    }
+    
     func completeCommitment() {
         showingCommitmentView = false
         showCompletionView()

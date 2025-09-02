@@ -25,9 +25,12 @@ struct OnboardingView: View {
                     removal: .scale(scale: 1.1).combined(with: .opacity)
                 ))
             } else if showingCommitment {
-                SignCommitmentView {
-                    manager.completeCommitment()
-                }
+                SignCommitmentView(
+                    manager: manager,
+                    onFinish: {
+                        manager.completeCommitment()
+                    }
+                )
                 .transition(.asymmetric(
                     insertion: .move(edge: .trailing).combined(with: .opacity),
                     removal: .move(edge: .leading).combined(with: .opacity)
@@ -48,10 +51,8 @@ struct OnboardingView: View {
         .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showingCommitment)
         .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showingCompletion)
         .onChange(of: manager.showingCommitmentView) { showingCommitmentView in
-            if showingCommitmentView {
-                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                    showingCommitment = true
-                }
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                showingCommitment = showingCommitmentView
             }
         }
         .onChange(of: manager.showingCompletionView) { showingCompletionView in
