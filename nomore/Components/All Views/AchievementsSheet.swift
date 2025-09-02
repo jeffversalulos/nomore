@@ -25,10 +25,6 @@ struct AchievementsSheet: View {
                     // Header content
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Milestones")
-                                .font(.system(size: 28, weight: .bold, design: .rounded))
-                                .foregroundStyle(Theme.textPrimary)
-                            
                             Text("\(unlockedCount) of \(achievementStore.achievements.count) unlocked")
                                 .font(.system(size: 16, weight: .medium))
                                 .foregroundStyle(Theme.textSecondary)
@@ -107,6 +103,12 @@ struct AchievementsSheet: View {
                             .font(.system(size: 18, weight: .medium))
                             .foregroundStyle(.white)
                     }
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    Text("Milestones")
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
                 }
             }
         }
