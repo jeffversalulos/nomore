@@ -25,47 +25,28 @@ struct AchievementsSheet: View {
                     // Header content
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(unlockedCount) of \(achievementStore.achievements.count) unlocked")
+                            Text("\(unlockedCount) of \(achievementStore.achievements.count) achieved")
                                 .font(.system(size: 16, weight: .medium))
                                 .foregroundStyle(Theme.textSecondary)
                         }
                         
                         Spacer()
                         
-                        // Progress indicator and reset button
-                        HStack(spacing: 16) {
-                            // Progress ring
-                            ZStack {
-                                Circle()
-                                    .stroke(.white.opacity(0.1), lineWidth: 3)
-                                    .frame(width: 40, height: 40)
-                                
-                                Circle()
-                                    .trim(from: 0, to: CGFloat(unlockedCount) / CGFloat(achievementStore.achievements.count))
-                                    .stroke(Theme.mint, lineWidth: 3)
-                                    .frame(width: 40, height: 40)
-                                    .rotationEffect(.degrees(-90))
-                                
-                                Text("\(unlockedCount)")
-                                    .font(.system(size: 12, weight: .bold))
-                                    .foregroundStyle(Theme.mint)
-                            }
+                        // Progress indicator
+                        ZStack {
+                            Circle()
+                                .stroke(.white.opacity(0.1), lineWidth: 3)
+                                .frame(width: 40, height: 40)
                             
-                            // Reset button
-                            Button {
-                                showingResetAlert = true
-                            } label: {
-                                Image(systemName: "arrow.clockwise")
-                                    .font(.system(size: 18, weight: .medium))
-                                    .foregroundStyle(Theme.textSecondary)
-                                    .frame(width: 44, height: 44)
-                                    .background(Theme.surface)
-                                    .clipShape(Circle())
-                                    .overlay(
-                                        Circle()
-                                            .stroke(Theme.surfaceStroke, lineWidth: 1)
-                                    )
-                            }
+                            Circle()
+                                .trim(from: 0, to: CGFloat(unlockedCount) / CGFloat(achievementStore.achievements.count))
+                                .stroke(Theme.mint, lineWidth: 3)
+                                .frame(width: 40, height: 40)
+                                .rotationEffect(.degrees(-90))
+                            
+                            Text("\(unlockedCount)")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundStyle(Theme.mint)
                         }
                     }
                 }
@@ -109,6 +90,16 @@ struct AchievementsSheet: View {
                     Text("Milestones")
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showingResetAlert = true
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundStyle(.white)
+                    }
                 }
             }
         }
