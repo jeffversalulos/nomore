@@ -133,12 +133,11 @@ struct CounterView: View {
             showingStreakModal ? StreakModal(isPresented: $showingStreakModal)
                 .environmentObject(appStreakStore) : nil
         )
-        .overlay(
-            // Achievements modal overlay
-            showingAchievementsModal ? AchievementsModal(isPresented: $showingAchievementsModal)
+        .sheet(isPresented: $showingAchievementsModal) {
+            AchievementsModal(isPresented: $showingAchievementsModal)
                 .environmentObject(streakStore)
-                .environmentObject(achievementStore) : nil
-        )
+                .environmentObject(achievementStore)
+        }
     }
 }
 
