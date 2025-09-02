@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OnboardingView: View {
     @EnvironmentObject var manager: OnboardingManager
+    @State private var showingCommitment = false
     @State private var showingCompletion = false
     let onComplete: () -> Void
     
@@ -23,6 +24,14 @@ struct OnboardingView: View {
                     insertion: .scale(scale: 0.8).combined(with: .opacity),
                     removal: .scale(scale: 1.1).combined(with: .opacity)
                 ))
+            } else if showingCommitment {
+                SignCommitmentView {
+                    manager.completeCommitment()
+                }
+                .transition(.asymmetric(
+                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    removal: .move(edge: .leading).combined(with: .opacity)
+                ))
             } else {
                 OnboardingQuestionView(
                     question: manager.questions[manager.currentQuestionIndex],
@@ -36,7 +45,15 @@ struct OnboardingView: View {
         }
         .appBackground()
         .animation(.easeInOut(duration: 0.4), value: manager.currentQuestionIndex)
+        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showingCommitment)
         .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showingCompletion)
+        .onChange(of: manager.showingCommitmentView) { showingCommitmentView in
+            if showingCommitmentView {
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                    showingCommitment = true
+                }
+            }
+        }
         .onChange(of: manager.showingCompletionView) { showingCompletionView in
             if showingCompletionView {
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
