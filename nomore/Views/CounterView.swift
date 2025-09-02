@@ -133,7 +133,7 @@ struct CounterView: View {
             showingStreakModal ? StreakModal(isPresented: $showingStreakModal)
                 .environmentObject(appStreakStore) : nil
         )
-        .sheet(isPresented: $showingAchievementsSheet) {
+        .fullScreenCover(isPresented: $showingAchievementsSheet) {
             AchievementsSheet(isPresented: $showingAchievementsSheet)
                 .environmentObject(streakStore)
                 .environmentObject(achievementStore)

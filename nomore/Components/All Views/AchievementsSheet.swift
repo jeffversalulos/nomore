@@ -108,8 +108,6 @@ struct AchievementsSheet: View {
                 }
             }
         }
-        .presentationDetents([.large])
-        .presentationDragIndicator(.visible)
         .onReceive(timer) { value in
             now = value
         }
