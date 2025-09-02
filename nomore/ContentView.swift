@@ -62,10 +62,15 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView()
+    let dailyUsageStore = DailyUsageStore()
+    let appStreakStore = AppStreakStore(dailyUsageStore: dailyUsageStore)
+    
+    return ContentView()
         .environmentObject(StreakStore())
         .environmentObject(JournalStore())
         .environmentObject(GoalsStore())
         .environmentObject(OnboardingManager())
-        .environmentObject(DailyUsageStore())
+        .environmentObject(dailyUsageStore)
+        .environmentObject(AchievementStore())
+        .environmentObject(appStreakStore)
 }
