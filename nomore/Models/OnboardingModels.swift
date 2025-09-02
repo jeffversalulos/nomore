@@ -46,7 +46,7 @@ struct OnboardingOption {
 }
 
 // MARK: - User Response Model
-struct OnboardingResponse {
+struct OnboardingResponse: Codable {
     let questionId: Int
     let selectedOptions: [Int]
     let timestamp: Date
@@ -59,7 +59,7 @@ struct OnboardingResponse {
 }
 
 // MARK: - Onboarding Profile Model
-struct OnboardingProfile {
+struct OnboardingProfile: Codable {
     var responses: [OnboardingResponse] = []
     var isCompleted: Bool = false
     var personalizedMessage: String = ""

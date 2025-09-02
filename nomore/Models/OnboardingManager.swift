@@ -15,9 +15,11 @@ class OnboardingManager: ObservableObject {
     
     private let userDefaults = UserDefaults.standard
     private let onboardingCompletedKey = "hasCompletedOnboarding"
+    private let onboardingProfileKey = "onboardingProfile"
     
     init() {
         loadOnboardingStatus()
+        loadOnboardingProfile()
     }
     
     // MARK: - Core Questions Data
@@ -54,6 +56,8 @@ class OnboardingManager: ObservableObject {
             let response = OnboardingResponse(questionId: questionId, selectedOptions: [optionId])
             profile.addResponse(response)
         }
+        
+        saveOnboardingProfile()
     }
     
     func isOptionSelected(questionId: Int, optionId: Int) -> Bool {
@@ -93,11 +97,22 @@ class OnboardingManager: ObservableObject {
         userDefaults.set(hasCompletedOnboarding, forKey: onboardingCompletedKey)
     }
     
+    private func loadOnboardingProfile() {
+        guard let data = userDefaults.data(forKey: onboardingProfileKey) else { return }
+        profile = (try? JSONDecoder().decode(OnboardingProfile.self, from: data)) ?? OnboardingProfile()
+    }
+    
+    private func saveOnboardingProfile() {
+        guard let data = try? JSONEncoder().encode(profile) else { return }
+        userDefaults.set(data, forKey: onboardingProfileKey)
+    }
+    
     func resetOnboarding() {
         hasCompletedOnboarding = false
         showingCompletionView = false
         profile = OnboardingProfile()
         currentQuestionIndex = 0
         saveOnboardingStatus()
+        saveOnboardingProfile()
     }
 }
