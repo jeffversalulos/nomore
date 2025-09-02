@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct AchievementsModal: View {
+struct AchievementsSheet: View {
     @EnvironmentObject var achievementStore: AchievementStore
     @EnvironmentObject var streakStore: StreakStore
     @Binding var isPresented: Bool
@@ -129,7 +129,7 @@ struct AchievementsModal: View {
     let achievementStore = AchievementStore()
     let streakStore = StreakStore()
     
-    return AchievementsModal(isPresented: .constant(true))
+    return AchievementsSheet(isPresented: .constant(true))
         .environmentObject(achievementStore)
         .environmentObject(streakStore)
         .appBackground()

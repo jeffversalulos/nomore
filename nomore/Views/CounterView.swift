@@ -12,7 +12,7 @@ struct CounterView: View {
     
     @State private var showingMoreView = false
     @State private var showingStreakModal = false
-    @State private var showingAchievementsModal = false
+    @State private var showingAchievementsSheet = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -20,7 +20,7 @@ struct CounterView: View {
         ZStack {
             VStack {
                 // Fixed header at top
-                HeaderView(showingStreakModal: $showingStreakModal, showingAchievementsModal: $showingAchievementsModal)
+                HeaderView(showingStreakModal: $showingStreakModal, showingAchievementsSheet: $showingAchievementsSheet)
                     .padding(.horizontal, 24)
                     .padding(.top, 8)
                 
@@ -133,8 +133,8 @@ struct CounterView: View {
             showingStreakModal ? StreakModal(isPresented: $showingStreakModal)
                 .environmentObject(appStreakStore) : nil
         )
-        .sheet(isPresented: $showingAchievementsModal) {
-            AchievementsModal(isPresented: $showingAchievementsModal)
+        .sheet(isPresented: $showingAchievementsSheet) {
+            AchievementsSheet(isPresented: $showingAchievementsSheet)
                 .environmentObject(streakStore)
                 .environmentObject(achievementStore)
         }
