@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HeaderView: View {
+    @EnvironmentObject var appStreakStore: AppStreakStore
     @Binding var showingStreakModal: Bool
     @Binding var showingAchievementsSheet: Bool
     
@@ -15,13 +16,19 @@ struct HeaderView: View {
             
             // Symbols on the right
             HStack(spacing: 16) {
-                // Fire symbol - tappable
+                // Fire symbol with streak count - tappable
                 Button {
                     showingStreakModal = true
                 } label: {
-                    Image(systemName: "flame.fill")
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundStyle(Color.orange)
+                    HStack(spacing: 4) {
+                        Image(systemName: "flame.fill")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundStyle(Color.orange)
+                        
+                        Text("\(appStreakStore.consecutiveDaysStreak)")
+                            .font(.system(size: 21, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.orange)
+                    }
                 }
                 
                 // Trophy symbol - tappable
@@ -40,7 +47,11 @@ struct HeaderView: View {
 }
 
 #Preview {
-    HeaderView(showingStreakModal: .constant(false), showingAchievementsSheet: .constant(false))
+    let dailyUsageStore = DailyUsageStore()
+    let appStreakStore = AppStreakStore(dailyUsageStore: dailyUsageStore)
+    
+    return HeaderView(showingStreakModal: .constant(false), showingAchievementsSheet: .constant(false))
+        .environmentObject(appStreakStore)
         .padding()
         .appBackground()
 }
