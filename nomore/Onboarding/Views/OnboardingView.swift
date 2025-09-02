@@ -21,8 +21,8 @@ struct OnboardingView: View {
                     onContinue: onComplete
                 )
                 .transition(.asymmetric(
-                    insertion: .scale(scale: 0.8).combined(with: .opacity),
-                    removal: .scale(scale: 1.1).combined(with: .opacity)
+                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    removal: .move(edge: .leading).combined(with: .opacity)
                 ))
             } else if showingCommitment {
                 SignCommitmentView(
@@ -33,7 +33,9 @@ struct OnboardingView: View {
                 )
                 .transition(.asymmetric(
                     insertion: .move(edge: .trailing).combined(with: .opacity),
-                    removal: .move(edge: .leading).combined(with: .opacity)
+                    removal: manager.isNavigatingBack ? 
+                        .move(edge: .trailing).combined(with: .opacity) : 
+                        .move(edge: .leading).combined(with: .opacity)
                 ))
             } else {
                 OnboardingQuestionView(
@@ -41,23 +43,23 @@ struct OnboardingView: View {
                     manager: manager
                 )
                 .transition(.asymmetric(
-                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    insertion: .move(edge: .leading).combined(with: .opacity),
                     removal: .move(edge: .leading).combined(with: .opacity)
                 ))
             }
         }
         .appBackground()
         .animation(.easeInOut(duration: 0.4), value: manager.currentQuestionIndex)
-        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showingCommitment)
-        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showingCompletion)
+        .animation(.spring(response: 0.5, dampingFraction: 0.9), value: showingCommitment)
+        .animation(.spring(response: 0.5, dampingFraction: 0.9), value: showingCompletion)
         .onChange(of: manager.showingCommitmentView) { showingCommitmentView in
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.9, blendDuration: 0)) {
                 showingCommitment = showingCommitmentView
             }
         }
         .onChange(of: manager.showingCompletionView) { showingCompletionView in
             if showingCompletionView {
-                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.9, blendDuration: 0)) {
                     showingCompletion = true
                 }
             }

@@ -13,6 +13,7 @@ class OnboardingManager: ObservableObject {
     @Published var hasCompletedOnboarding = false
     @Published var showingCommitmentView = false
     @Published var showingCompletionView = false
+    @Published var isNavigatingBack = false
     
     private let userDefaults = UserDefaults.standard
     private let onboardingCompletedKey = "hasCompletedOnboarding"
@@ -79,9 +80,15 @@ class OnboardingManager: ObservableObject {
     }
     
     func goBackFromCommitment() {
+        isNavigatingBack = true
         showingCommitmentView = false
         // Go back to the last question (which should be the last question since we just finished them all)
         currentQuestionIndex = questions.count - 1
+        
+        // Reset the flag after a brief delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.isNavigatingBack = false
+        }
     }
     
     func completeCommitment() {
