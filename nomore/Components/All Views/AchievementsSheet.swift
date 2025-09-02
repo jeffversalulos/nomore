@@ -100,11 +100,13 @@ struct AchievementsSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Done") {
+                    Button {
                         isPresented = false
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundStyle(.white)
                     }
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundStyle(Theme.mint)
                 }
             }
         }
