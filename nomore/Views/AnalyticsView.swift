@@ -110,10 +110,10 @@ struct AnalyticsView: View {
                 .foregroundStyle(Theme.textPrimary)
                 .multilineTextAlignment(.center)
             
-            // Use EXACT same brain rewiring calculation from CounterView (100-day goal)
+            // Use EXACT same sobriety calculation from CounterView (90-day goal)
             let secondsSinceRelapse = now.timeIntervalSince(streakStore.lastRelapseDate)
             let daysSinceRelapse = secondsSinceRelapse / (24 * 3600)
-            let remainingDays = max(0, 100.0 - daysSinceRelapse) // 100-day goal like BrainRewiringProgressBar
+            let remainingDays = max(0, 90.0 - daysSinceRelapse) // 90-day goal like SobrietyRing
             let projectedDate = Calendar.current.date(byAdding: .day, value: Int(remainingDays), to: now) ?? now
             
             Text(projectedDate, style: .date)
