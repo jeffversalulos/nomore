@@ -2,12 +2,9 @@ import SwiftUI
 
 struct AnalyticsView: View {
     @EnvironmentObject var streakStore: StreakStore
+    @EnvironmentObject var dailyUsageStore: DailyUsageStore
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
-    // Constants for calculations
-    private let totalRecoveryDays = 365.0 // 1 year for full recovery
-    private let quitTargetDays = 365.0 // Target to quit completely in 1 year
     
     var body: some View {
         ZStack {
@@ -58,24 +55,29 @@ struct AnalyticsView: View {
     private var recoveryProgressSection: some View {
         VStack(spacing: 16) {
             ZStack {
+                // Use the EXACT same SobrietyRing component from CounterView
+                // Decorative progress ring (90-day horizon) - SAME AS COUNTERVIEW
+                let secondsSince = now.timeIntervalSince(streakStore.lastRelapseDate)
+                let sobrietyProgress = min(max(secondsSince / (90 * 24 * 3600), 0), 1)
+                
                 // Background circle
                 Circle()
                     .stroke(Color.white.opacity(0.15), lineWidth: 8)
                     .frame(width: 200, height: 200)
                 
-                // Progress circle
+                // Progress circle - using SAME calculation as SobrietyRing
                 Circle()
-                    .trim(from: 0, to: recoveryProgress)
+                    .trim(from: 0, to: max(0.001, min(sobrietyProgress, 1)))
                     .stroke(
                         AngularGradient(
-                            gradient: Gradient(colors: [Theme.aqua, Theme.mint]),
+                            gradient: Gradient(colors: [Theme.aqua, Theme.accent, Theme.aqua]),
                             center: .center
                         ),
                         style: StrokeStyle(lineWidth: 8, lineCap: .round)
                     )
                     .frame(width: 200, height: 200)
                     .rotationEffect(.degrees(-90))
-                    .animation(.easeInOut(duration: 0.5), value: recoveryProgress)
+                    .animation(.easeInOut(duration: 0.5), value: sobrietyProgress)
                 
                 // Center content
                 VStack(spacing: 8) {
@@ -84,10 +86,12 @@ struct AnalyticsView: View {
                         .foregroundStyle(Theme.textSecondary)
                         .tracking(1.2)
                     
-                    Text("\(Int(recoveryProgress * 100))%")
+                    Text("\(Int(sobrietyProgress * 100))%")
                         .font(.system(size: 48, weight: .bold))
                         .foregroundStyle(Theme.textPrimary)
                     
+                    // Use EXACT same calculation as CounterView for days
+                    let daysSinceRelapse = Int(secondsSince / (24 * 3600))
                     Text("\(daysSinceRelapse) D STREAK")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(Theme.textSecondary)
@@ -106,7 +110,13 @@ struct AnalyticsView: View {
                 .foregroundStyle(Theme.textPrimary)
                 .multilineTextAlignment(.center)
             
-            Text(projectedQuitDate, style: .date)
+            // Use EXACT same brain rewiring calculation from CounterView (100-day goal)
+            let secondsSinceRelapse = now.timeIntervalSince(streakStore.lastRelapseDate)
+            let daysSinceRelapse = secondsSinceRelapse / (24 * 3600)
+            let remainingDays = max(0, 100.0 - daysSinceRelapse) // 100-day goal like BrainRewiringProgressBar
+            let projectedDate = Calendar.current.date(byAdding: .day, value: Int(remainingDays), to: now) ?? now
+            
+            Text(projectedDate, style: .date)
                 .font(.system(size: 20, weight: .bold))
                 .foregroundStyle(Theme.textPrimary)
                 .padding(.horizontal, 24)
@@ -144,7 +154,7 @@ struct AnalyticsView: View {
             }
             .padding(.horizontal, 24)
             
-            // Simple progress visualization
+            // Use REAL progress data based on WeeklyProgressTracker logic
             progressChart
                 .padding(.horizontal, 24)
         }
@@ -177,9 +187,9 @@ struct AnalyticsView: View {
                 }
                 .stroke(Color.white.opacity(0.1), lineWidth: 0.5)
                 
-                // Progress line
+                // Progress line using REAL data from WeeklyProgressTracker logic
                 Path { path in
-                    let points = generateProgressPoints(width: width, height: height)
+                    let points = generateRealProgressPoints(width: width, height: height)
                     guard let firstPoint = points.first else { return }
                     
                     path.move(to: firstPoint)
@@ -198,7 +208,7 @@ struct AnalyticsView: View {
                 
                 // Progress area fill
                 Path { path in
-                    let points = generateProgressPoints(width: width, height: height)
+                    let points = generateRealProgressPoints(width: width, height: height)
                     guard let firstPoint = points.first else { return }
                     
                     path.move(to: CGPoint(x: firstPoint.x, y: height))
@@ -221,44 +231,60 @@ struct AnalyticsView: View {
         .frame(height: 100)
     }
     
-    // MARK: - Computed Properties
-    private var daysSinceRelapse: Int {
-        let secondsSince = now.timeIntervalSince(streakStore.lastRelapseDate)
-        return max(0, Int(secondsSince / (24 * 3600)))
-    }
-    
-    private var recoveryProgress: Double {
-        let daysSince = Double(daysSinceRelapse)
-        return min(max(daysSince / totalRecoveryDays, 0), 1)
-    }
-    
-    private var projectedQuitDate: Date {
-        let daysSince = Double(daysSinceRelapse)
-        let remainingDays = max(0, quitTargetDays - daysSince)
-        return Calendar.current.date(byAdding: .day, value: Int(remainingDays), to: now) ?? now
-    }
-    
     // MARK: - Helper Methods
-    private func generateProgressPoints(width: CGFloat, height: CGFloat) -> [CGPoint] {
-        let daysSince = daysSinceRelapse
-        let maxDays = max(daysSince, 7) // Show at least 7 days
+    // Use REAL data from WeeklyProgressTracker logic to generate progress points
+    private func generateRealProgressPoints(width: CGFloat, height: CGFloat) -> [CGPoint] {
+        let calendar = Calendar.current
+        let today = Date()
         var points: [CGPoint] = []
         
-        for i in 0...maxDays {
-            let x = (CGFloat(i) / CGFloat(maxDays)) * width
-            // Create a gradual upward trend with some variation
-            let baseProgress = Double(i) / Double(maxDays)
-            let variation = sin(Double(i) * 0.3) * 0.1 // Small variation
-            let progress = min(max(baseProgress + variation, 0), 1)
-            let y = height - (CGFloat(progress) * height * 0.8) - (height * 0.1) // Leave some margin
+        // Create a sliding window of 7 days (same as WeeklyProgressTracker)
+        let daysToShow = 7
+        
+        for i in 0..<daysToShow {
+            let dayOffset = i - (daysToShow - 1) // Start from 6 days ago
+            guard let date = calendar.date(byAdding: .day, value: dayOffset, to: today) else { continue }
+            
+            let x = (CGFloat(i) / CGFloat(daysToShow - 1)) * width
+            
+            // Use EXACT same logic as WeeklyProgressTracker to determine if day was completed
+            let isCompleted = hasAppUsageOnDate(date)
+            let isFuture = date > today
+            
+            // Calculate y position based on real completion data
+            let progress: Double
+            if isFuture {
+                progress = 0.3 // Future days show lower on chart
+            } else if isCompleted {
+                progress = 0.8 // Completed days show higher
+            } else {
+                progress = 0.1 // Missed days show lower
+            }
+            
+            let y = height - (CGFloat(progress) * height * 0.8) - (height * 0.1)
             points.append(CGPoint(x: x, y: y))
         }
         
         return points
+    }
+    
+    // EXACT same logic as WeeklyProgressTracker
+    private func hasAppUsageOnDate(_ date: Date) -> Bool {
+        let calendar = Calendar.current
+        let today = Date()
+        
+        // For future dates, always return false
+        if date > today {
+            return false
+        }
+        
+        // Use the DailyUsageStore to check if the app was used on this date
+        return dailyUsageStore.hasUsageOnDate(date)
     }
 }
 
 #Preview {
     AnalyticsView()
         .environmentObject(StreakStore())
+        .environmentObject(DailyUsageStore())
 }
