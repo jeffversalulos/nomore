@@ -16,6 +16,9 @@ struct OnboardingGoal: Identifiable, Equatable {
 }
 
 struct GoalsToTrackView: View {
+    @ObservedObject var manager: OnboardingManager
+    let onContinue: (() -> Void)?
+
     @State private var goals: [OnboardingGoal] = [
         OnboardingGoal(
             title: "Stronger relationships",
@@ -54,105 +57,99 @@ struct GoalsToTrackView: View {
             isSelected: true
         )
     ]
-    
-    @Environment(\.dismiss) private var dismiss
+
     @StateObject private var goalsStore = GoalsStore()
-    
-    let onContinue: (() -> Void)?
-    
-    init(onContinue: (() -> Void)? = nil) {
+
+    init(manager: OnboardingManager, onContinue: (() -> Void)? = nil) {
+        self._manager = ObservedObject(wrappedValue: manager)
         self.onContinue = onContinue
     }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                // Background
-                Theme.backgroundGradient
-                    .ignoresSafeArea()
-                
-                VStack(spacing: 0) {
-                    // Header
-                    VStack(spacing: 12) {
-                        HStack {
-                            Button(action: {
-                                dismiss()
-                            }) {
-                                Image(systemName: "chevron.left")
-                                    .font(.system(size: 18, weight: .medium))
-                                    .foregroundColor(Theme.textPrimary)
-                            }
-                            Spacer()
+        ZStack {
+            // Background
+            Theme.backgroundGradient
+                .ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                // Header
+                VStack(spacing: 12) {
+                    HStack {
+                        Button(action: {
+                            manager.goBackFromGoals()
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 18, weight: .medium))
+                                .foregroundColor(Theme.textPrimary)
                         }
-                        .padding(.horizontal, 20)
-                        .padding(.top, 10)
-                        
-                        Text("Choose your goals")
-                            .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(Theme.textPrimary)
-                            .padding(.top, 20)
-                        
-                        Text("Select the goals you wish to track during\nyour reboot.")
-                            .font(.system(size: 16, weight: .regular))
-                            .foregroundColor(Theme.textSecondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 20)
+                        Spacer()
                     }
-                    
-                    // Goals List
-                    ScrollView {
-                        LazyVStack(spacing: 16) {
-                            ForEach(goals.indices, id: \.self) { index in
-                                GoalCards(
-                                    goal: goals[index],
-                                    onTap: {
-                                        withAnimation(.easeInOut(duration: 0.2)) {
-                                            goals[index].isSelected.toggle()
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                        .padding(.horizontal, 20)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
+
+                    Text("Choose your goals")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundColor(Theme.textPrimary)
                         .padding(.top, 20)
-                        .padding(.bottom, 20)
-                    }
-                    .padding(.bottom, 90) // Account for button height + padding
-                }
-                
-                // Bottom Button
-                VStack {
-                    Spacer()
-                    
-                    Button(action: {
-                        // Save selected goals to the store
-                        saveSelectedGoals()
-                        
-                        // Call the continue callback if provided, otherwise dismiss
-                        if let onContinue = onContinue {
-                            onContinue()
-                        } else {
-                            dismiss()
-                        }
-                    }) {
-                        HStack {
-                            Text("Track these goals")
-                                .font(.system(size: 18, weight: .semibold))
-                                .foregroundColor(.black)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color.white)
-                        )
+
+                    Text("Select the goals you wish to track during\nyour reboot.")
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(Theme.textSecondary)
+                        .multilineTextAlignment(.center)
                         .padding(.horizontal, 20)
-                    }
-                    .padding(.bottom, 10)
                 }
+
+                // Goals List
+                ScrollView {
+                    LazyVStack(spacing: 16) {
+                        ForEach(goals.indices, id: \.self) { index in
+                            GoalCards(
+                                goal: goals[index],
+                                onTap: {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        goals[index].isSelected.toggle()
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
+                    .padding(.bottom, 20)
+                }
+                .padding(.bottom, 90) // Account for button height + padding
+            }
+
+            // Bottom Button
+            VStack {
+                Spacer()
+
+                Button(action: {
+                    // Save selected goals to the store
+                    saveSelectedGoals()
+
+                    // Call the continue callback if provided
+                    if let onContinue = onContinue {
+                        onContinue()
+                    }
+                }) {
+                    HStack {
+                        Text("Track these goals")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.black)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 56)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.white)
+                    )
+                    .padding(.horizontal, 20)
+                }
+                .padding(.bottom, 10)
             }
         }
-        .navigationBarHidden(true)
+        .appBackground()
     }
     
     private func saveSelectedGoals() {
@@ -241,7 +238,8 @@ struct GoalCards: View {
 }
 
 #Preview {
-    GoalsToTrackView {
+    let manager = OnboardingManager()
+    return GoalsToTrackView(manager: manager) {
         print("Goals selected and continuing...")
     }
 }

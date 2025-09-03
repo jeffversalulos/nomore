@@ -39,7 +39,7 @@ struct OnboardingView: View {
                         .move(edge: .leading).combined(with: .opacity)
                 ))
             } else if showingGoals {
-                GoalsToTrackView {
+                GoalsToTrackView(manager: manager) {
                     manager.completeGoals()
                 }
                 .transition(.asymmetric(
