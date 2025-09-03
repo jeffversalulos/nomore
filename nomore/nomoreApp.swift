@@ -24,6 +24,7 @@ struct nomoreApp: App {
                     appContainer.onboardingManager.completeOnboarding()
                 }
                 .environmentObject(appContainer.onboardingManager)
+                .environmentObject(appContainer.goalsStore)
                 .onAppear(perform: AppearanceConfigurator.configure)
             }
         }

@@ -58,7 +58,7 @@ struct GoalsToTrackView: View {
         )
     ]
 
-    @StateObject private var goalsStore = GoalsStore()
+    @EnvironmentObject var goalsStore: GoalsStore
 
     init(manager: OnboardingManager, onContinue: (() -> Void)? = nil) {
         self._manager = ObservedObject(wrappedValue: manager)
@@ -242,4 +242,5 @@ struct GoalCards: View {
     return GoalsToTrackView(manager: manager) {
         print("Goals selected and continuing...")
     }
+    .environmentObject(GoalsStore())
 }
