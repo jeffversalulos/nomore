@@ -43,7 +43,9 @@ struct OnboardingView: View {
                     manager.completeGoals()
                 }
                 .transition(.asymmetric(
-                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    insertion: manager.isNavigatingBack ?
+                        .move(edge: .leading).combined(with: .opacity) :
+                        .move(edge: .trailing).combined(with: .opacity),
                     removal: manager.isNavigatingBack ?
                         .move(edge: .trailing).combined(with: .opacity) :
                         .move(edge: .leading).combined(with: .opacity)
