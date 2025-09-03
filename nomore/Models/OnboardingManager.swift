@@ -11,6 +11,7 @@ class OnboardingManager: ObservableObject {
     @Published var currentQuestionIndex = 0
     @Published var profile = OnboardingProfile()
     @Published var hasCompletedOnboarding = false
+    @Published var showingGoalsView = false
     @Published var showingCommitmentView = false
     @Published var showingCompletionView = false
     @Published var isNavigatingBack = false
@@ -32,7 +33,7 @@ class OnboardingManager: ObservableObject {
         if currentQuestionIndex < questions.count - 1 {
             currentQuestionIndex += 1
         } else {
-            showCommitmentView()
+            showGoalsView()
         }
     }
     
@@ -74,6 +75,28 @@ class OnboardingManager: ObservableObject {
         return profile.responses.contains { $0.questionId == currentQuestion.id && !$0.selectedOptions.isEmpty }
     }
     
+    // MARK: - Goals View Navigation
+    private func showGoalsView() {
+        showingGoalsView = true
+    }
+
+    func goBackFromGoals() {
+        isNavigatingBack = true
+        showingGoalsView = false
+        // Go back to the last question (which should be the last question since we just finished them all)
+        currentQuestionIndex = questions.count - 1
+
+        // Reset the flag after a brief delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.isNavigatingBack = false
+        }
+    }
+
+    func completeGoals() {
+        showingGoalsView = false
+        showCommitmentView()
+    }
+
     // MARK: - Completion
     private func showCommitmentView() {
         showingCommitmentView = true
@@ -82,9 +105,9 @@ class OnboardingManager: ObservableObject {
     func goBackFromCommitment() {
         isNavigatingBack = true
         showingCommitmentView = false
-        // Go back to the last question (which should be the last question since we just finished them all)
-        currentQuestionIndex = questions.count - 1
-        
+        // Go back to the goals view
+        showingGoalsView = true
+
         // Reset the flag after a brief delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.isNavigatingBack = false
@@ -132,6 +155,7 @@ class OnboardingManager: ObservableObject {
     
     func resetOnboarding() {
         hasCompletedOnboarding = false
+        showingGoalsView = false
         showingCommitmentView = false
         showingCompletionView = false
         profile = OnboardingProfile()
