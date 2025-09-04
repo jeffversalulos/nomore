@@ -75,6 +75,20 @@ class OnboardingManager: ObservableObject {
         return profile.responses.contains { $0.questionId == currentQuestion.id && !$0.selectedOptions.isEmpty }
     }
     
+    // MARK: - Goal Selection Methods
+    func toggleGoalSelection(_ goalTitle: String) {
+        if profile.selectedGoalIds.contains(goalTitle) {
+            profile.selectedGoalIds.removeAll { $0 == goalTitle }
+        } else {
+            profile.selectedGoalIds.append(goalTitle)
+        }
+        saveOnboardingProfile()
+    }
+    
+    func isGoalSelected(_ goalTitle: String) -> Bool {
+        return profile.selectedGoalIds.contains(goalTitle)
+    }
+    
     // MARK: - Goals View Navigation
     private func showGoalsView() {
         showingGoalsView = true

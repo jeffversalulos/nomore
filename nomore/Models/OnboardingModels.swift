@@ -61,6 +61,7 @@ struct OnboardingResponse: Codable {
 // MARK: - Onboarding Profile Model
 struct OnboardingProfile: Codable {
     var responses: [OnboardingResponse] = []
+    var selectedGoalIds: [String] = []
     var isCompleted: Bool = false
     var personalizedMessage: String = ""
     

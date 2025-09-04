@@ -19,43 +19,36 @@ struct GoalsToTrackView: View {
     @ObservedObject var manager: OnboardingManager
     let onContinue: (() -> Void)?
 
-    @State private var goals: [OnboardingGoal] = [
-        OnboardingGoal(
-            title: "Stronger relationships",
-            icon: "heart.fill",
-            gradient: [Color(red: 0.8, green: 0.2, blue: 0.4), Color(red: 0.6, green: 0.15, blue: 0.3)]
-        ),
-        OnboardingGoal(
-            title: "Improved self-confidence",
-            icon: "person.fill",
-            gradient: [Color(red: 0.2, green: 0.6, blue: 0.9), Color(red: 0.15, green: 0.4, blue: 0.7)]
-        ),
-        OnboardingGoal(
-            title: "Improved mood and happiness",
-            icon: "face.smiling.fill",
-            gradient: [Color(red: 0.95, green: 0.7, blue: 0.2), Color(red: 0.8, green: 0.5, blue: 0.1)]
-        ),
-        OnboardingGoal(
-            title: "More energy and motivation",
-            icon: "bolt.fill",
-            gradient: [Color(red: 0.9, green: 0.5, blue: 0.2), Color(red: 0.7, green: 0.3, blue: 0.1)]
-        ),
-        OnboardingGoal(
-            title: "Improved desire and sex life",
-            icon: "doc.text.fill",
-            gradient: [Color(red: 0.8, green: 0.3, blue: 0.3), Color(red: 0.6, green: 0.2, blue: 0.2)]
-        ),
-        OnboardingGoal(
-            title: "Improved self-control",
-            icon: "brain.head.profile",
-            gradient: [Color(red: 0.4, green: 0.7, blue: 0.9), Color(red: 0.3, green: 0.5, blue: 0.7)]
-        ),
-        OnboardingGoal(
-            title: "Improved focus and clarity",
-            icon: "target",
-            gradient: [Color(red: 0.6, green: 0.3, blue: 0.9), Color(red: 0.4, green: 0.2, blue: 0.7)]
-        )
+    private let goalTitles: [String] = [
+        "Stronger relationships",
+        "Improved self-confidence", 
+        "Improved mood and happiness",
+        "More energy and motivation",
+        "Improved desire and sex life",
+        "Improved self-control",
+        "Improved focus and clarity"
     ]
+    
+    private let goalIcons: [String] = [
+        "heart.fill",
+        "person.fill",
+        "face.smiling.fill", 
+        "bolt.fill",
+        "doc.text.fill",
+        "brain.head.profile",
+        "target"
+    ]
+    
+    private let goalGradients: [[Color]] = [
+        [Color(red: 0.8, green: 0.2, blue: 0.4), Color(red: 0.6, green: 0.15, blue: 0.3)],
+        [Color(red: 0.2, green: 0.6, blue: 0.9), Color(red: 0.15, green: 0.4, blue: 0.7)],
+        [Color(red: 0.95, green: 0.7, blue: 0.2), Color(red: 0.8, green: 0.5, blue: 0.1)],
+        [Color(red: 0.9, green: 0.5, blue: 0.2), Color(red: 0.7, green: 0.3, blue: 0.1)],
+        [Color(red: 0.8, green: 0.3, blue: 0.3), Color(red: 0.6, green: 0.2, blue: 0.2)],
+        [Color(red: 0.4, green: 0.7, blue: 0.9), Color(red: 0.3, green: 0.5, blue: 0.7)],
+        [Color(red: 0.6, green: 0.3, blue: 0.9), Color(red: 0.4, green: 0.2, blue: 0.7)]
+    ]
+    
 
     @EnvironmentObject var goalsStore: GoalsStore
 
@@ -101,12 +94,15 @@ struct GoalsToTrackView: View {
                 // Goals List
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(goals.indices, id: \.self) { index in
-                            GoalCards(
-                                goal: goals[index],
+                        ForEach(goalTitles.indices, id: \.self) { index in
+                            GoalCardSimple(
+                                title: goalTitles[index],
+                                icon: goalIcons[index],
+                                gradient: goalGradients[index],
+                                isSelected: manager.isGoalSelected(goalTitles[index]),
                                 onTap: {
                                     withAnimation(.easeInOut(duration: 0.2)) {
-                                        goals[index].isSelected.toggle()
+                                        manager.toggleGoalSelection(goalTitles[index])
                                     }
                                 }
                             )
@@ -124,8 +120,8 @@ struct GoalsToTrackView: View {
                 Spacer()
 
                 Button(action: {
-                    // Save selected goals to the store
-                    saveSelectedGoals()
+                    // Transfer selected goals to the store at the end of onboarding
+                    transferGoalsToStore()
 
                     // Call the continue callback if provided
                     if let onContinue = onContinue {
@@ -151,25 +147,21 @@ struct GoalsToTrackView: View {
         .appBackground()
     }
     
-    private func saveSelectedGoals() {
-        // Clear existing selections
-        for goal in goalsStore.goals {
-            if goal.isSelected {
-                goalsStore.toggleGoalSelection(goal)
-            }
-        }
+    private func transferGoalsToStore() {
+        // Clear existing selections in the store
+        goalsStore.clearAllSelections()
         
-        // Add selected onboarding goals to the store
-        for onboardingGoal in goals.filter({ $0.isSelected }) {
+        // Transfer selected onboarding goals to the store
+        for goalTitle in manager.profile.selectedGoalIds {
             // Try to find matching goal by title, otherwise create a custom goal
-            if let existingGoal = goalsStore.goals.first(where: { $0.title.lowercased().contains(onboardingGoal.title.lowercased().split(separator: " ").first ?? "") }) {
+            if let existingGoal = goalsStore.goals.first(where: { $0.title.lowercased().contains(goalTitle.lowercased().split(separator: " ").first ?? "") }) {
                 if !existingGoal.isSelected {
                     goalsStore.toggleGoalSelection(existingGoal)
                 }
             } else {
                 // Create a new custom goal
                 goalsStore.addCustomGoal(
-                    title: onboardingGoal.title,
+                    title: goalTitle,
                     description: "Selected during onboarding"
                 )
             }
@@ -177,8 +169,11 @@ struct GoalsToTrackView: View {
     }
 }
 
-struct GoalCards: View {
-    let goal: OnboardingGoal
+struct GoalCardSimple: View {
+    let title: String
+    let icon: String
+    let gradient: [Color]
+    let isSelected: Bool
     let onTap: () -> Void
     
     var body: some View {
@@ -190,13 +185,13 @@ struct GoalCards: View {
                         .fill(Color.white.opacity(0.2))
                         .frame(width: 44, height: 44)
                     
-                    Image(systemName: goal.icon)
+                    Image(systemName: icon)
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(.white)
                 }
                 
                 // Title
-                Text(goal.title)
+                Text(title)
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.leading)
@@ -209,32 +204,33 @@ struct GoalCards: View {
                         .fill(Color.black.opacity(0.3))
                         .frame(width: 28, height: 28)
                     
-                    if goal.isSelected {
+                    if isSelected {
                         Image(systemName: "checkmark")
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(.white)
                     }
                 }
             }
-            .padding(.horizontal, goal.isSelected ? 20 : 28)
+            .padding(.horizontal, isSelected ? 20 : 28)
             .padding(.vertical, 18)
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(
                         LinearGradient(
-                            colors: goal.gradient,
+                            colors: gradient,
                             startPoint: .leading,
                             endPoint: .trailing
                         )
                     )
             )
-            .opacity(goal.isSelected ? 1.0 : 0.6)
+            .opacity(isSelected ? 1.0 : 0.6)
         }
         .buttonStyle(PlainButtonStyle())
-        .scaleEffect(goal.isSelected ? 1.02 : 1.0)
-        .animation(.easeInOut(duration: 0.2), value: goal.isSelected)
+        .scaleEffect(isSelected ? 1.02 : 1.0)
+        .animation(.easeInOut(duration: 0.2), value: isSelected)
     }
 }
+
 
 #Preview {
     let manager = OnboardingManager()
