@@ -53,8 +53,7 @@ struct GoalsToTrackView: View {
         OnboardingGoal(
             title: "Improved focus and clarity",
             icon: "target",
-            gradient: [Color(red: 0.6, green: 0.3, blue: 0.9), Color(red: 0.4, green: 0.2, blue: 0.7)],
-            isSelected: true
+            gradient: [Color(red: 0.6, green: 0.3, blue: 0.9), Color(red: 0.4, green: 0.2, blue: 0.7)]
         )
     ]
 

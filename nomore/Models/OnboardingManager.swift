@@ -153,7 +153,7 @@ class OnboardingManager: ObservableObject {
         userDefaults.set(data, forKey: onboardingProfileKey)
     }
     
-    func resetOnboarding() {
+    func resetOnboarding(goalsStore: GoalsStore? = nil) {
         hasCompletedOnboarding = false
         showingGoalsView = false
         showingCommitmentView = false
@@ -162,5 +162,8 @@ class OnboardingManager: ObservableObject {
         currentQuestionIndex = 0
         saveOnboardingStatus()
         saveOnboardingProfile()
+        
+        // Clear any previously selected goals
+        goalsStore?.clearAllSelections()
     }
 }

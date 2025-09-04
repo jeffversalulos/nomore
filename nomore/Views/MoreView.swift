@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MoreView: View {
     @EnvironmentObject var onboardingManager: OnboardingManager
+    @EnvironmentObject var goalsStore: GoalsStore
     
     var body: some View {
         ZStack {
@@ -23,7 +24,7 @@ struct MoreView: View {
                     #if DEBUG
                     Section("Debug") {
                         Button("Reset Onboarding") {
-                            onboardingManager.resetOnboarding()
+                            onboardingManager.resetOnboarding(goalsStore: goalsStore)
                         }
                         .foregroundColor(.red)
                     }

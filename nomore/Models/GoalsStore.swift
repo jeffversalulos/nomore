@@ -144,4 +144,11 @@ final class GoalsStore: ObservableObject {
     var selectedGoals: [Goal] {
         goals.filter { $0.isSelected }
     }
+    
+    func clearAllSelections() {
+        for index in goals.indices {
+            goals[index].isSelected = false
+        }
+        persist()
+    }
 }
