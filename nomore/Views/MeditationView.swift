@@ -58,7 +58,7 @@ struct MeditationView: View {
                             .padding(.vertical, 14)
                             .background(Theme.surface)
                             .foregroundStyle(Theme.textPrimary)
-                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
+                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness))
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                     .accessibilityLabel(isRunning ? "Pause" : "Start")
@@ -71,7 +71,7 @@ struct MeditationView: View {
                             .padding(.vertical, 14)
                             .background(Theme.surface)
                             .foregroundStyle(Theme.textPrimary)
-                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
+                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness))
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                     .accessibilityHint("Resets to the beginning of the breathing cycle")

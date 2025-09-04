@@ -48,7 +48,7 @@ struct JournalView: View {
                             .padding(14)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Theme.surface)
-                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: 1))
+                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness))
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                             .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
                             .listRowBackground(Color.clear)

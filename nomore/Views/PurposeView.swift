@@ -166,7 +166,7 @@ struct PurposeView: View {
             .background(Theme.surface)
             .overlay(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(Theme.surfaceStroke, lineWidth: 1)
+                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .softShadow()
@@ -366,7 +366,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
             .foregroundStyle(Theme.textPrimary)
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(Theme.surfaceStroke, lineWidth: 1)
+                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
             )
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }

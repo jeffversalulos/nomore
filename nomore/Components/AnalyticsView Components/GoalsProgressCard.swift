@@ -47,7 +47,7 @@ struct GoalsProgressCard: View {
                 .background(
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Theme.surface)
-                        .stroke(Theme.surfaceStroke, lineWidth: 1)
+                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                 )
                 .padding(.horizontal, 24)
                 .softShadow()

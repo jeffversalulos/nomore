@@ -20,7 +20,7 @@ struct QuitDatePredictionCard: View {
                         .fill(Theme.surface)
                         .overlay(
                             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .stroke(Theme.surfaceStroke, lineWidth: 1)
+                                .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                         )
                 )
         }

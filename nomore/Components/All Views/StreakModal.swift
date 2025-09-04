@@ -93,7 +93,7 @@ struct StreakModal: View {
                         .fill(Theme.surfaceTwo)
                         .overlay(
                             RoundedRectangle(cornerRadius: 24, style: .continuous)
-                                .stroke(Theme.surfaceStroke, lineWidth: 1)
+                                .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                         )
                 )
                 .padding(.horizontal, 20)

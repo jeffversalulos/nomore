@@ -72,7 +72,7 @@ struct CounterView: View {
                                 .foregroundStyle(.white.opacity(0.7))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                        .stroke(Theme.surfaceStroke, lineWidth: 0.5)
+                                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                                 )
                                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                         }
@@ -103,7 +103,7 @@ struct CounterView: View {
                         .foregroundStyle(Theme.textPrimary)
                         .overlay(
                             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .stroke(Theme.surfaceStroke, lineWidth: 1)
+                                .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                     }
@@ -186,7 +186,7 @@ struct CounterView: View {
                             .clipShape(Circle())
                             .overlay(
                                 Circle()
-                                    .stroke(Theme.surfaceStroke, lineWidth: 1)
+                                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                             )
                     }
                     .padding(.trailing, 16)

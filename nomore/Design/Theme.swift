@@ -15,7 +15,10 @@ enum Theme {
     // Surfaces
     static let surface = Color.black.opacity(0.25)
     static let surfaceTwo = Color.black.opacity(0.75)
-    static let surfaceStroke = Color.black.opacity(0.25)
+    static let surfaceStroke = Color.white.opacity(0.30)
+    
+    // Border thickness
+    static let borderThickness: CGFloat = 1.5
 
     // Background
     static var backgroundGradient: LinearGradient {

@@ -46,7 +46,7 @@ struct BrainRewiringProgressBar: View {
         .background(Theme.surface)
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Theme.surfaceStroke, lineWidth: 0.5)
+                .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
         )
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }

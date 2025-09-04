@@ -45,7 +45,7 @@ struct CustomTabBar: View {
                 .fill(Theme.surfaceTwo)
                 .overlay(
                     Capsule()
-                        .stroke(Theme.surfaceStroke, lineWidth: 1)
+                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                 )
         )
         .frame(width: min(UIScreen.main.bounds.width - 40, 340))

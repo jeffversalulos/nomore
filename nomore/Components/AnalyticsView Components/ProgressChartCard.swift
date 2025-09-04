@@ -23,7 +23,7 @@ struct ProgressChartCard: View {
                 .fill(Theme.surface)
                 .overlay(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Theme.surfaceStroke, lineWidth: 0.5)
+                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                 )
         )
         .padding(.horizontal, 24)

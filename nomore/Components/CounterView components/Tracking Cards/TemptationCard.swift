@@ -33,7 +33,7 @@ struct TemptationCard: View {
             .background(Theme.surface)
             .overlay(
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(Theme.surfaceStroke, lineWidth: 1)
+                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
             )
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             
