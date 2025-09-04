@@ -20,7 +20,7 @@ struct ContentView: View {
                         CounterView(selectedTab: $selectedTab)
                             .transition(.opacity)
                     } else if selectedTab == 1 {
-                        JournalView()
+                        AnalyticsView()
                             .transition(.opacity)
                     } else if selectedTab == 2 {
                         MeditationView()

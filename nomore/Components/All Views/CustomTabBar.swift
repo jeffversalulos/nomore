@@ -13,7 +13,7 @@ struct CustomTabBar: View {
     // Tab items data
     private let tabs = [
         (title: "Counter", icon: "timer"),
-        (title: "Journal", icon: "square.and.pencil"),
+        (title: "Analytics", icon: "chart.line.uptrend.xyaxis"),
         (title: "Meditate", icon: "brain.head.profile"),
         (title: "Purpose", icon: "ellipsis.circle")
     ]

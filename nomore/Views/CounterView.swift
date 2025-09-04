@@ -13,7 +13,6 @@ struct CounterView: View {
     @State private var showingMoreView = false
     @State private var showingStreakModal = false
     @State private var showingAchievementsSheet = false
-    @State private var showingAnalyticsView = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -86,7 +85,7 @@ struct CounterView: View {
 
                     // Analytics Button
                     Button {
-                        showingAnalyticsView = true
+                        selectedTab = 1
                     } label: {
                         HStack {
                             Image(systemName: "chart.line.uptrend.xyaxis")
@@ -162,12 +161,6 @@ struct CounterView: View {
             AchievementsSheet(isPresented: $showingAchievementsSheet)
                 .environmentObject(streakStore)
                 .environmentObject(achievementStore)
-        }
-        .sheet(isPresented: $showingAnalyticsView) {
-            AnalyticsView()
-                .environmentObject(streakStore)
-                .environmentObject(dailyUsageStore)
-                .environmentObject(goalsStore)
         }
     }
 }
