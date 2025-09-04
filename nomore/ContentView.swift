@@ -26,7 +26,7 @@ struct ContentView: View {
                         MeditationView()
                             .transition(.opacity)
                     } else if selectedTab == 3 {
-                        GoalsView()
+                        PurposeView()
                             .transition(.opacity)
                     }
                 }
@@ -69,6 +69,7 @@ struct ContentView: View {
         .environmentObject(StreakStore())
         .environmentObject(JournalStore())
         .environmentObject(GoalsStore())
+        .environmentObject(PurposeStore())
         .environmentObject(OnboardingManager())
         .environmentObject(dailyUsageStore)
         .environmentObject(AchievementStore())

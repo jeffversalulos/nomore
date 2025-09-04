@@ -16,6 +16,7 @@ final class AppContainer: ObservableObject {
     @Published private(set) var streakStore: StreakStore
     @Published private(set) var journalStore: JournalStore
     @Published private(set) var goalsStore: GoalsStore
+    @Published private(set) var purposeStore: PurposeStore
     @Published private(set) var onboardingManager: OnboardingManager
     @Published private(set) var dailyUsageStore: DailyUsageStore
     @Published private(set) var achievementStore: AchievementStore
@@ -30,6 +31,7 @@ final class AppContainer: ObservableObject {
         self.streakStore = StreakStore()
         self.journalStore = JournalStore()
         self.goalsStore = GoalsStore()
+        self.purposeStore = PurposeStore()
         self.onboardingManager = OnboardingManager()
         self.achievementStore = AchievementStore()
         
@@ -69,6 +71,7 @@ extension View {
             .environmentObject(container.streakStore)
             .environmentObject(container.journalStore)
             .environmentObject(container.goalsStore)
+            .environmentObject(container.purposeStore)
             .environmentObject(container.onboardingManager)
             .environmentObject(container.dailyUsageStore)
             .environmentObject(container.achievementStore)

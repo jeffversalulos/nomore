@@ -1,5 +1,5 @@
 //
-//  Goals.swift
+//  PurposeView.swift
 //  nomore
 //
 //  Created by Aa on 2025-08-14.
@@ -8,32 +8,32 @@
 import SwiftUI
 import PhotosUI
 
-struct GoalsView: View {
-    @EnvironmentObject var goalsStore: GoalsStore
-    @State private var showingAddGoal = false
-    @State private var showingSelectedGoals = false
+struct PurposeView: View {
+    @EnvironmentObject var purposeStore: PurposeStore
+    @State private var showingAddPurpose = false
+    @State private var showingSelectedPurposes = false
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 24) {
                 headerSection
                 
-                if !goalsStore.selectedGoals.isEmpty {
-                    selectedGoalsSection
+                if !purposeStore.selectedPurposes.isEmpty {
+                    selectedPurposesSection
                 }
                 
-                availableGoalsSection
+                availablePurposesSection
                 
-                addCustomGoalButton
+                addCustomPurposeButton
             }
             .padding(.horizontal, 20)
             .padding(.top, 20)
             .padding(.bottom, 100) // Add bottom padding to account for the custom tab bar
         }
         .preferredColorScheme(.dark)
-        .sheet(isPresented: $showingAddGoal) {
-            AddGoalSheet()
-                .environmentObject(goalsStore)
+        .sheet(isPresented: $showingAddPurpose) {
+            AddPurposeSheet()
+                .environmentObject(purposeStore)
         }
     }
     
@@ -48,7 +48,7 @@ struct GoalsView: View {
                 .foregroundStyle(Theme.textPrimary)
                 .multilineTextAlignment(.center)
             
-            Text("Select the goals that motivate you most. They'll remind you why this matters.")
+            Text("Select the purposes that motivate you most. They'll remind you why this matters.")
                 .font(.body)
                 .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
@@ -57,16 +57,16 @@ struct GoalsView: View {
         .padding(.bottom, 8)
     }
     
-    private var selectedGoalsSection: some View {
+    private var selectedPurposesSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text("Your Selected Goals")
+                Text("Your Selected Purposes")
                     .font(.headline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
                 
                 Spacer()
                 
-                Text("\(goalsStore.selectedGoals.count)")
+                Text("\(purposeStore.selectedPurposes.count)")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.accent)
                     .padding(.horizontal, 8)
@@ -75,27 +75,27 @@ struct GoalsView: View {
                     .clipShape(Capsule())
             }
             
-            let selectedGoals = goalsStore.selectedGoals
-            ForEach(0..<(selectedGoals.count + 1) / 2, id: \.self) { rowIndex in
+            let selectedPurposes = purposeStore.selectedPurposes
+            ForEach(0..<(selectedPurposes.count + 1) / 2, id: \.self) { rowIndex in
                 HStack(spacing: 12) {
                     let leftIndex = rowIndex * 2
                     let rightIndex = leftIndex + 1
                     
-                    if leftIndex < selectedGoals.count {
-                        GoalCard(goal: selectedGoals[leftIndex], isSelected: true) {
+                    if leftIndex < selectedPurposes.count {
+                        PurposeCard(purpose: selectedPurposes[leftIndex], isSelected: true) {
                             withAnimation(.spring(response: 0.4)) {
-                                goalsStore.toggleGoalSelection(selectedGoals[leftIndex])
+                                purposeStore.togglePurposeSelection(selectedPurposes[leftIndex])
                             }
                         }
                     }
                     
-                    if rightIndex < selectedGoals.count {
-                        GoalCard(goal: selectedGoals[rightIndex], isSelected: true) {
+                    if rightIndex < selectedPurposes.count {
+                        PurposeCard(purpose: selectedPurposes[rightIndex], isSelected: true) {
                             withAnimation(.spring(response: 0.4)) {
-                                goalsStore.toggleGoalSelection(selectedGoals[rightIndex])
+                                purposeStore.togglePurposeSelection(selectedPurposes[rightIndex])
                             }
                         }
-                    } else if leftIndex < selectedGoals.count {
+                    } else if leftIndex < selectedPurposes.count {
                         // Add spacer for odd number of items
                         Spacer()
                             .frame(maxWidth: .infinity)
@@ -105,33 +105,33 @@ struct GoalsView: View {
         }
     }
     
-    private var availableGoalsSection: some View {
+    private var availablePurposesSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Choose Your Goals")
+            Text("Choose Your Purposes")
                 .font(.headline.weight(.semibold))
                 .foregroundStyle(Theme.textPrimary)
             
-            let availableGoals = goalsStore.goals.filter { !$0.isSelected }
-            ForEach(0..<(availableGoals.count + 1) / 2, id: \.self) { rowIndex in
+            let availablePurposes = purposeStore.purposes.filter { !$0.isSelected }
+            ForEach(0..<(availablePurposes.count + 1) / 2, id: \.self) { rowIndex in
                 HStack(spacing: 12) {
                     let leftIndex = rowIndex * 2
                     let rightIndex = leftIndex + 1
                     
-                    if leftIndex < availableGoals.count {
-                        GoalCard(goal: availableGoals[leftIndex], isSelected: false) {
+                    if leftIndex < availablePurposes.count {
+                        PurposeCard(purpose: availablePurposes[leftIndex], isSelected: false) {
                             withAnimation(.spring(response: 0.4)) {
-                                goalsStore.toggleGoalSelection(availableGoals[leftIndex])
+                                purposeStore.togglePurposeSelection(availablePurposes[leftIndex])
                             }
                         }
                     }
                     
-                    if rightIndex < availableGoals.count {
-                        GoalCard(goal: availableGoals[rightIndex], isSelected: false) {
+                    if rightIndex < availablePurposes.count {
+                        PurposeCard(purpose: availablePurposes[rightIndex], isSelected: false) {
                             withAnimation(.spring(response: 0.4)) {
-                                goalsStore.toggleGoalSelection(availableGoals[rightIndex])
+                                purposeStore.togglePurposeSelection(availablePurposes[rightIndex])
                             }
                         }
-                    } else if leftIndex < availableGoals.count {
+                    } else if leftIndex < availablePurposes.count {
                         // Add spacer for odd number of items
                         Spacer()
                             .frame(maxWidth: .infinity)
@@ -141,9 +141,9 @@ struct GoalsView: View {
         }
     }
     
-    private var addCustomGoalButton: some View {
+    private var addCustomPurposeButton: some View {
         Button {
-            showingAddGoal = true
+            showingAddPurpose = true
         } label: {
             HStack(spacing: 12) {
                 Image(systemName: "plus.circle.fill")
@@ -151,7 +151,7 @@ struct GoalsView: View {
                     .foregroundStyle(Theme.accent)
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Add Custom Goal")
+                    Text("Add Custom Purpose")
                         .font(.headline)
                         .foregroundStyle(Theme.textPrimary)
                     
@@ -175,8 +175,8 @@ struct GoalsView: View {
     }
 }
 
-struct GoalCard: View {
-    let goal: Goal
+struct PurposeCard: View {
+    let purpose: Purpose
     let isSelected: Bool
     let onTap: () -> Void
     
@@ -184,27 +184,27 @@ struct GoalCard: View {
         Button(action: onTap) {
             VStack(spacing: 12) {
                 // Icon or Image
-                if let imageData = goal.customImageData,
+                if let imageData = purpose.customImageData,
                    let uiImage = UIImage(data: imageData) {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 40, height: 40)
                         .clipShape(Circle())
-                } else if let systemImage = goal.systemImage {
+                } else if let systemImage = purpose.systemImage {
                     Image(systemName: systemImage)
                         .font(.system(size: 28, weight: .medium))
                         .foregroundStyle(isSelected ? Theme.accent : Theme.textSecondary)
                 }
                 
                 VStack(spacing: 4) {
-                    Text(goal.title)
+                    Text(purpose.title)
                         .font(.headline.weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
                     
-                    Text(goal.description)
+                    Text(purpose.description)
                         .font(.caption)
                         .foregroundStyle(Theme.textSecondary)
                         .multilineTextAlignment(.center)
@@ -233,8 +233,8 @@ struct GoalCard: View {
     }
 }
 
-struct AddGoalSheet: View {
-    @EnvironmentObject var goalsStore: GoalsStore
+struct AddPurposeSheet: View {
+    @EnvironmentObject var purposeStore: PurposeStore
     @Environment(\.dismiss) private var dismiss
     
     @State private var title = ""
@@ -287,7 +287,7 @@ struct AddGoalSheet: View {
                     // Text fields
                     VStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Goal Title")
+                            Text("Purpose Title")
                                 .font(.headline.weight(.semibold))
                                 .foregroundStyle(Theme.textPrimary)
                             
@@ -300,7 +300,7 @@ struct AddGoalSheet: View {
                                 .font(.headline.weight(.semibold))
                                 .foregroundStyle(Theme.textPrimary)
                             
-                            TextField("Describe what motivates you about this goal", text: $description, axis: .vertical)
+                            TextField("Describe what motivates you about this purpose", text: $description, axis: .vertical)
                                 .lineLimit(3...6)
                                 .textFieldStyle(CustomTextFieldStyle())
                         }
@@ -310,9 +310,9 @@ struct AddGoalSheet: View {
                     
                     // Save button
                     Button {
-                        addGoal()
+                        addPurpose()
                     } label: {
-                        Text("Add Goal")
+                        Text("Add Purpose")
                             .font(.headline.weight(.semibold))
                             .frame(maxWidth: .infinity)
                             .padding(16)
@@ -324,7 +324,7 @@ struct AddGoalSheet: View {
                 }
                 .padding(20)
                 }
-                .navigationTitle("Add Custom Goal")
+                .navigationTitle("Add Custom Purpose")
                 .navigationBarTitleDisplayMode(.inline)
                 .preferredColorScheme(.dark)
                 .toolbar {
@@ -348,8 +348,8 @@ struct AddGoalSheet: View {
         }
     }
     
-    private func addGoal() {
-        goalsStore.addCustomGoal(
+    private func addPurpose() {
+        purposeStore.addCustomPurpose(
             title: title,
             description: description,
             imageData: imageData
@@ -373,6 +373,6 @@ struct CustomTextFieldStyle: TextFieldStyle {
 }
 
 #Preview {
-    GoalsView()
-        .environmentObject(GoalsStore())
+    PurposeView()
+        .environmentObject(PurposeStore())
 }

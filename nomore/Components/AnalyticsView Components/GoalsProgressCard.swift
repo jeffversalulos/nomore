@@ -16,7 +16,7 @@ struct GoalsProgressCard: View {
         "Improved focus and clarity": 21     // 3 weeks for cognitive improvements
     ]
     
-    var selectedGoals: [Goal] {
+    var selectedGoals: [String] {
         goalsStore.selectedGoals
     }
     
@@ -34,11 +34,11 @@ struct GoalsProgressCard: View {
                 
                 // Goals container
                 VStack(spacing: 16) {
-                    ForEach(selectedGoals) { goal in
+                    ForEach(selectedGoals, id: \.self) { goalTitle in
                         GoalProgressRow(
-                            goal: goal,
-                            progress: calculateProgress(for: goal),
-                            timeRemaining: calculateTimeRemaining(for: goal)
+                            goalTitle: goalTitle,
+                            progress: calculateProgress(for: goalTitle),
+                            timeRemaining: calculateTimeRemaining(for: goalTitle)
                         )
                     }
                 }
@@ -55,23 +55,23 @@ struct GoalsProgressCard: View {
         }
     }
     
-    private func calculateProgress(for goal: Goal) -> Double {
+    private func calculateProgress(for goalTitle: String) -> Double {
         let secondsSinceLastRelapse = currentTime.timeIntervalSince(streakStore.lastRelapseDate)
         let daysSinceLastRelapse = secondsSinceLastRelapse / (24 * 3600)
         
         // Get the timeframe for this goal (default to 60 days if not found)
-        let goalTimeframe = Double(goalTimeframes[goal.title] ?? 60)
+        let goalTimeframe = Double(goalTimeframes[goalTitle] ?? 60)
         
         // Calculate progress (0.0 to 1.0)
         let progress = min(daysSinceLastRelapse / goalTimeframe, 1.0)
         return max(progress, 0.0)
     }
     
-    private func calculateTimeRemaining(for goal: Goal) -> String {
+    private func calculateTimeRemaining(for goalTitle: String) -> String {
         let secondsSinceLastRelapse = currentTime.timeIntervalSince(streakStore.lastRelapseDate)
         let daysSinceLastRelapse = Int(secondsSinceLastRelapse / (24 * 3600))
         
-        let goalTimeframe = goalTimeframes[goal.title] ?? 60
+        let goalTimeframe = goalTimeframes[goalTitle] ?? 60
         let remainingDays = max(goalTimeframe - daysSinceLastRelapse, 0)
         
         if remainingDays == 0 {
@@ -101,16 +101,27 @@ struct GoalsProgressCard: View {
 }
 
 struct GoalProgressRow: View {
-    let goal: Goal
+    let goalTitle: String
     let progress: Double
     let timeRemaining: String
+    
+    // Map goal titles to icons
+    private let goalIcons: [String: String] = [
+        "Stronger relationships": "heart.fill",
+        "Improved self-confidence": "person.fill",
+        "Improved mood and happiness": "face.smiling.fill",
+        "More energy and motivation": "bolt.fill",
+        "Improved desire and sex life": "doc.text.fill",
+        "Improved self-control": "brain.head.profile",
+        "Improved focus and clarity": "target"
+    ]
     
     var body: some View {
         VStack(spacing: 12) {
             // Goal header
             HStack {
                 // Goal icon
-                if let systemImage = goal.systemImage {
+                if let systemImage = goalIcons[goalTitle] {
                     Image(systemName: systemImage)
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(Theme.accent)
@@ -118,7 +129,7 @@ struct GoalProgressRow: View {
                 }
                 
                 // Goal title
-                Text(goal.title)
+                Text(goalTitle)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(Theme.textPrimary)
                     .multilineTextAlignment(.leading)

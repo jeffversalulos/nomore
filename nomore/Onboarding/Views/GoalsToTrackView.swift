@@ -152,20 +152,7 @@ struct GoalsToTrackView: View {
         goalsStore.clearAllSelections()
         
         // Transfer selected onboarding goals to the store
-        for goalTitle in manager.profile.selectedGoalIds {
-            // Try to find matching goal by title, otherwise create a custom goal
-            if let existingGoal = goalsStore.goals.first(where: { $0.title.lowercased().contains(goalTitle.lowercased().split(separator: " ").first ?? "") }) {
-                if !existingGoal.isSelected {
-                    goalsStore.toggleGoalSelection(existingGoal)
-                }
-            } else {
-                // Create a new custom goal
-                goalsStore.addCustomGoal(
-                    title: goalTitle,
-                    description: "Selected during onboarding"
-                )
-            }
-        }
+        goalsStore.setGoals(manager.profile.selectedGoalIds)
     }
 }
 
