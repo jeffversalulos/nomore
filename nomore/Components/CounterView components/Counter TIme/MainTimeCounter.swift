@@ -46,7 +46,7 @@ struct MainTimeCounter: View {
                         .font(.system(size: 90, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .contentTransition(.numericText())
-                    Text("m")
+                    Text(components.minutes == 1 ? "minute" : "minutes")
                         .font(.system(size: 55, weight: .bold))
                         .foregroundStyle(.white)
                         .offset(y: -12)
