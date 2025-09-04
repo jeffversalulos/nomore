@@ -68,6 +68,48 @@ final class AchievementStore: ObservableObject {
                 daysRequired: 30,
                 iconName: "lock",
                 unlockNumber: 6
+            ),
+            Achievement(
+                title: "Resilient Spirit",
+                description: "Forty days of unwavering commitment. You've weathered storms and emerged stronger. Your resilience is becoming unbreakable.",
+                daysRequired: 40,
+                iconName: "lock",
+                unlockNumber: 7
+            ),
+            Achievement(
+                title: "Golden Milestone",
+                description: "Fifty days of pure dedication—you've reached a golden milestone. Your willpower has been forged into something extraordinary.",
+                daysRequired: 50,
+                iconName: "lock",
+                unlockNumber: 8
+            ),
+            Achievement(
+                title: "Mindful Mastery",
+                description: "Two months of conscious choice and mindful living. You've mastered the art of saying no and meaning it. True freedom is yours.",
+                daysRequired: 60,
+                iconName: "lock",
+                unlockNumber: 9
+            ),
+            Achievement(
+                title: "Unstoppable Force",
+                description: "Seventy days of relentless progress. You've become an unstoppable force of positive change. Nothing can break your momentum now.",
+                daysRequired: 70,
+                iconName: "lock",
+                unlockNumber: 10
+            ),
+            Achievement(
+                title: "Phoenix Rising",
+                description: "Eighty days of rebirth and renewal. Like a phoenix, you've risen from the ashes stronger, wiser, and more determined than ever.",
+                daysRequired: 80,
+                iconName: "lock",
+                unlockNumber: 11
+            ),
+            Achievement(
+                title: "Summit Conqueror",
+                description: "Ninety days at the peak of your power. You've conquered the summit of self-discipline. The view from here is breathtaking.",
+                daysRequired: 90,
+                iconName: "lock",
+                unlockNumber: 12
             )
         ]
     }
