@@ -22,7 +22,7 @@ struct StreakCounter: View {
             
             // Dedicated bubble counter - shows appropriate units based on time
             SmallerUnitsCounter(components: components)
-                .padding(.top, -4)
+                .padding(.top, -20)
         }
     }
 }

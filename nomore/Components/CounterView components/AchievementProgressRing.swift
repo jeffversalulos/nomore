@@ -75,7 +75,7 @@ struct AchievementProgressRing: View {
                     .foregroundStyle(Color.white.opacity(0.4))
             }
         }
-        .frame(width: 180, height: 180)
+        .frame(width: 200, height: 200)
     }
 }
 
