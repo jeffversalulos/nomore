@@ -94,13 +94,19 @@ struct MeditationView: View {
                                 .font(.headline)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
-                                .background(Theme.mint)
-                                .foregroundStyle(.white)
+                                .background(Theme.surface)
+                                .foregroundStyle(Theme.textPrimary)
+                                .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.mint.opacity(0.5), lineWidth: Theme.borderThickness))
                                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                         }
                         .accessibilityHint("Complete the meditation session")
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: .bottom)),
+                            removal: .opacity.combined(with: .move(edge: .bottom))
+                        ))
                     }
                 }
+                .animation(.easeInOut(duration: 0.4), value: isRunning)
                 .padding(.horizontal)
 
                 Spacer()
