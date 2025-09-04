@@ -59,10 +59,6 @@ struct GoalsToTrackView: View {
     
     var body: some View {
         ZStack {
-            // Background
-            Theme.backgroundGradient
-                .ignoresSafeArea()
-
             VStack(spacing: 0) {
                 // Header
                 VStack(spacing: 12) {

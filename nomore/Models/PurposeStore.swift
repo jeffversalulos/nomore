@@ -6,7 +6,7 @@ struct Purpose: Identifiable, Codable, Equatable {
     var title: String
     var description: String
     var systemImage: String?
-    var customImageData: Data?
+    var customImageFileName: String? // Store filename instead of data
     var isSelected: Bool
     var dateCreated: Date
     
@@ -15,7 +15,7 @@ struct Purpose: Identifiable, Codable, Equatable {
         title: String,
         description: String,
         systemImage: String? = nil,
-        customImageData: Data? = nil,
+        customImageFileName: String? = nil,
         isSelected: Bool = false,
         dateCreated: Date = Date()
     ) {
@@ -23,9 +23,15 @@ struct Purpose: Identifiable, Codable, Equatable {
         self.title = title
         self.description = description
         self.systemImage = systemImage
-        self.customImageData = customImageData
+        self.customImageFileName = customImageFileName
         self.isSelected = isSelected
         self.dateCreated = dateCreated
+    }
+    
+    // Helper to get the actual image data when needed
+    var customImageData: Data? {
+        guard let fileName = customImageFileName else { return nil }
+        return PurposeStore.loadImageData(fileName: fileName)
     }
 }
 
@@ -33,8 +39,8 @@ struct Purpose: Identifiable, Codable, Equatable {
 final class PurposeStore: ObservableObject {
     @Published private(set) var purposes: [Purpose] = []
     
-    private let defaultsKey = "recoveryPurposesJSON"
-    private let defaults = UserDefaults.standard
+    private let purposesFileName = "purposes.json"
+    private let imagesDirectoryName = "purpose_images"
     
     private let encoder: JSONEncoder = {
         let e = JSONEncoder()
@@ -49,25 +55,52 @@ final class PurposeStore: ObservableObject {
     }()
     
     init() {
+        createImagesDirectoryIfNeeded()
         load()
         if purposes.isEmpty {
             setupDefaultPurposes()
         }
     }
     
+    // MARK: - File Storage Methods
+    
+    private var documentsDirectory: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    }
+    
+    private var purposesFileURL: URL {
+        documentsDirectory.appendingPathComponent(purposesFileName)
+    }
+    
+    private var imagesDirectoryURL: URL {
+        documentsDirectory.appendingPathComponent(imagesDirectoryName)
+    }
+    
+    private func createImagesDirectoryIfNeeded() {
+        try? FileManager.default.createDirectory(
+            at: imagesDirectoryURL,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
+    }
+    
     private func load() {
-        guard let json = defaults.string(forKey: defaultsKey),
-              let data = json.data(using: .utf8) else {
+        do {
+            let data = try Data(contentsOf: purposesFileURL)
+            purposes = try decoder.decode([Purpose].self, from: data)
+        } catch {
+            // File doesn't exist or is corrupted, start fresh
             purposes = []
-            return
         }
-        purposes = (try? decoder.decode([Purpose].self, from: data)) ?? []
     }
     
     private func persist() {
-        guard let data = try? encoder.encode(purposes),
-              let json = String(data: data, encoding: .utf8) else { return }
-        defaults.set(json, forKey: defaultsKey)
+        do {
+            let data = try encoder.encode(purposes)
+            try data.write(to: purposesFileURL)
+        } catch {
+            print("Failed to save purposes: \(error)")
+        }
     }
     
     private func setupDefaultPurposes() {
@@ -126,10 +159,17 @@ final class PurposeStore: ObservableObject {
     }
     
     func addCustomPurpose(title: String, description: String, imageData: Data? = nil) {
+        var imageFileName: String? = nil
+        
+        // Save image to file if provided
+        if let imageData = imageData {
+            imageFileName = saveImageData(imageData)
+        }
+        
         let newPurpose = Purpose(
             title: title,
             description: description,
-            customImageData: imageData,
+            customImageFileName: imageFileName,
             isSelected: true
         )
         purposes.append(newPurpose)
@@ -137,6 +177,11 @@ final class PurposeStore: ObservableObject {
     }
     
     func deletePurpose(_ purpose: Purpose) {
+        // Delete associated image file if it exists
+        if let fileName = purpose.customImageFileName {
+            deleteImageFile(fileName: fileName)
+        }
+        
         purposes.removeAll { $0.id == purpose.id }
         persist()
     }
@@ -150,5 +195,33 @@ final class PurposeStore: ObservableObject {
             purposes[index].isSelected = false
         }
         persist()
+    }
+    
+    // MARK: - Image File Management
+    
+    private func saveImageData(_ data: Data) -> String? {
+        let fileName = "\(UUID().uuidString).jpg"
+        let fileURL = imagesDirectoryURL.appendingPathComponent(fileName)
+        
+        do {
+            try data.write(to: fileURL)
+            return fileName
+        } catch {
+            print("Failed to save image: \(error)")
+            return nil
+        }
+    }
+    
+    static func loadImageData(fileName: String) -> Data? {
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let imagesDirectoryURL = documentsDirectory.appendingPathComponent("purpose_images")
+        let fileURL = imagesDirectoryURL.appendingPathComponent(fileName)
+        
+        return try? Data(contentsOf: fileURL)
+    }
+    
+    private func deleteImageFile(fileName: String) {
+        let fileURL = imagesDirectoryURL.appendingPathComponent(fileName)
+        try? FileManager.default.removeItem(at: fileURL)
     }
 }
