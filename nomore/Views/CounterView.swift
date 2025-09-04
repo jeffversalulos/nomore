@@ -13,6 +13,7 @@ struct CounterView: View {
     @State private var showingMoreView = false
     @State private var showingStreakModal = false
     @State private var showingAchievementsSheet = false
+    @State private var showingAnalyticsView = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -83,6 +84,30 @@ struct CounterView: View {
                     TrackingCards(startDate: streakStore.lastRelapseDate)
                         .padding(.top, 24)
 
+                    // Analytics Button
+                    Button {
+                        showingAnalyticsView = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .font(.system(size: 18, weight: .medium))
+                            Text("View Analytics")
+                                .font(.system(size: 16, weight: .medium))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 24)
+                        .background(Theme.surface)
+                        .foregroundStyle(Theme.textPrimary)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .stroke(Theme.surfaceStroke, lineWidth: 1)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.top, 32)
+
                     // Add some bottom padding for better scrolling experience
                     Spacer(minLength: 50)
                 }
@@ -137,6 +162,12 @@ struct CounterView: View {
             AchievementsSheet(isPresented: $showingAchievementsSheet)
                 .environmentObject(streakStore)
                 .environmentObject(achievementStore)
+        }
+        .sheet(isPresented: $showingAnalyticsView) {
+            AnalyticsView()
+                .environmentObject(streakStore)
+                .environmentObject(dailyUsageStore)
+                .environmentObject(goalsStore)
         }
     }
 }

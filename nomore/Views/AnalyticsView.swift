@@ -3,6 +3,7 @@ import SwiftUI
 struct AnalyticsView: View {
     @EnvironmentObject var streakStore: StreakStore
     @EnvironmentObject var dailyUsageStore: DailyUsageStore
+    @EnvironmentObject var goalsStore: GoalsStore
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -27,6 +28,11 @@ struct AnalyticsView: View {
                         // Recovery Progress Circle - Using extracted component
                         RecoveryProgressCard(currentTime: now)
                             .environmentObject(streakStore)
+                        
+                        // Goals Progress Section - Using extracted component
+                        GoalsProgressCard(currentTime: now)
+                            .environmentObject(streakStore)
+                            .environmentObject(goalsStore)
                         
                         // Quit Date Prediction - Using extracted component
                         QuitDatePredictionCard()
@@ -59,4 +65,5 @@ struct AnalyticsView: View {
     AnalyticsView()
         .environmentObject(StreakStore())
         .environmentObject(DailyUsageStore())
+        .environmentObject(GoalsStore())
 }
