@@ -13,7 +13,7 @@ enum Theme {
     static let textSecondary = Color.white.opacity(0.85)
 
     // Surfaces
-    static let surface = Color.black.opacity(0.15)
+    static let surface = Color.black.opacity(0.25)
     static let surfaceTwo = Color.black.opacity(0.75)
     static let surfaceStroke = Color.black.opacity(0.25)
 
