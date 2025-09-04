@@ -13,6 +13,7 @@ struct CounterView: View {
     @State private var showingMoreView = false
     @State private var showingStreakModal = false
     @State private var showingAchievementsSheet = false
+    @State private var showingJournalView = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -109,6 +110,60 @@ struct CounterView: View {
                     .padding(.horizontal, 24)
                     .padding(.top, 32)
 
+                    // Daily Reflection Component
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            showingJournalView = true
+                        }
+                    } label: {
+                        VStack(spacing: 12) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Daily Reflection")
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .foregroundStyle(Theme.textPrimary)
+                                    Text("Take a moment to reflect on your journey")
+                                        .font(.system(size: 14, weight: .regular))
+                                        .foregroundStyle(Theme.textSecondary)
+                                        .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                                Image(systemName: "pencil.line")
+                                    .font(.system(size: 20, weight: .medium))
+                                    .foregroundStyle(Theme.accent)
+                            }
+                            
+                            HStack {
+                                Image(systemName: "heart.text.square")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundStyle(Theme.mint)
+                                Text("Express your thoughts and feelings")
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundStyle(Theme.textSecondary)
+                                Spacer()
+                            }
+                        }
+                        .padding(20)
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .fill(Theme.surface)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                        .stroke(
+                                            LinearGradient(
+                                                colors: [Theme.accent.opacity(0.3), Theme.mint.opacity(0.2)],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ),
+                                            lineWidth: 1
+                                        )
+                                )
+                        )
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.top, 20)
+
                     // Add some bottom padding for better scrolling experience
                     Spacer(minLength: 50)
                 }
@@ -163,6 +218,10 @@ struct CounterView: View {
             AchievementsSheet(isPresented: $showingAchievementsSheet)
                 .environmentObject(streakStore)
                 .environmentObject(achievementStore)
+        }
+        .sheet(isPresented: $showingJournalView) {
+            JournalView()
+                .environmentObject(journalStore)
         }
     }
 }
