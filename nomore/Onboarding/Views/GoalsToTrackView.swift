@@ -165,7 +165,7 @@ struct GoalCardSimple: View {
                 // Icon
                 ZStack {
                     Circle()
-                        .fill(Color.white.opacity(0.2))
+                        .fill(Theme.surface)
                         .frame(width: 44, height: 44)
                     
                     Image(systemName: icon)

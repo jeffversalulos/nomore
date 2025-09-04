@@ -32,7 +32,7 @@ struct OnboardingQuestionView: View {
                         ZStack(alignment: .leading) {
                             // Background
                             Capsule()
-                                .fill(Color.white.opacity(0.2))
+                                .fill(Theme.surface)
                                 .frame(height: 6)
                             
                             // Progress

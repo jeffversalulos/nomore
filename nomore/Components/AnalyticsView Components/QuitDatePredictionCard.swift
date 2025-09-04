@@ -17,10 +17,10 @@ struct QuitDatePredictionCard: View {
                 .padding(.vertical, 12)
                 .background(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(.white.opacity(0.08))
+                        .fill(Theme.surface)
                         .overlay(
                             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .stroke(.white.opacity(0.15), lineWidth: 1)
+                                .stroke(Theme.surfaceStroke, lineWidth: 1)
                         )
                 )
         }

@@ -20,10 +20,10 @@ struct ProgressChartCard: View {
         .padding(.vertical, 20)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(.white.opacity(0.05))
+                .fill(Theme.surface)
                 .overlay(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(.white.opacity(0.1), lineWidth: 0.5)
+                        .stroke(Theme.surfaceStroke, lineWidth: 0.5)
                 )
         )
         .padding(.horizontal, 24)

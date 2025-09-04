@@ -22,7 +22,7 @@ struct BrainRewiringProgressBar: View {
                 ZStack(alignment: .leading) {
                     // Background track
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(.white.opacity(0.15))
+                        .fill(Theme.surface)
                         .frame(height: 8)
                     
                     // Progress fill
@@ -43,10 +43,10 @@ struct BrainRewiringProgressBar: View {
         .padding(.horizontal, 24)
         .padding(.vertical, 16)
         //this:
-        .background(.white.opacity(0.05))
+        .background(Theme.surface)
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(.white.opacity(0.1), lineWidth: 0.5)
+                .stroke(Theme.surfaceStroke, lineWidth: 0.5)
         )
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }

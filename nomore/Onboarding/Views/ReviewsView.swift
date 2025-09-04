@@ -240,10 +240,10 @@ struct ReviewCard: View {
         .padding(20)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.white.opacity(0.08))
+                .fill(Theme.surface)
                 .overlay(
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                        .stroke(Theme.surfaceStroke, lineWidth: 1)
                 )
         )
         .opacity(showContent ? 1.0 : 0.0)

@@ -30,10 +30,10 @@ struct TemptationCard: View {
             .frame(maxWidth: .infinity, maxHeight: 110)
             .padding(.horizontal, 12)
             .padding(.vertical, 16)
-            .background(.white.opacity(0.08))
+            .background(Theme.surface)
             .overlay(
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(.white.opacity(0.15), lineWidth: 1)
+                    .stroke(Theme.surfaceStroke, lineWidth: 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             

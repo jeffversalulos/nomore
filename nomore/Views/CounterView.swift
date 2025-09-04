@@ -68,11 +68,11 @@ struct CounterView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
                                 .padding(.horizontal, 24)
-                                .background(.white.opacity(0.04))
+                                .background(Theme.surface)
                                 .foregroundStyle(.white.opacity(0.7))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                        .stroke(.white.opacity(0.1), lineWidth: 0.5)
+                                        .stroke(Theme.surfaceStroke, lineWidth: 0.5)
                                 )
                                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                         }
