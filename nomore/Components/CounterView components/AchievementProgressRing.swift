@@ -61,6 +61,19 @@ struct AchievementProgressRing: View {
                 )
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 0.3), value: progressData.progress)
+            
+            // Center achievement icon
+            if let currentAchievement = progressData.current {
+                // Show the most recent achievement icon
+                Image(systemName: currentAchievement.iconName)
+                    .font(.system(size: 40, weight: .medium))
+                    .foregroundStyle(Theme.textPrimary)
+            } else {
+                // Show grayed-out lock if no achievements unlocked yet
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 40, weight: .medium))
+                    .foregroundStyle(Color.white.opacity(0.4))
+            }
         }
         .frame(width: 220, height: 220)
     }
