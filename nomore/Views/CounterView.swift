@@ -34,10 +34,10 @@ struct CounterView: View {
                         WeeklyProgressTracker()
                             .padding(.horizontal, 24)
 
-                    // Decorative progress ring (90-day horizon)
-                    let secondsSince = now.timeIntervalSince(streakStore.lastRelapseDate)
-                    let progress = min(max(secondsSince / (90 * 24 * 3600), 0), 1)
-                    SobrietyRing(progress: progress)
+                    // Achievement progress ring
+                    let achievementSeconds = now.timeIntervalSince(streakStore.lastRelapseDate)
+                    let achievementDays = achievementSeconds / (24 * 3600) // Keep as Double for fractional days
+                    AchievementProgressRing(daysSinceLastRelapse: achievementDays, achievementStore: achievementStore)
 
                     let components = calculateTimeComponents(from: streakStore.lastRelapseDate, to: now)
                     StreakCounter(components: components)

@@ -28,11 +28,18 @@ final class AchievementStore: ObservableObject {
     private func setupAchievements() {
         achievements = [
             Achievement(
+                title: "First Breath",
+                description: "Two hours of strength and commitment. Every moment of resistance is a victory. You've already started something incredible.",
+                daysRequired: 0,
+                iconName: "lungs.fill",
+                unlockNumber: 1
+            ),
+            Achievement(
                 title: "First Steps",
                 description: "Today marks the beginning of something powerful. This decision is a promise to yourself. Small steps create big change.",
                 daysRequired: 1,
                 iconName: "medal",
-                unlockNumber: 1
+                unlockNumber: 2
             ),
             Achievement(
                 title: "Momentum Builder",
