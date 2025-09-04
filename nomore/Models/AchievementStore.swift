@@ -38,77 +38,77 @@ final class AchievementStore: ObservableObject {
                 title: "Momentum Builder",
                 description: "The first few days are tough—but you're tougher. You're already proving your strength. Keep your reasons close.",
                 daysRequired: 3,
-                iconName: "lock",
+                iconName: "arrow.up.circle.fill",
                 unlockNumber: 2
             ),
             Achievement(
                 title: "Breakthrough",
                 description: "You've pushed through the initial resistance. Momentum is building, and the shift has begun. Keep going.",
                 daysRequired: 5,
-                iconName: "lock",
+                iconName: "bolt.circle.fill",
                 unlockNumber: 3
             ),
             Achievement(
                 title: "Mind Shift",
                 description: "Your mind is beginning to adapt. New neural pathways are forming. You're becoming the person you want to be.",
                 daysRequired: 7,
-                iconName: "lock",
+                iconName: "brain.head.profile",
                 unlockNumber: 4
             ),
             Achievement(
                 title: "Foundation",
                 description: "Two weeks of commitment shows real dedication. You're building a solid foundation for lasting change.",
                 daysRequired: 14,
-                iconName: "lock",
+                iconName: "building.columns.fill",
                 unlockNumber: 5
             ),
             Achievement(
                 title: "Transformation",
                 description: "A month of progress—your discipline is transforming into habit. The new you is emerging stronger every day.",
                 daysRequired: 30,
-                iconName: "lock",
+                iconName: "sparkles",
                 unlockNumber: 6
             ),
             Achievement(
                 title: "Resilient Spirit",
                 description: "Forty days of unwavering commitment. You've weathered storms and emerged stronger. Your resilience is becoming unbreakable.",
                 daysRequired: 40,
-                iconName: "lock",
+                iconName: "shield.fill",
                 unlockNumber: 7
             ),
             Achievement(
                 title: "Golden Milestone",
                 description: "Fifty days of pure dedication—you've reached a golden milestone. Your willpower has been forged into something extraordinary.",
                 daysRequired: 50,
-                iconName: "lock",
+                iconName: "star.circle.fill",
                 unlockNumber: 8
             ),
             Achievement(
                 title: "Mindful Mastery",
                 description: "Two months of conscious choice and mindful living. You've mastered the art of saying no and meaning it. True freedom is yours.",
                 daysRequired: 60,
-                iconName: "lock",
+                iconName: "figure.mind.and.body",
                 unlockNumber: 9
             ),
             Achievement(
                 title: "Unstoppable Force",
                 description: "Seventy days of relentless progress. You've become an unstoppable force of positive change. Nothing can break your momentum now.",
                 daysRequired: 70,
-                iconName: "lock",
+                iconName: "tornado",
                 unlockNumber: 10
             ),
             Achievement(
                 title: "Phoenix Rising",
                 description: "Eighty days of rebirth and renewal. Like a phoenix, you've risen from the ashes stronger, wiser, and more determined than ever.",
                 daysRequired: 80,
-                iconName: "lock",
+                iconName: "flame.fill",
                 unlockNumber: 11
             ),
             Achievement(
                 title: "Summit Conqueror",
                 description: "Ninety days at the peak of your power. You've conquered the summit of self-discipline. The view from here is breathtaking.",
                 daysRequired: 90,
-                iconName: "lock",
+                iconName: "mountain.2.fill",
                 unlockNumber: 12
             )
         ]
