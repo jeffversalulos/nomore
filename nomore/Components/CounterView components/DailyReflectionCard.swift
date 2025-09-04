@@ -9,9 +9,9 @@ struct DailyReflectionCard: View {
                 showingJournalView = true
             }
         } label: {
-            VStack(spacing: 12) {
+            VStack(spacing: 24) {
                 HStack {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 6) {
                         Text("Daily Reflection")
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(Theme.textPrimary)
@@ -26,7 +26,7 @@ struct DailyReflectionCard: View {
                         .foregroundStyle(Theme.accent)
                 }
                 
-                HStack {
+                HStack(spacing: 10) {
                     Image(systemName: "heart.text.square")
                         .font(.system(size: 16, weight: .medium))
                         .foregroundStyle(Theme.mint)
@@ -47,6 +47,16 @@ struct DailyReflectionCard: View {
                     )
             )
         }
+        .buttonStyle(ReflectionCardButtonStyle())
+    }
+}
+
+struct ReflectionCardButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .opacity(configuration.isPressed ? 0.9 : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 
