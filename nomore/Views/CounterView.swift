@@ -85,7 +85,9 @@ struct CounterView: View {
 
                     // Analytics Button
                     Button {
-                        selectedTab = 1
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            selectedTab = 1
+                        }
                     } label: {
                         HStack {
                             Image(systemName: "chart.line.uptrend.xyaxis")
