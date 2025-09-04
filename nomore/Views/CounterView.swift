@@ -37,7 +37,7 @@ struct CounterView: View {
                     // Achievement progress ring
                     let achievementSeconds = now.timeIntervalSince(streakStore.lastRelapseDate)
                     let achievementDays = achievementSeconds / (24 * 3600) // Keep as Double for fractional days
-                    AchievementProgressRing(daysSinceLastRelapse: achievementDays, achievementStore: achievementStore)
+                    AchievementProgressRing(daysSinceLastRelapse: achievementDays, achievementStore: achievementStore, showingAchievementsSheet: $showingAchievementsSheet)
 
                     let components = calculateTimeComponents(from: streakStore.lastRelapseDate, to: now)
                     StreakCounter(components: components)

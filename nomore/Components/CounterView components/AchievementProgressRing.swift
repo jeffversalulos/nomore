@@ -10,6 +10,7 @@ import SwiftUI
 struct AchievementProgressRing: View {
     let daysSinceLastRelapse: Double // Changed to Double for fractional days
     let achievementStore: AchievementStore
+    @Binding var showingAchievementsSheet: Bool
     
     private var progressData: (current: Achievement?, next: Achievement?, progress: Double) {
         let unlockedAchievements = achievementStore.achievements.filter { 
@@ -62,17 +63,21 @@ struct AchievementProgressRing: View {
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 0.3), value: progressData.progress)
             
-            // Center achievement icon
-            if let currentAchievement = progressData.current {
-                // Show the most recent achievement icon
-                Image(systemName: currentAchievement.iconName)
-                    .font(.system(size: 40, weight: .medium))
-                    .foregroundStyle(Theme.textPrimary)
-            } else {
-                // Show grayed-out lock if no achievements unlocked yet
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 40, weight: .medium))
-                    .foregroundStyle(Color.white.opacity(0.4))
+            // Center achievement icon - clickable
+            Button {
+                showingAchievementsSheet = true
+            } label: {
+                if let currentAchievement = progressData.current {
+                    // Show the most recent achievement icon
+                    Image(systemName: currentAchievement.iconName)
+                        .font(.system(size: 40, weight: .medium))
+                        .foregroundStyle(Theme.textPrimary)
+                } else {
+                    // Show grayed-out lock if no achievements unlocked yet
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 40, weight: .medium))
+                        .foregroundStyle(Color.white.opacity(0.4))
+                }
             }
         }
         .frame(width: 200, height: 200)
@@ -86,17 +91,20 @@ struct AchievementProgressRing: View {
             // Preview with different progress states
             AchievementProgressRing(
                 daysSinceLastRelapse: 0.42, // 10 hours - should show ~42% between "First Breath" and "First Steps"
-                achievementStore: AchievementStore()
+                achievementStore: AchievementStore(),
+                showingAchievementsSheet: .constant(false)
             )
             
             AchievementProgressRing(
                 daysSinceLastRelapse: 25.0, // Between day 14 and day 30 achievements
-                achievementStore: AchievementStore()
+                achievementStore: AchievementStore(),
+                showingAchievementsSheet: .constant(false)
             )
             
             AchievementProgressRing(
                 daysSinceLastRelapse: 45.0, // Between day 30 and day 50 achievements
-                achievementStore: AchievementStore()
+                achievementStore: AchievementStore(),
+                showingAchievementsSheet: .constant(false)
             )
         }
     }
