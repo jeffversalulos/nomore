@@ -34,7 +34,7 @@ extension View {
     func appBackground() -> some View {
         background(
             ZStack {
-                Image("BG")
+                Image("BG2")
                             .resizable()
                             .scaledToFit()
                             .scaledToFill()
