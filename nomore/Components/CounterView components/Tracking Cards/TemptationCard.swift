@@ -3,7 +3,8 @@ import SwiftUI
 struct TemptationCard: View {
     // Hardcoded placeholders as requested
     @State private var isTempted: Bool = false
-    private let temptationEmoji = "😄"
+    @State private var showingTemptationSheet = false
+    @State private var selectedMoodEmoji: String = "😄" // Default mood emoji
     
     var body: some View {
         ZStack {
@@ -39,7 +40,7 @@ struct TemptationCard: View {
             
             // Emoji positioned on top border
             VStack {
-                Text(temptationEmoji)
+                Text(selectedMoodEmoji)
                     .font(.system(size: 40))
                     .offset(y: -20)
                 
@@ -47,10 +48,14 @@ struct TemptationCard: View {
             }
         }
         .onTapGesture {
-            // For demo purposes - toggle temptation state
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isTempted.toggle()
-            }
+            showingTemptationSheet = true
+        }
+        .sheet(isPresented: $showingTemptationSheet) {
+            TemptationSheet(
+                isPresented: $showingTemptationSheet,
+                isTempted: $isTempted,
+                selectedMoodEmoji: $selectedMoodEmoji
+            )
         }
     }
 }
