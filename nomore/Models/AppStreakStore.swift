@@ -29,14 +29,21 @@ final class AppStreakStore: ObservableObject {
         return currentStreak
     }
     
-    /// Calculates the current streak by counting consecutive days backwards from today
+    /// Calculates the current streak by counting consecutive days backwards from yesterday
+    /// Today doesn't count until it's complete (tomorrow)
     private func calculateCurrentStreak() {
         let calendar = Calendar.current
         let today = Date()
         var streak = 0
         
-        // Start from today and count backwards
-        var currentDate = today
+        // Start from yesterday and count backwards (today doesn't count until it's complete)
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else {
+            currentStreak = 0
+            objectWillChange.send()
+            return
+        }
+        
+        var currentDate = yesterday
         
         while dailyUsageStore.hasUsageOnDate(currentDate) {
             streak += 1
