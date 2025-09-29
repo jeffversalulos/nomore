@@ -73,7 +73,7 @@ struct InternetFilterView: View {
                                 .scaleEffect(1.1)
                         }
                         .padding(.horizontal, 40)
-                        .onChange(of: isContentRestrictionsEnabled) { newValue in
+                        .onChange(of: isContentRestrictionsEnabled) { oldValue, newValue in
                             if newValue {
                                 requestFamilyControlsAuthorization()
                             }
@@ -121,7 +121,7 @@ struct InternetFilterView: View {
         .appBackground()
         .navigationBarHidden(true)
         .familyActivityPicker(isPresented: $isAppPickerPresented, selection: $activitySelection)
-        .onChange(of: activitySelection) { newSelection in
+        .onChange(of: activitySelection) { oldSelection, newSelection in
             applyAppRestrictions(selection: newSelection)
         }
     }
