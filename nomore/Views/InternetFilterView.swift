@@ -3,13 +3,10 @@ import FamilyControls
 import ManagedSettings
 
 struct InternetFilterView: View {
-    @State private var isContentRestrictionsEnabled = false
+    @EnvironmentObject private var appRestrictionsStore: AppRestrictionsStore
     @State private var authorizationCenter = AuthorizationCenter.shared
     @State private var isAppPickerPresented = false
-    @State private var activitySelection = FamilyActivitySelection()
     @Environment(\.dismiss) private var dismiss
-    
-    private let managedSettingsStore = ManagedSettingsStore()
     
     var body: some View {
         ZStack {
@@ -51,12 +48,22 @@ struct InternetFilterView: View {
                             .foregroundColor(Theme.textPrimary)
                             .multilineTextAlignment(.center)
                         
-                        Text("QUITTR protects you by managing content restrictions and disabling private browsing.")
-                            .font(.system(size: 16, weight: .regular))
-                            .foregroundColor(Theme.textSecondary)
-                            .multilineTextAlignment(.center)
-                            .lineLimit(nil)
-                            .padding(.horizontal, 40)
+                        VStack(spacing: 12) {
+                            Text("QUITTR protects you by managing content restrictions and disabling private browsing.")
+                                .font(.system(size: 16, weight: .regular))
+                                .foregroundColor(Theme.textSecondary)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(nil)
+                                .padding(.horizontal, 40)
+                            
+                            if appRestrictionsStore.hasActiveRestrictions {
+                                Text("Active restrictions: \(appRestrictionsStore.activitySelection.applicationTokens.count) apps, \(appRestrictionsStore.activitySelection.categoryTokens.count) categories")
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundColor(Theme.mint)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal, 40)
+                            }
+                        }
                     }
                     
                     // Enable Content Restrictions Toggle
@@ -68,14 +75,16 @@ struct InternetFilterView: View {
                             
                             Spacer()
                             
-                            Toggle("", isOn: $isContentRestrictionsEnabled)
+                            Toggle("", isOn: $appRestrictionsStore.isContentRestrictionsEnabled)
                                 .toggleStyle(SwitchToggleStyle(tint: Theme.mint))
                                 .scaleEffect(1.1)
                         }
                         .padding(.horizontal, 40)
-                        .onChange(of: isContentRestrictionsEnabled) { oldValue, newValue in
+                        .onChange(of: appRestrictionsStore.isContentRestrictionsEnabled) { oldValue, newValue in
                             if newValue {
                                 requestFamilyControlsAuthorization()
+                            } else {
+                                appRestrictionsStore.setContentRestrictionsEnabled(false)
                             }
                         }
                     }
@@ -89,12 +98,12 @@ struct InternetFilterView: View {
                         isAppPickerPresented = true
                     }) {
                         HStack(spacing: 8) {
-                            Text("Block Apps")
-                            Image(systemName: "plus")
+                            Text(appRestrictionsStore.hasActiveRestrictions ? "Manage Blocked Apps" : "Block Apps")
+                            Image(systemName: appRestrictionsStore.hasActiveRestrictions ? "gear" : "plus")
                                 .font(.system(size: 16, weight: .medium))
                         }
                         .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(isContentRestrictionsEnabled ? Theme.textPrimary : Theme.textSecondary)
+                        .foregroundColor(appRestrictionsStore.isContentRestrictionsEnabled ? Theme.textPrimary : Theme.textSecondary)
                         .frame(maxWidth: .infinity)
                         .frame(height: 56)
                         .background(
@@ -106,8 +115,8 @@ struct InternetFilterView: View {
                                 )
                         )
                     }
-                    .disabled(!isContentRestrictionsEnabled)
-                    .opacity(isContentRestrictionsEnabled ? 1.0 : 0.6)
+                    .disabled(!appRestrictionsStore.isContentRestrictionsEnabled)
+                    .opacity(appRestrictionsStore.isContentRestrictionsEnabled ? 1.0 : 0.6)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 40)
                 }
@@ -120,9 +129,16 @@ struct InternetFilterView: View {
         }
         .appBackground()
         .navigationBarHidden(true)
-        .familyActivityPicker(isPresented: $isAppPickerPresented, selection: $activitySelection)
-        .onChange(of: activitySelection) { oldSelection, newSelection in
-            applyAppRestrictions(selection: newSelection)
+        .familyActivityPicker(isPresented: $isAppPickerPresented, selection: $appRestrictionsStore.activitySelection)
+        .onChange(of: appRestrictionsStore.activitySelection) { oldSelection, newSelection in
+            appRestrictionsStore.updateActivitySelection(newSelection)
+        }
+        .onChange(of: isAppPickerPresented) { oldValue, newValue in
+            // Handle picker dismissal to prevent navigation glitch
+            if !newValue {
+                // Picker was dismissed, ensure we stay in this view
+                print("Family activity picker dismissed")
+            }
         }
     }
     
@@ -130,12 +146,15 @@ struct InternetFilterView: View {
         Task {
             do {
                 try await authorizationCenter.requestAuthorization(for: .individual)
-                // Authorization successful - toggle stays enabled
+                // Authorization successful - update store
+                await MainActor.run {
+                    appRestrictionsStore.setContentRestrictionsEnabled(true)
+                }
                 print("Family Controls authorization granted")
             } catch {
                 // Authorization failed - reset toggle
                 await MainActor.run {
-                    isContentRestrictionsEnabled = false
+                    appRestrictionsStore.setContentRestrictionsEnabled(false)
                 }
                 print("Family Controls authorization failed: \(error)")
                 
@@ -151,15 +170,6 @@ struct InternetFilterView: View {
         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsURL)
         }
-    }
-    
-    private func applyAppRestrictions(selection: FamilyActivitySelection) {
-        // Apply app restrictions using ManagedSettingsStore
-        managedSettingsStore.shield.applications = selection.applicationTokens.isEmpty ? nil : selection.applicationTokens
-        managedSettingsStore.shield.applicationCategories = selection.categoryTokens.isEmpty ? nil : .specific(selection.categoryTokens)
-        managedSettingsStore.shield.webDomains = selection.webDomainTokens.isEmpty ? nil : selection.webDomainTokens
-        
-        print("Applied restrictions to \(selection.applicationTokens.count) apps, \(selection.categoryTokens.count) categories, and \(selection.webDomainTokens.count) web domains")
     }
 }
 
