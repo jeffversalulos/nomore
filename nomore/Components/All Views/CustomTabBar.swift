@@ -15,7 +15,7 @@ struct CustomTabBar: View {
         (title: "Counter", icon: "timer"),
         (title: "Analytics", icon: "chart.line.uptrend.xyaxis"),
         (title: "Meditate", icon: "brain.head.profile"),
-        (title: "Purpose", icon: "ellipsis.circle")
+        (title: "Filter", icon: "shield.checkered")
     ]
     
     var body: some View {

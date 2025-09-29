@@ -26,7 +26,7 @@ struct ContentView: View {
                         MeditationView()
                             .transition(.opacity)
                     } else if selectedTab == 3 {
-                        PurposeView()
+                        InternetFilterView()
                             .transition(.opacity)
                     }
                 }
@@ -74,4 +74,5 @@ struct ContentView: View {
         .environmentObject(dailyUsageStore)
         .environmentObject(AchievementStore())
         .environmentObject(appStreakStore)
+        .environmentObject(AppRestrictionsStore())
 }
