@@ -1,10 +1,15 @@
 import SwiftUI
 import FamilyControls
+import ManagedSettings
 
 struct InternetFilterView: View {
     @State private var isContentRestrictionsEnabled = false
     @State private var authorizationCenter = AuthorizationCenter.shared
+    @State private var isAppPickerPresented = false
+    @State private var activitySelection = FamilyActivitySelection()
     @Environment(\.dismiss) private var dismiss
+    
+    private let managedSettingsStore = ManagedSettingsStore()
     
     var body: some View {
         ZStack {
@@ -81,7 +86,7 @@ struct InternetFilterView: View {
                 // Bottom button
                 VStack(spacing: 16) {
                     Button(action: {
-                        // Placeholder - no action for now
+                        isAppPickerPresented = true
                     }) {
                         HStack(spacing: 8) {
                             Text("Block Apps")
@@ -89,7 +94,7 @@ struct InternetFilterView: View {
                                 .font(.system(size: 16, weight: .medium))
                         }
                         .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(Theme.textPrimary)
+                        .foregroundColor(isContentRestrictionsEnabled ? Theme.textPrimary : Theme.textSecondary)
                         .frame(maxWidth: .infinity)
                         .frame(height: 56)
                         .background(
@@ -101,8 +106,8 @@ struct InternetFilterView: View {
                                 )
                         )
                     }
-                    .disabled(true) // Disabled for now as requested
-                    .opacity(0.6)
+                    .disabled(!isContentRestrictionsEnabled)
+                    .opacity(isContentRestrictionsEnabled ? 1.0 : 0.6)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 40)
                 }
@@ -115,6 +120,10 @@ struct InternetFilterView: View {
         }
         .appBackground()
         .navigationBarHidden(true)
+        .familyActivityPicker(isPresented: $isAppPickerPresented, selection: $activitySelection)
+        .onChange(of: activitySelection) { newSelection in
+            applyAppRestrictions(selection: newSelection)
+        }
     }
     
     private func requestFamilyControlsAuthorization() {
@@ -142,6 +151,15 @@ struct InternetFilterView: View {
         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsURL)
         }
+    }
+    
+    private func applyAppRestrictions(selection: FamilyActivitySelection) {
+        // Apply app restrictions using ManagedSettingsStore
+        managedSettingsStore.shield.applications = selection.applicationTokens.isEmpty ? nil : selection.applicationTokens
+        managedSettingsStore.shield.applicationCategories = selection.categoryTokens.isEmpty ? nil : .specific(selection.categoryTokens)
+        managedSettingsStore.shield.webDomains = selection.webDomainTokens.isEmpty ? nil : selection.webDomainTokens
+        
+        print("Applied restrictions to \(selection.applicationTokens.count) apps, \(selection.categoryTokens.count) categories, and \(selection.webDomainTokens.count) web domains")
     }
 }
 
