@@ -8,111 +8,104 @@ struct InternetFilterView: View {
     @State private var isAppPickerPresented = false
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                // Title
-                Text("Internet Filter")
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(Theme.textPrimary)
-                    .padding(.top, 20)
-                    .padding(.bottom, 40)
-                
-                Spacer()
-                
-                // Main content area with starfield background effect
-                VStack(spacing: 40) {
-                    // Description and status
-                    VStack(spacing: 16) {
-                        VStack(spacing: 12) {
-                            Text("QUITTR protects you by managing content restrictions and disabling private browsing.")
-                                .font(.system(size: 16, weight: .regular))
-                                .foregroundColor(Theme.textSecondary)
+        VStack(spacing: 0) {
+            // Title
+            Text("Internet Filter")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundColor(Theme.textPrimary)
+                .padding(.top, 20)
+                .padding(.bottom, 40)
+            
+            Spacer()
+            
+            // Main content area with starfield background effect
+            VStack(spacing: 40) {
+                // Description and status
+                VStack(spacing: 16) {
+                    VStack(spacing: 12) {
+                        Text("QUITTR protects you by managing content restrictions and disabling private browsing.")
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(Theme.textSecondary)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(nil)
+                            .padding(.horizontal, 40)
+                        
+                        if appRestrictionsStore.hasActiveRestrictions {
+                            Text("Active restrictions: \(appRestrictionsStore.activitySelection.applicationTokens.count) apps, \(appRestrictionsStore.activitySelection.categoryTokens.count) categories")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(Theme.mint)
                                 .multilineTextAlignment(.center)
-                                .lineLimit(nil)
                                 .padding(.horizontal, 40)
-                            
-                            if appRestrictionsStore.hasActiveRestrictions {
-                                Text("Active restrictions: \(appRestrictionsStore.activitySelection.applicationTokens.count) apps, \(appRestrictionsStore.activitySelection.categoryTokens.count) categories")
-                                    .font(.system(size: 14, weight: .medium))
-                                    .foregroundColor(Theme.mint)
-                                    .multilineTextAlignment(.center)
-                                    .padding(.horizontal, 40)
-                            }
-                        }
-                    }
-                    
-                    // Enable Content Restrictions Toggle
-                    VStack(spacing: 20) {
-                        HStack {
-                            Text("Enable Content Restrictions")
-                                .font(.system(size: 18, weight: .medium))
-                                .foregroundColor(Theme.textPrimary)
-                            
-                            Spacer()
-                            
-                            Toggle("", isOn: $appRestrictionsStore.isContentRestrictionsEnabled)
-                                .toggleStyle(SwitchToggleStyle(tint: Theme.mint))
-                                .scaleEffect(1.1)
-                        }
-                        .padding(.horizontal, 40)
-                        .onChange(of: appRestrictionsStore.isContentRestrictionsEnabled) { oldValue, newValue in
-                            if newValue {
-                                requestFamilyControlsAuthorization()
-                            } else {
-                                appRestrictionsStore.setContentRestrictionsEnabled(false)
-                            }
                         }
                     }
                 }
                 
-                Spacer()
-                
-                // Bottom button
-                VStack(spacing: 16) {
-                    Button(action: {
-                        isAppPickerPresented = true
-                    }) {
-                        HStack(spacing: 8) {
-                            Text(appRestrictionsStore.hasActiveRestrictions ? "Manage Blocked Apps" : "Block Apps")
-                            Image(systemName: appRestrictionsStore.hasActiveRestrictions ? "gear" : "plus")
-                                .font(.system(size: 16, weight: .medium))
-                        }
-                        .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(appRestrictionsStore.isContentRestrictionsEnabled ? Theme.textPrimary : Theme.textSecondary)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(
-                            RoundedRectangle(cornerRadius: 28)
-                                .fill(Theme.surface)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 28)
-                                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
-                                )
-                        )
+                // Enable Content Restrictions Toggle
+                VStack(spacing: 20) {
+                    HStack {
+                        Text("Enable Content Restrictions")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(Theme.textPrimary)
+                        
+                        Spacer()
+                        
+                        Toggle("", isOn: $appRestrictionsStore.isContentRestrictionsEnabled)
+                            .toggleStyle(SwitchToggleStyle(tint: Theme.mint))
+                            .scaleEffect(1.1)
                     }
-                    .disabled(!appRestrictionsStore.isContentRestrictionsEnabled)
-                    .opacity(appRestrictionsStore.isContentRestrictionsEnabled ? 1.0 : 0.6)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 100) // Add bottom padding to account for the custom tab bar
+                    .padding(.horizontal, 40)
+                    .onChange(of: appRestrictionsStore.isContentRestrictionsEnabled) { oldValue, newValue in
+                        if newValue {
+                            requestFamilyControlsAuthorization()
+                        } else {
+                            appRestrictionsStore.setContentRestrictionsEnabled(false)
+                        }
+                    }
                 }
             }
             
-            // Starfield background effect
+            Spacer()
+            
+            // Bottom button
+            VStack(spacing: 16) {
+                Button(action: {
+                    isAppPickerPresented = true
+                }) {
+                    HStack(spacing: 8) {
+                        Text(appRestrictionsStore.hasActiveRestrictions ? "Manage Blocked Apps" : "Block Apps")
+                        Image(systemName: appRestrictionsStore.hasActiveRestrictions ? "gear" : "plus")
+                            .font(.system(size: 16, weight: .medium))
+                    }
+                    .font(.system(size: 17, weight: .medium))
+                    .foregroundColor(appRestrictionsStore.isContentRestrictionsEnabled ? Theme.textPrimary : Theme.textSecondary)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 56)
+                    .background(
+                        RoundedRectangle(cornerRadius: 28)
+                            .fill(Theme.surface)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 28)
+                                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+                            )
+                    )
+                }
+                .disabled(!appRestrictionsStore.isContentRestrictionsEnabled)
+                .opacity(appRestrictionsStore.isContentRestrictionsEnabled ? 1.0 : 0.6)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 100) // Add bottom padding to account for the custom tab bar
+            }
+        }
+        .background(
+            // Starfield background effect as background instead of overlay
             StarfieldView()
                 .ignoresSafeArea()
-                .allowsHitTesting(false)
-        }
+        )
         .appBackground()
-        .familyActivityPicker(isPresented: $isAppPickerPresented, selection: $appRestrictionsStore.activitySelection)
-        .onChange(of: appRestrictionsStore.activitySelection) { oldSelection, newSelection in
-            appRestrictionsStore.updateActivitySelection(newSelection)
-        }
-        .onChange(of: isAppPickerPresented) { oldValue, newValue in
-            // Handle picker dismissal to prevent navigation glitch
-            if !newValue {
-                // Picker was dismissed, ensure we stay in this view
-                print("Family activity picker dismissed")
-            }
+        .sheet(isPresented: $isAppPickerPresented) {
+            FamilyActivityPickerSheet(
+                selection: $appRestrictionsStore.activitySelection,
+                isPresented: $isAppPickerPresented
+            )
         }
     }
     
@@ -144,6 +137,44 @@ struct InternetFilterView: View {
         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsURL)
         }
+    }
+}
+
+// Family Activity Picker wrapped in a proper sheet
+struct FamilyActivityPickerSheet: View {
+    @Binding var selection: FamilyActivitySelection
+    @Binding var isPresented: Bool
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var appRestrictionsStore: AppRestrictionsStore
+    
+    var body: some View {
+        NavigationView {
+            FamilyActivityPicker(selection: $selection)
+                .navigationTitle("Block Apps & Categories")
+                .navigationBarTitleDisplayMode(.large)
+                .navigationBarBackButtonHidden(true)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel") {
+                            dismiss()
+                        }
+                        .foregroundColor(Theme.textSecondary)
+                    }
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Done") {
+                            // Update the store with the new selection
+                            appRestrictionsStore.updateActivitySelection(selection)
+                            dismiss()
+                        }
+                        .foregroundColor(Theme.mint)
+                        .fontWeight(.semibold)
+                    }
+                }
+        }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
+        .interactiveDismissDisabled(false) // Allow swipe to dismiss
     }
 }
 
