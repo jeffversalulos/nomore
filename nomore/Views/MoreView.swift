@@ -13,9 +13,6 @@ struct MoreView: View {
                         NavigationLink(destination: PurposeView()) {
                             Label("Your Purpose", systemImage: "target")
                         }
-                        NavigationLink(destination: InternetFilterView()) {
-                            Label("Internet Filter", systemImage: "shield.checkered")
-                        }
                     }
                     
                     Section("Coming soon") {

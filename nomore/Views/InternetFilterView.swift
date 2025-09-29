@@ -6,48 +6,23 @@ struct InternetFilterView: View {
     @EnvironmentObject private var appRestrictionsStore: AppRestrictionsStore
     @State private var authorizationCenter = AuthorizationCenter.shared
     @State private var isAppPickerPresented = false
-    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                // Header with back button
-                HStack {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 18, weight: .medium))
-                            Text("Back")
-                                .font(.system(size: 17, weight: .regular))
-                        }
-                        .foregroundColor(Theme.textPrimary)
-                    }
-                    
-                    Spacer()
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
-                .padding(.bottom, 20)
-                
                 // Title
-                Text("Internet filter")
+                Text("Internet Filter")
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(Theme.textPrimary)
+                    .padding(.top, 20)
                     .padding(.bottom, 40)
                 
                 Spacer()
                 
                 // Main content area with starfield background effect
                 VStack(spacing: 40) {
-                    // Internet Filter icon/title
+                    // Description and status
                     VStack(spacing: 16) {
-                        Text("Internet Filter")
-                            .font(.system(size: 32, weight: .bold))
-                            .foregroundColor(Theme.textPrimary)
-                            .multilineTextAlignment(.center)
-                        
                         VStack(spacing: 12) {
                             Text("QUITTR protects you by managing content restrictions and disabling private browsing.")
                                 .font(.system(size: 16, weight: .regular))
@@ -118,7 +93,7 @@ struct InternetFilterView: View {
                     .disabled(!appRestrictionsStore.isContentRestrictionsEnabled)
                     .opacity(appRestrictionsStore.isContentRestrictionsEnabled ? 1.0 : 0.6)
                     .padding(.horizontal, 20)
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 100) // Add bottom padding to account for the custom tab bar
                 }
             }
             
@@ -128,7 +103,6 @@ struct InternetFilterView: View {
                 .allowsHitTesting(false)
         }
         .appBackground()
-        .navigationBarHidden(true)
         .familyActivityPicker(isPresented: $isAppPickerPresented, selection: $appRestrictionsStore.activitySelection)
         .onChange(of: appRestrictionsStore.activitySelection) { oldSelection, newSelection in
             appRestrictionsStore.updateActivitySelection(newSelection)
