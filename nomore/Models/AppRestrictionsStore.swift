@@ -72,10 +72,45 @@ final class AppRestrictionsStore: ObservableObject {
         // Load the content restrictions toggle state
         isContentRestrictionsEnabled = defaults.bool(forKey: contentRestrictionsEnabledKey)
         
-        // Note: We cannot restore the FamilyActivitySelection from UserDefaults
-        // because the tokens are not serializable. The ManagedSettingsStore
-        // maintains the actual restrictions, so they persist across app launches.
-        // We only track whether restrictions are enabled and if any are active.
+        // Restore the FamilyActivitySelection from ManagedSettingsStore
+        // The actual restrictions persist in ManagedSettingsStore, so we can reconstruct
+        // the selection from what's currently active
+        restoreActivitySelectionFromManagedSettings()
+    }
+    
+    private func restoreActivitySelectionFromManagedSettings() {
+        // Reconstruct the FamilyActivitySelection from what's currently active in ManagedSettingsStore
+        var restoredSelection = FamilyActivitySelection()
+        
+        // Restore application tokens
+        if let applications = managedSettingsStore.shield.applications {
+            restoredSelection.applicationTokens = applications
+        }
+        
+        // Restore category tokens
+        if case let .specific(categories, except: _) = managedSettingsStore.shield.applicationCategories {
+            restoredSelection.categoryTokens = categories
+        }
+        
+        // Restore web domain tokens
+        if let webDomains = managedSettingsStore.shield.webDomains {
+            restoredSelection.webDomainTokens = webDomains
+        }
+        
+        // Update the activity selection if we found any active restrictions
+        let hasActiveRestrictions = !restoredSelection.applicationTokens.isEmpty || 
+                                   !restoredSelection.categoryTokens.isEmpty || 
+                                   !restoredSelection.webDomainTokens.isEmpty
+        
+        if hasActiveRestrictions {
+            activitySelection = restoredSelection
+            // Update the UserDefaults flag to match the restored state
+            defaults.set(true, forKey: hasActiveRestrictionsKey)
+            print("Restored \(restoredSelection.applicationTokens.count) apps, \(restoredSelection.categoryTokens.count) categories, and \(restoredSelection.webDomainTokens.count) web domains from ManagedSettingsStore")
+        } else {
+            // Ensure the flag is correct if no restrictions are active
+            defaults.set(false, forKey: hasActiveRestrictionsKey)
+        }
     }
     
     private func applyAppRestrictions(selection: FamilyActivitySelection) {

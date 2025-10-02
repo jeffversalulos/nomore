@@ -170,7 +170,7 @@ struct FamilyActivityPickerSheet: View {
                     appRestrictionsStore.updateActivitySelection(selection)
                     dismiss()
                 }
-                .foregroundColor(Theme.mint)
+                .foregroundColor(.accentColor)
                 .font(.system(size: 17, weight: .semibold))
             }
             .padding(.horizontal, 16)
