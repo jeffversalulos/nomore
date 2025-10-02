@@ -148,29 +148,40 @@ struct FamilyActivityPickerSheet: View {
     @EnvironmentObject private var appRestrictionsStore: AppRestrictionsStore
     
     var body: some View {
-        NavigationView {
-            FamilyActivityPicker(selection: $selection)
-                .navigationTitle("Block Apps & Categories")
-                .navigationBarTitleDisplayMode(.large)
-                .navigationBarBackButtonHidden(true)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel") {
-                            dismiss()
-                        }
-                        .foregroundColor(Theme.textSecondary)
-                    }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Done") {
-                            // Update the store with the new selection
-                            appRestrictionsStore.updateActivitySelection(selection)
-                            dismiss()
-                        }
-                        .foregroundColor(Theme.mint)
-                        .fontWeight(.semibold)
-                    }
+        VStack(spacing: 0) {
+            // Custom header to replace NavigationView
+            HStack {
+                Button("Cancel") {
+                    dismiss()
                 }
+                .foregroundColor(Theme.textSecondary)
+                .font(.system(size: 17, weight: .regular))
+                
+                Spacer()
+                
+                Text("Choose Activities")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(Theme.textPrimary)
+                
+                Spacer()
+                
+                Button("Done") {
+                    // Update the store with the new selection
+                    appRestrictionsStore.updateActivitySelection(selection)
+                    dismiss()
+                }
+                .foregroundColor(Theme.mint)
+                .font(.system(size: 17, weight: .semibold))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(
+                Color(UIColor.systemBackground)
+                    .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1)
+            )
+            
+            // Family Activity Picker without NavigationView wrapper
+            FamilyActivityPicker(selection: $selection)
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
