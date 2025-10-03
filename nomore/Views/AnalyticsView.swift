@@ -47,8 +47,8 @@ struct AnalyticsView: View {
                         ConsistencyScoreCard()
                             .environmentObject(consistencyStore)
                         
-                        // Progress Chart Section - Using extracted component
-                        ProgressChartCard()
+                        // Analytics Day Memory Section - Using extracted component
+                        AnalyticsDayMemory()
                             .environmentObject(streakStore)
                         
                         // Add some bottom padding for better scrolling experience

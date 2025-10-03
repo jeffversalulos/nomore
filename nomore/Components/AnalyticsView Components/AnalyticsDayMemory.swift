@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ProgressChartCard: View {
+struct AnalyticsDayMemory: View {
     @EnvironmentObject var streakStore: StreakStore
     @State private var currentTime = Date()
     
@@ -124,7 +124,7 @@ struct ProgressChartCard: View {
 }
 
 #Preview {
-    ProgressChartCard()
+    AnalyticsDayMemory()
         .environmentObject(StreakStore())
         .appBackground()
 }
