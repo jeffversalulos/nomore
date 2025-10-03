@@ -4,6 +4,8 @@ struct AnalyticsView: View {
     @EnvironmentObject var streakStore: StreakStore
     @EnvironmentObject var dailyUsageStore: DailyUsageStore
     @EnvironmentObject var goalsStore: GoalsStore
+    @EnvironmentObject var achievementStore: AchievementStore
+    @EnvironmentObject var consistencyStore: ConsistencyStore
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -41,9 +43,13 @@ struct AnalyticsView: View {
                         // Motivational Message - Using extracted component
                         MotivationalMessageCard()
                         
+                        // Consistency Score - Using extracted component
+                        ConsistencyScoreCard()
+                            .environmentObject(consistencyStore)
+                        
                         // Progress Chart Section - Using extracted component
                         ProgressChartCard()
-                            .environmentObject(dailyUsageStore)
+                            .environmentObject(streakStore)
                         
                         // Add some bottom padding for better scrolling experience
                         Spacer(minLength: 50)
@@ -62,8 +68,20 @@ struct AnalyticsView: View {
 }
 
 #Preview {
-    AnalyticsView()
+    let goalsStore = GoalsStore()
+    
+    // Add some sample goals for preview
+    goalsStore.setGoals([
+        "Stronger relationships",
+        "Improved self-confidence",
+        "More energy and motivation",
+        "Improved focus and clarity"
+    ])
+    
+    return AnalyticsView()
         .environmentObject(StreakStore())
         .environmentObject(DailyUsageStore())
-        .environmentObject(GoalsStore())
+        .environmentObject(goalsStore)
+        .environmentObject(AchievementStore())
+        .environmentObject(ConsistencyStore())
 }

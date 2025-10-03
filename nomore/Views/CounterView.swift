@@ -8,6 +8,7 @@ struct CounterView: View {
     @EnvironmentObject var dailyUsageStore: DailyUsageStore
     @EnvironmentObject var achievementStore: AchievementStore
     @EnvironmentObject var appStreakStore: AppStreakStore
+    @EnvironmentObject var consistencyStore: ConsistencyStore
     @Binding var selectedTab: Int
     
     @State private var showingMoreView = false
@@ -61,6 +62,7 @@ struct CounterView: View {
                         // Relapse button - more subtle and refined
                         Button {
                             streakStore.resetRelapseDate()
+                            consistencyStore.recordRelapse()
                             selectedTab = 1
                         } label: {
                             Text("Reset Streak")

@@ -2,7 +2,7 @@ import SwiftUI
 import Foundation
 
 /// Represents a single achievement milestone
-struct Achievement: Identifiable, Codable {
+struct Achievement: Identifiable, Codable, Equatable {
     let id = UUID()
     let title: String
     let description: String
@@ -13,6 +13,11 @@ struct Achievement: Identifiable, Codable {
     /// Check if this achievement is unlocked based on current streak
     func isUnlocked(daysSinceLastRelapse: Int) -> Bool {
         return daysSinceLastRelapse >= daysRequired
+    }
+    
+    /// Equatable conformance based on unlockNumber (which is unique)
+    static func == (lhs: Achievement, rhs: Achievement) -> Bool {
+        return lhs.unlockNumber == rhs.unlockNumber
     }
 }
 

@@ -202,6 +202,13 @@ struct GoalProgressRow: View {
     let goalsStore = GoalsStore()
     let streakStore = StreakStore()
     
+    // Add some sample goals for preview
+    goalsStore.setGoals([
+        "Stronger relationships",
+        "Improved self-confidence",
+        "More energy and motivation"
+    ])
+    
     return GoalsProgressCard(currentTime: Date())
         .environmentObject(goalsStore)
         .environmentObject(streakStore)

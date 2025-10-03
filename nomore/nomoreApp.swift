@@ -16,7 +16,11 @@ struct nomoreApp: App {
             if appContainer.onboardingManager.hasCompletedOnboarding {
                 ContentView()
                     .injectAppContainer(appContainer)
-                    .onAppear(perform: AppearanceConfigurator.configure)
+                    .onAppear {
+                        AppearanceConfigurator.configure()
+                        // Track app open for consistency scoring
+                        appContainer.consistencyStore.recordAppOpen()
+                    }
             } else {
                 OnboardingView {
                     // This closure is called when "Begin Your Recovery" button is pressed

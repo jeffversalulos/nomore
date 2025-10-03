@@ -64,15 +64,25 @@ struct ContentView: View {
 #Preview {
     let dailyUsageStore = DailyUsageStore()
     let appStreakStore = AppStreakStore(dailyUsageStore: dailyUsageStore)
+    let goalsStore = GoalsStore()
+    
+    // Add some sample goals for preview
+    goalsStore.setGoals([
+        "Stronger relationships",
+        "Improved self-confidence",
+        "More energy and motivation",
+        "Improved focus and clarity"
+    ])
     
     return ContentView()
         .environmentObject(StreakStore())
         .environmentObject(JournalStore())
-        .environmentObject(GoalsStore())
+        .environmentObject(goalsStore)
         .environmentObject(PurposeStore())
         .environmentObject(OnboardingManager())
         .environmentObject(dailyUsageStore)
         .environmentObject(AchievementStore())
         .environmentObject(appStreakStore)
         .environmentObject(AppRestrictionsStore())
+        .environmentObject(ConsistencyStore())
 }

@@ -1,21 +1,63 @@
 import SwiftUI
 
 struct ProgressChartCard: View {
-    @EnvironmentObject var dailyUsageStore: DailyUsageStore
+    @EnvironmentObject var streakStore: StreakStore
+    @State private var currentTime = Date()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            // Simple header
             HStack {
-                Text("Your progress")
+                Text("Your Progress")
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundStyle(Theme.textPrimary)
                 Spacer()
+                Text(progressMessage)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(progressColor)
             }
             .padding(.horizontal, 24)
             
-            // REUSE WeeklyProgressTracker logic for real progress data
-            progressChart
-                .padding(.horizontal, 24)
+            // Simple visual: Current streak vs Personal best
+            HStack(spacing: 20) {
+                // Current streak
+                VStack(spacing: 8) {
+                    Text("Current")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(Theme.textSecondary)
+                    
+                    Text("\(currentStreakDays)")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundStyle(Theme.accent)
+                    
+                    Text("days")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(Theme.textSecondary)
+                }
+                .frame(maxWidth: .infinity)
+                
+                // VS indicator
+                Text("vs")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(Theme.textSecondary.opacity(0.6))
+                
+                // Personal best
+                VStack(spacing: 8) {
+                    Text("Best")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(Theme.textSecondary)
+                    
+                    Text("\(personalBest)")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundStyle(isNewRecord ? Theme.mint : Theme.textSecondary)
+                    
+                    Text("days")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(Theme.textSecondary)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .padding(.horizontal, 24)
         }
         .padding(.vertical, 20)
         .background(
@@ -27,122 +69,62 @@ struct ProgressChartCard: View {
                 )
         )
         .padding(.horizontal, 24)
+        .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
+            currentTime = Date()
+        }
+        .onAppear {
+            currentTime = Date()
+        }
     }
     
-    // MARK: - Progress Chart
-    private var progressChart: some View {
-        GeometryReader { geometry in
-            let width = geometry.size.width
-            let height: CGFloat = 100
-            
-            ZStack {
-                // Background grid lines
-                Path { path in
-                    for i in 0...4 {
-                        let y = CGFloat(i) * (height / 4)
-                        path.move(to: CGPoint(x: 0, y: y))
-                        path.addLine(to: CGPoint(x: width, y: y))
-                    }
-                }
-                .stroke(Color.white.opacity(0.1), lineWidth: 0.5)
-                
-                // Progress line using EXACT WeeklyProgressTracker logic
-                Path { path in
-                    let points = generateProgressPoints(width: width, height: height)
-                    guard let firstPoint = points.first else { return }
-                    
-                    path.move(to: firstPoint)
-                    for point in points.dropFirst() {
-                        path.addLine(to: point)
-                    }
-                }
-                .stroke(
-                    LinearGradient(
-                        colors: [Theme.aqua, Theme.mint],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    ),
-                    style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round)
-                )
-                
-                // Progress area fill
-                Path { path in
-                    let points = generateProgressPoints(width: width, height: height)
-                    guard let firstPoint = points.first else { return }
-                    
-                    path.move(to: CGPoint(x: firstPoint.x, y: height))
-                    path.addLine(to: firstPoint)
-                    for point in points.dropFirst() {
-                        path.addLine(to: point)
-                    }
-                    path.addLine(to: CGPoint(x: points.last?.x ?? width, y: height))
-                    path.closeSubpath()
-                }
-                .fill(
-                    LinearGradient(
-                        colors: [Theme.aqua.opacity(0.3), Theme.mint.opacity(0.1)],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-            }
-        }
-        .frame(height: 100)
+    // MARK: - Data Properties
+    private var currentStreakDays: Int {
+        let secondsSinceRelapse = currentTime.timeIntervalSince(streakStore.lastRelapseDate)
+        return Int(secondsSinceRelapse / (24 * 3600))
     }
     
-    // MARK: - Helper Methods
-    // REUSE EXACT WeeklyProgressTracker logic for generating progress points
-    private func generateProgressPoints(width: CGFloat, height: CGFloat) -> [CGPoint] {
-        let calendar = Calendar.current
-        let today = Date()
-        var points: [CGPoint] = []
+    private var personalBest: Int {
+        // For now, we'll use a simple heuristic: if current streak > stored best, update it
+        // In a real app, you'd want to track this properly in UserDefaults
+        let stored = UserDefaults.standard.integer(forKey: "personalBestStreak")
+        let current = currentStreakDays
         
-        // Use EXACT same sliding window as WeeklyProgressTracker (-5 to +1 days)
-        for i in -5...1 {
-            guard let date = calendar.date(byAdding: .day, value: i, to: today) else { continue }
-            
-            // Map the 7 days (-5 to +1) to x positions (0 to width)
-            let dayIndex = i + 5 // Convert -5...1 to 0...6
-            let x = (CGFloat(dayIndex) / 6.0) * width
-            
-            // REUSE EXACT WeeklyProgressTracker logic
-            let isCompleted = hasAppUsageOnDate(date)
-            let isFuture = date > today
-            
-            // Calculate y position based on completion status
-            let progress: Double
-            if isFuture {
-                progress = 0.3 // Future days show lower
-            } else if isCompleted {
-                progress = 0.8 // Completed days show higher
-            } else {
-                progress = 0.1 // Missed days show lower
-            }
-            
-            let y = height - (CGFloat(progress) * height * 0.8) - (height * 0.1)
-            points.append(CGPoint(x: x, y: y))
+        if current > stored {
+            UserDefaults.standard.set(current, forKey: "personalBestStreak")
+            return current
         }
         
-        return points
+        return max(stored, current)
     }
     
-    // REUSE EXACT WeeklyProgressTracker logic for app usage checking
-    private func hasAppUsageOnDate(_ date: Date) -> Bool {
-        let calendar = Calendar.current
-        let today = Date()
-        
-        // For future dates, always return false
-        if date > today {
-            return false
+    private var isNewRecord: Bool {
+        return currentStreakDays >= personalBest && currentStreakDays > 0
+    }
+    
+    private var progressMessage: String {
+        if isNewRecord {
+            return "New Record! 🎉"
+        } else if currentStreakDays == 0 {
+            return "Fresh Start"
+        } else {
+            let remaining = personalBest - currentStreakDays
+            return "\(remaining) to beat record"
         }
-        
-        // Use the DailyUsageStore to check if the app was used on this date
-        return dailyUsageStore.hasUsageOnDate(date)
+    }
+    
+    private var progressColor: Color {
+        if isNewRecord {
+            return Theme.mint
+        } else if currentStreakDays == 0 {
+            return Theme.accent
+        } else {
+            return Theme.textSecondary
+        }
     }
 }
 
 #Preview {
     ProgressChartCard()
-        .environmentObject(DailyUsageStore())
+        .environmentObject(StreakStore())
         .appBackground()
 }

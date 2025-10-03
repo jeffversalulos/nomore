@@ -22,6 +22,7 @@ final class AppContainer: ObservableObject {
     @Published private(set) var achievementStore: AchievementStore
     @Published private(set) var appStreakStore: AppStreakStore
     @Published private(set) var appRestrictionsStore: AppRestrictionsStore
+    @Published private(set) var consistencyStore: ConsistencyStore
     
     // MARK: - Private Properties
     private var cancellables = Set<AnyCancellable>()
@@ -36,6 +37,7 @@ final class AppContainer: ObservableObject {
         self.onboardingManager = OnboardingManager()
         self.achievementStore = AchievementStore()
         self.appRestrictionsStore = AppRestrictionsStore()
+        self.consistencyStore = ConsistencyStore()
         
         // Initialize dependent stores
         let dailyUsage = DailyUsageStore()
@@ -79,5 +81,6 @@ extension View {
             .environmentObject(container.achievementStore)
             .environmentObject(container.appStreakStore)
             .environmentObject(container.appRestrictionsStore)
+            .environmentObject(container.consistencyStore)
     }
 }
