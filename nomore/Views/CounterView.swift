@@ -84,10 +84,39 @@ struct CounterView: View {
                     TrackingCards(startDate: streakStore.lastRelapseDate)
                         .padding(.top, 24)
 
-                    // Analytics Button
-                    AnalyticsButton(selectedTab: $selectedTab)
+                    // Analytics Section
+                    VStack(spacing: 16) {
+                        // View Analytics Heading
+                        HStack {
+                            Text("View Analytics")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundStyle(Theme.textPrimary)
+                            Spacer()
+                        }
                         .padding(.horizontal, 24)
-                        .padding(.top, 32)
+                        
+                        // Chart Image Button
+                        Button {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                selectedTab = 1
+                            }
+                        } label: {
+                            Image("Chart FIgma")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 150)
+                                .offset(y: -4)
+                                .background(Theme.surface)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        }
+                        .padding(.horizontal, 24)
+                    }
+                    .padding(.top, 32)
 
                     // Daily Reflection Component
                     DailyReflectionCard(showingJournalView: $showingJournalView)
