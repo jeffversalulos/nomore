@@ -148,44 +148,14 @@ struct FamilyActivityPickerSheet: View {
     @EnvironmentObject private var appRestrictionsStore: AppRestrictionsStore
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Custom header to replace NavigationView
-            HStack {
-                Button("Cancel") {
-                    dismiss()
-                }
-                .foregroundColor(Theme.textSecondary)
-                .font(.system(size: 17, weight: .regular))
-                
-                Spacer()
-                
-                Text("Choose Activities")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(Theme.textPrimary)
-                
-                Spacer()
-                
-                Button("Done") {
-                    // Update the store with the new selection
-                    appRestrictionsStore.updateActivitySelection(selection)
-                    dismiss()
-                }
-                .foregroundColor(.accentColor)
-                .font(.system(size: 17, weight: .semibold))
+        FamilyActivityPicker(selection: $selection)
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+            .interactiveDismissDisabled(false) // Allow swipe to dismiss
+            .onChange(of: selection) { oldValue, newValue in
+                // Update the store with the new selection
+                appRestrictionsStore.updateActivitySelection(newValue)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(
-                Color(UIColor.systemBackground)
-                    .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1)
-            )
-            
-            // Family Activity Picker without NavigationView wrapper
-            FamilyActivityPicker(selection: $selection)
-        }
-        .presentationDetents([.large])
-        .presentationDragIndicator(.visible)
-        .interactiveDismissDisabled(false) // Allow swipe to dismiss
     }
 }
 
