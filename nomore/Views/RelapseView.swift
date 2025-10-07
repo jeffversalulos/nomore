@@ -45,9 +45,9 @@ struct RelapseView: View {
                 
                 // Scrollable content - constrained to not overlap button
                 ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 32) {
+                    VStack(spacing: 64) {
                         // Main message at top of scroll
-                        VStack(spacing: 16) {
+                        VStack(spacing: 56) {
                             Text("You let yourself\ndown, again.")
                                 .font(.system(size: 32, weight: .bold))
                                 .foregroundStyle(Theme.textPrimary)
@@ -74,7 +74,7 @@ struct RelapseView: View {
                             }
                             
                             // Cycle items
-                            VStack(spacing: 20) {
+                            VStack(spacing: 25) {
                                 CycleItem(
                                     icon: "hand.point.up.left",
                                     title: "Jerking Off",
