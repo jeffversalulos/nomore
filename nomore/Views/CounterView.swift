@@ -15,6 +15,7 @@ struct CounterView: View {
     @State private var showingStreakModal = false
     @State private var showingAchievementsSheet = false
     @State private var showingJournalView = false
+    @State private var showingPanickingView = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -54,8 +55,8 @@ struct CounterView: View {
                     VStack(spacing: 16) {
                         // Panic Button
                         PanicButton {
-                            // Navigate to Journal view
-                            selectedTab = 1
+                            // Show PanickingView as sheet
+                            showingPanickingView = true
                         }
                         .padding(.horizontal)
 
@@ -183,6 +184,9 @@ struct CounterView: View {
         .sheet(isPresented: $showingJournalView) {
             JournalView()
                 .environmentObject(journalStore)
+        }
+        .sheet(isPresented: $showingPanickingView) {
+            PanickingView()
         }
     }
 }
