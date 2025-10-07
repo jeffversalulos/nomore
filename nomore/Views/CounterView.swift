@@ -16,6 +16,7 @@ struct CounterView: View {
     @State private var showingAchievementsSheet = false
     @State private var showingJournalView = false
     @State private var showingPanickingView = false
+    @State private var showingRelapseView = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -62,11 +63,9 @@ struct CounterView: View {
 
                         // Relapse button - more subtle and refined
                         Button {
-                            streakStore.resetRelapseDate()
-                            consistencyStore.recordRelapse()
-                            selectedTab = 1
+                            showingRelapseView = true
                         } label: {
-                            Text("Reset Streak")
+                            Text("I Relapsed")
                                 .font(.system(size: 16, weight: .medium))
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
@@ -188,6 +187,11 @@ struct CounterView: View {
         .sheet(isPresented: $showingPanickingView) {
             PanickingView()
         }
+        .fullScreenCover(isPresented: $showingRelapseView) {
+            RelapseView(isPresented: $showingRelapseView, selectedTab: $selectedTab)
+                .environmentObject(streakStore)
+                .environmentObject(consistencyStore)
+        }
     }
 }
 
@@ -207,6 +211,7 @@ struct CounterView: View {
         .environmentObject(dailyUsageStore)
         .environmentObject(achievementStore)
         .environmentObject(appStreakStore)
+        .environmentObject(ConsistencyStore())
         
 }
 
