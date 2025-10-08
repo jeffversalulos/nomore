@@ -13,8 +13,59 @@ struct SmallerUnitsCounter: View {
     var body: some View {
         HStack(alignment: .lastTextBaseline, spacing: 8) {
             // Show appropriate content based on time hierarchy
-            if components.months > 0 || components.days > 0 {
-                // When months or days exist: show hours, minutes and seconds in bubble
+            if components.months > 0 {
+                // When months exist: show days, hours, minutes and seconds in bubble
+                if components.days > 0 {
+                    HStack(alignment: .lastTextBaseline, spacing: 4) {
+                        Text("\(components.days)")
+                            .font(.system(size: 32, weight: .ultraLight, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.85))
+                            .contentTransition(.numericText())
+                        Text("d")
+                            .font(.system(size: 18, weight: .light))
+                            .foregroundStyle(.white.opacity(0.65))
+                            .offset(y: -4)
+                    }
+                }
+                
+                if components.hours > 0 {
+                    HStack(alignment: .lastTextBaseline, spacing: 4) {
+                        Text("\(components.hours)")
+                            .font(.system(size: 32, weight: .ultraLight, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.85))
+                            .contentTransition(.numericText())
+                        Text("hr")
+                            .font(.system(size: 18, weight: .light))
+                            .foregroundStyle(.white.opacity(0.65))
+                            .offset(y: -4)
+                    }
+                }
+                
+                if components.minutes > 0 {
+                    HStack(alignment: .lastTextBaseline, spacing: 4) {
+                        Text("\(components.minutes)")
+                            .font(.system(size: 32, weight: .ultraLight, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.85))
+                            .contentTransition(.numericText())
+                        Text("m")
+                            .font(.system(size: 18, weight: .light))
+                            .foregroundStyle(.white.opacity(0.65))
+                            .offset(y: -4)
+                    }
+                }
+                
+                HStack(alignment: .lastTextBaseline, spacing: 4) {
+                    Text("\(components.seconds)")
+                        .font(.system(size: 32, weight: .ultraLight, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.85))
+                        .contentTransition(.numericText())
+                    Text("s")
+                        .font(.system(size: 18, weight: .light))
+                        .foregroundStyle(.white.opacity(0.65))
+                        .offset(y: -4)
+                }
+            } else if components.days > 0 {
+                // When days exist but no months: show hours, minutes and seconds in bubble
                 if components.hours > 0 {
                     HStack(alignment: .lastTextBaseline, spacing: 4) {
                         Text("\(components.hours)")

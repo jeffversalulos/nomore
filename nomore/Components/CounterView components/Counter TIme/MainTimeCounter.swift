@@ -19,7 +19,7 @@ struct MainTimeCounter: View {
                         .font(.system(size: 90, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .contentTransition(.numericText())
-                    Text("mo")
+                    Text(components.months == 1 ? "month" : "months")
                         .font(.system(size: 55, weight: .bold))
                         .foregroundStyle(.white)
                         .offset(y: -12)
@@ -51,14 +51,6 @@ struct MainTimeCounter: View {
                         .foregroundStyle(.white)
                         .offset(y: -12)
                 }
-            }
-            
-            // Secondary time display (smaller unit) - only show if relevant
-            if components.months > 0 && components.days > 0 {
-                Text("\(components.days) \(components.days == 1 ? "day" : "days")")
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-                    .contentTransition(.numericText())
             }
         }
     }
