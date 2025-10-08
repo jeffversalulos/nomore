@@ -33,7 +33,7 @@ struct InternetFilterCard: View {
                     
                     // Content
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Internet Filter")
+                        Text("Content Filter")
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(Theme.textPrimary)
                         
