@@ -120,6 +120,10 @@ struct CounterView: View {
                     }
                     .padding(.top, 32)
 
+                    // Internet Filter Section
+                    InternetFilterCard(selectedTab: $selectedTab)
+                        .padding(.top, 32)
+
                     // Daily Reflection Component
                     DailyReflectionCard(showingJournalView: $showingJournalView)
                         .padding(.horizontal, 24)
