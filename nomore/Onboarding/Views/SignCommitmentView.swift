@@ -20,7 +20,7 @@ struct SignCommitmentView: View {
             // Navigation bar
             HStack {
                 Button(action: {
-                    manager.goBackFromCommitment()
+                    manager.goBack()
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 20, weight: .medium))

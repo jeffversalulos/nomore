@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+// MARK: - Onboarding Step Enum
+enum OnboardingStep: Equatable {
+    case question(index: Int)
+    case goals
+    case commitment
+    case completion
+}
+
 // MARK: - Onboarding Question Model
 struct OnboardingQuestion {
     let id: Int

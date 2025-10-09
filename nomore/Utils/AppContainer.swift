@@ -59,7 +59,7 @@ final class AppContainer: ObservableObject {
             }
             .store(in: &cancellables)
             
-        onboardingManager.$showingCompletionView
+        onboardingManager.$currentStep
             .sink { [weak self] _ in
                 // This will trigger objectWillChange for AppContainer
                 self?.objectWillChange.send()

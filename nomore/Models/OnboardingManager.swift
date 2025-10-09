@@ -8,13 +8,10 @@
 import SwiftUI
 
 class OnboardingManager: ObservableObject {
-    @Published var currentQuestionIndex = 0
+    @Published var currentStep: OnboardingStep = .question(index: 0)
+    @Published var previousStep: OnboardingStep? = nil
     @Published var profile = OnboardingProfile()
     @Published var hasCompletedOnboarding = false
-    @Published var showingGoalsView = false
-    @Published var showingCommitmentView = false
-    @Published var showingCompletionView = false
-    @Published var isNavigatingBack = false
     
     private let userDefaults = UserDefaults.standard
     private let onboardingCompletedKey = "hasCompletedOnboarding"
@@ -28,18 +25,58 @@ class OnboardingManager: ObservableObject {
     // MARK: - Core Questions Data
     let questions: [OnboardingQuestion] = OnboardingQuestionsData.questions
     
+    // Computed property for backward compatibility
+    var currentQuestionIndex: Int {
+        switch currentStep {
+        case .question(let index):
+            return index
+        default:
+            return 0
+        }
+    }
+    
     // MARK: - Navigation Methods
     func nextQuestion() {
-        if currentQuestionIndex < questions.count - 1 {
-            currentQuestionIndex += 1
-        } else {
-            showGoalsView()
+        switch currentStep {
+        case .question(let index):
+            if index < questions.count - 1 {
+                navigateTo(.question(index: index + 1))
+            } else {
+                navigateTo(.goals)
+            }
+        default:
+            break
         }
     }
     
     func previousQuestion() {
-        if currentQuestionIndex > 0 {
-            currentQuestionIndex -= 1
+        switch currentStep {
+        case .question(let index):
+            if index > 0 {
+                navigateTo(.question(index: index - 1))
+            }
+        default:
+            break
+        }
+    }
+    
+    private func navigateTo(_ step: OnboardingStep) {
+        previousStep = currentStep
+        currentStep = step
+    }
+    
+    func goBack() {
+        switch currentStep {
+        case .goals:
+            navigateTo(.question(index: questions.count - 1))
+        case .commitment:
+            navigateTo(.goals)
+        case .completion:
+            navigateTo(.commitment)
+        case .question(let index):
+            if index > 0 {
+                navigateTo(.question(index: index - 1))
+            }
         }
     }
     
@@ -71,8 +108,13 @@ class OnboardingManager: ObservableObject {
     }
     
     func canProceed() -> Bool {
-        let currentQuestion = questions[currentQuestionIndex]
-        return profile.responses.contains { $0.questionId == currentQuestion.id && !$0.selectedOptions.isEmpty }
+        switch currentStep {
+        case .question(let index):
+            let currentQuestion = questions[index]
+            return profile.responses.contains { $0.questionId == currentQuestion.id && !$0.selectedOptions.isEmpty }
+        default:
+            return true
+        }
     }
     
     // MARK: - Goal Selection Methods
@@ -90,53 +132,15 @@ class OnboardingManager: ObservableObject {
     }
     
     // MARK: - Goals View Navigation
-    private func showGoalsView() {
-        showingGoalsView = true
-    }
-
-    func goBackFromGoals() {
-        isNavigatingBack = true
-        showingGoalsView = false
-        // Go back to the last question (which should be the last question since we just finished them all)
-        currentQuestionIndex = questions.count - 1
-
-        // Reset the flag after a brief delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.isNavigatingBack = false
-        }
-    }
-
     func completeGoals() {
-        showingGoalsView = false
-        showCommitmentView()
+        navigateTo(.commitment)
     }
 
     // MARK: - Completion
-    private func showCommitmentView() {
-        showingCommitmentView = true
-    }
-    
-    func goBackFromCommitment() {
-        isNavigatingBack = true
-        showingCommitmentView = false
-        // Go back to the goals view
-        showingGoalsView = true
-
-        // Reset the flag after a brief delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.isNavigatingBack = false
-        }
-    }
-    
     func completeCommitment() {
-        showingCommitmentView = false
-        showCompletionView()
-    }
-    
-    private func showCompletionView() {
         profile.isCompleted = true
         profile.personalizedMessage = generatePersonalizedMessage()
-        showingCompletionView = true
+        navigateTo(.completion)
     }
     
     func completeOnboarding() {
@@ -169,11 +173,9 @@ class OnboardingManager: ObservableObject {
     
     func resetOnboarding(goalsStore: GoalsStore? = nil) {
         hasCompletedOnboarding = false
-        showingGoalsView = false
-        showingCommitmentView = false
-        showingCompletionView = false
+        currentStep = .question(index: 0)
+        previousStep = nil
         profile = OnboardingProfile()
-        currentQuestionIndex = 0
         saveOnboardingStatus()
         saveOnboardingProfile()
         

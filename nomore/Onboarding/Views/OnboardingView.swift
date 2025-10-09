@@ -9,14 +9,12 @@ import SwiftUI
 
 struct OnboardingView: View {
     @EnvironmentObject var manager: OnboardingManager
-    @State private var showingGoals = false
-    @State private var showingCommitment = false
-    @State private var showingCompletion = false
     let onComplete: () -> Void
     
     var body: some View {
         ZStack {
-            if showingCompletion {
+            switch manager.currentStep {
+            case .completion:
                 OnboardingCompletionView(
                     profile: manager.profile,
                     onContinue: onComplete
@@ -25,7 +23,8 @@ struct OnboardingView: View {
                     insertion: .move(edge: .trailing).combined(with: .opacity),
                     removal: .move(edge: .leading).combined(with: .opacity)
                 ))
-            } else if showingCommitment {
+                
+            case .commitment:
                 SignCommitmentView(
                     manager: manager,
                     onFinish: {
@@ -34,25 +33,27 @@ struct OnboardingView: View {
                 )
                 .transition(.asymmetric(
                     insertion: .move(edge: .trailing).combined(with: .opacity),
-                    removal: manager.isNavigatingBack ?
+                    removal: isNavigatingBack ?
                         .move(edge: .trailing).combined(with: .opacity) :
                         .move(edge: .leading).combined(with: .opacity)
                 ))
-            } else if showingGoals {
-                GoalsToTrackView(manager: manager) {
+                
+            case .goals:
+                GoalsToTrackView(manager: manager, onContinue: {
                     manager.completeGoals()
-                }
+                })
                 .transition(.asymmetric(
-                    insertion: manager.isNavigatingBack ?
+                    insertion: isNavigatingBack ?
                         .move(edge: .leading).combined(with: .opacity) :
                         .move(edge: .trailing).combined(with: .opacity),
-                    removal: manager.isNavigatingBack ?
+                    removal: isNavigatingBack ?
                         .move(edge: .trailing).combined(with: .opacity) :
                         .move(edge: .leading).combined(with: .opacity)
                 ))
-            } else {
+                
+            case .question(let index):
                 OnboardingQuestionView(
-                    question: manager.questions[manager.currentQuestionIndex],
+                    question: manager.questions[index],
                     manager: manager
                 )
                 .transition(.asymmetric(
@@ -63,25 +64,17 @@ struct OnboardingView: View {
         }
         .appBackground()
         .animation(.easeInOut(duration: 0.4), value: manager.currentQuestionIndex)
-        .animation(.spring(response: 0.5, dampingFraction: 0.9), value: showingGoals)
-        .animation(.spring(response: 0.5, dampingFraction: 0.9), value: showingCommitment)
-        .animation(.spring(response: 0.5, dampingFraction: 0.9), value: showingCompletion)
-        .onChange(of: manager.showingGoalsView) { showingGoalsView in
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.9, blendDuration: 0)) {
-                showingGoals = showingGoalsView
-            }
-        }
-        .onChange(of: manager.showingCommitmentView) { showingCommitmentView in
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.9, blendDuration: 0)) {
-                showingCommitment = showingCommitmentView
-            }
-        }
-        .onChange(of: manager.showingCompletionView) { showingCompletionView in
-            if showingCompletionView {
-                withAnimation(.spring(response: 0.5, dampingFraction: 0.9, blendDuration: 0)) {
-                    showingCompletion = true
-                }
-            }
+        .animation(.spring(response: 0.5, dampingFraction: 0.9), value: manager.currentStep)
+    }
+    
+    private var isNavigatingBack: Bool {
+        guard let previousStep = manager.previousStep else { return false }
+        
+        switch (previousStep, manager.currentStep) {
+        case (.goals, .question), (.commitment, .goals), (.completion, .commitment):
+            return true
+        default:
+            return false
         }
     }
 }

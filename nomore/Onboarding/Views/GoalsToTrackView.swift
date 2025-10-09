@@ -64,7 +64,7 @@ struct GoalsToTrackView: View {
                 VStack(spacing: 12) {
                     HStack {
                         Button(action: {
-                            manager.goBackFromGoals()
+                            manager.goBack()
                         }) {
                             Image(systemName: "chevron.left")
                                 .font(.system(size: 18, weight: .medium))
