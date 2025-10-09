@@ -5,22 +5,25 @@ struct ConsistencyScoreCard: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            // Header
+            // Header with Status
             HStack {
                 Text("Consistency Score")
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(Theme.textPrimary)
                 Spacer()
+                Text(consistencyStore.consistencyLevel)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(consistencyStore.consistencyColor)
             }
             
-            // Main Score Display
-            HStack(spacing: 24) {
-                // Circular Progress Ring
+            // Main Content - Centered Layout
+            VStack(spacing: 16) {
+                // Circular Progress Ring - Centered and Larger
                 ZStack {
                     // Background ring
                     Circle()
                         .stroke(Theme.surfaceStroke, lineWidth: 8)
-                        .frame(width: 120, height: 120)
+                        .frame(width: 140, height: 140)
                     
                     // Progress ring
                     Circle()
@@ -29,14 +32,14 @@ struct ConsistencyScoreCard: View {
                             consistencyStore.consistencyColor,
                             style: StrokeStyle(lineWidth: 8, lineCap: .round)
                         )
-                        .frame(width: 120, height: 120)
+                        .frame(width: 140, height: 140)
                         .rotationEffect(.degrees(-90))
                         .animation(.easeInOut(duration: 1.0), value: consistencyStore.consistencyScore)
                     
                     // Score text in center
                     VStack(spacing: 2) {
                         Text("\(consistencyStore.consistencyScore)")
-                            .font(.system(size: 32, weight: .bold))
+                            .font(.system(size: 36, weight: .bold))
                             .foregroundStyle(Theme.textPrimary)
                         
                         Text("/ 100")
@@ -45,81 +48,40 @@ struct ConsistencyScoreCard: View {
                     }
                 }
                 
-                // Score Details
-                VStack(alignment: .leading, spacing: 12) {
-                    // Status Level
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("STATUS")
+                // Progress to Next Level
+                VStack(spacing: 8) {
+                    HStack {
+                        Text("Next Level")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(Theme.textSecondary)
-                            .tracking(1.0)
-                        
-                        Text(consistencyStore.consistencyLevel)
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(consistencyStore.consistencyColor)
+                        Spacer()
+                        Text(nextLevelProgress)
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(Theme.textPrimary)
                     }
                     
-                    // Progress Indicators
-                    VStack(alignment: .leading, spacing: 8) {
-                        ScoreFactorRow(
-                            icon: "calendar.badge.plus",
-                            title: "Daily Check-ins",
-                            description: "+5-11 points",
-                            color: Theme.mint
-                        )
-                        
-                        ScoreFactorRow(
-                            icon: "calendar.badge.minus",
-                            title: "Missed Days",
-                            description: "-4-8 points",
-                            color: Color.orange
-                        )
-                        
-                        ScoreFactorRow(
-                            icon: "exclamationmark.triangle",
-                            title: "Relapses",
-                            description: "-20-44 points",
-                            color: Color.red
-                        )
+                    // Progress bar
+                    GeometryReader { geometry in
+                        ZStack(alignment: .leading) {
+                            // Background
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(Theme.surfaceStroke)
+                                .frame(height: 4)
+                            
+                            // Progress fill
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(consistencyStore.consistencyColor)
+                                .frame(width: geometry.size.width * nextLevelProgressPercentage, height: 4)
+                                .animation(.easeInOut(duration: 0.8), value: consistencyStore.consistencyScore)
+                        }
                     }
+                    .frame(height: 4)
                 }
-                
-                Spacer()
-            }
-            
-            // Progress Bar at bottom
-            VStack(spacing: 8) {
-                HStack {
-                    Text("Progress to Next Level")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(Theme.textSecondary)
-                    Spacer()
-                    Text(nextLevelProgress)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Theme.textPrimary)
-                }
-                
-                // Progress bar
-                GeometryReader { geometry in
-                    ZStack(alignment: .leading) {
-                        // Background
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Theme.surfaceStroke)
-                            .frame(height: 6)
-                        
-                        // Progress fill
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(consistencyStore.consistencyColor)
-                            .frame(width: geometry.size.width * nextLevelProgressPercentage, height: 6)
-                            .animation(.easeInOut(duration: 0.8), value: consistencyStore.consistencyScore)
-                    }
-                }
-                .frame(height: 6)
             }
         }
-        .padding(24)
+        .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 16)
                 .fill(Theme.surface)
                 .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
         )
@@ -165,33 +127,6 @@ struct ConsistencyScoreCard: View {
     }
 }
 
-// MARK: - Supporting Views
-
-struct ScoreFactorRow: View {
-    let icon: String
-    let title: String
-    let description: String
-    let color: Color
-    
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(color)
-                .frame(width: 16)
-            
-            VStack(alignment: .leading, spacing: 1) {
-                Text(title)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Theme.textPrimary)
-                
-                Text(description)
-                    .font(.system(size: 10, weight: .regular))
-                    .foregroundStyle(Theme.textSecondary)
-            }
-        }
-    }
-}
 
 #Preview {
     ConsistencyScoreCard()
