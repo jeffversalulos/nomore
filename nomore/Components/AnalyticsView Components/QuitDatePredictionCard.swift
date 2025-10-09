@@ -4,22 +4,22 @@ struct QuitDatePredictionCard: View {
     @EnvironmentObject var streakStore: StreakStore
     
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 30) {
             Text("You're on track to quit porn by:")
                 .font(.system(size: 18, weight: .medium))
                 .foregroundStyle(Theme.textPrimary)
                 .multilineTextAlignment(.center)
             
             Text(formattedQuitDate)
-                .font(.system(size: 20, weight: .bold))
+                .font(.system(size: 25, weight: .bold))
                 .foregroundStyle(Theme.textPrimary)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 12)
+                .padding(.horizontal, 25)
+                .padding(.vertical, 20)
                 .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    RoundedRectangle(cornerRadius: 100, style: .continuous)
                         .fill(Theme.surface)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            RoundedRectangle(cornerRadius: 100, style: .continuous)
                                 .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                         )
                 )

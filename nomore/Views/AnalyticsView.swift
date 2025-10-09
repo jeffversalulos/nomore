@@ -24,7 +24,7 @@ struct AnalyticsView: View {
                 
                 // Scrollable content
                 ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 32) {
+                    VStack(spacing: 48) {
                         Spacer(minLength: 20)
                         
                         // Recovery Progress Circle - Using extracted component
