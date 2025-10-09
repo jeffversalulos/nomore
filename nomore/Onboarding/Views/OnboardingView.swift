@@ -90,4 +90,5 @@ struct OnboardingView: View {
     OnboardingView {
         print("Onboarding completed")
     }
+    .environmentObject(OnboardingManager())
 }
