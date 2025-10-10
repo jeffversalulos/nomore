@@ -8,8 +8,8 @@
 import SwiftUI
 
 class OnboardingManager: ObservableObject {
-    @Published var currentStep: OnboardingStep = .question(index: 0)
-    @Published var previousStep: OnboardingStep? = nil
+    @Published var currentIndex: Int = 0
+    @Published var previousIndex: Int = 0
     @Published var profile = OnboardingProfile()
     @Published var hasCompletedOnboarding = false
     
@@ -17,67 +17,51 @@ class OnboardingManager: ObservableObject {
     private let onboardingCompletedKey = "hasCompletedOnboarding"
     private let onboardingProfileKey = "onboardingProfile"
     
+    // MARK: - Core Questions Data
+    let questions: [OnboardingQuestion] = OnboardingQuestionsData.questions
+    private lazy var screenSequence = OnboardingFlow.screenSequence(questionCount: questions.count)
+    
+    var currentScreen: OnboardingScreenType {
+        screenSequence[currentIndex]
+    }
+    
+    var isNavigatingBack: Bool {
+        previousIndex > currentIndex
+    }
+    
+    // Computed property for question index when on question screen
+    var currentQuestionIndex: Int {
+        if case .question(let index) = currentScreen {
+            return index
+        }
+        return 0
+    }
+    
     init() {
         loadOnboardingStatus()
         loadOnboardingProfile()
     }
     
-    // MARK: - Core Questions Data
-    let questions: [OnboardingQuestion] = OnboardingQuestionsData.questions
-    
-    // Computed property for backward compatibility
-    var currentQuestionIndex: Int {
-        switch currentStep {
-        case .question(let index):
-            return index
-        default:
-            return 0
-        }
-    }
-    
     // MARK: - Navigation Methods
-    func nextQuestion() {
-        switch currentStep {
-        case .question(let index):
-            if index < questions.count - 1 {
-                navigateTo(.question(index: index + 1))
-            } else {
-                navigateTo(.goals)
-            }
-        default:
-            break
+    func next() {
+        guard currentIndex < screenSequence.count - 1 else { return }
+        previousIndex = currentIndex
+        currentIndex += 1
+        
+        // Auto-save profile on each navigation
+        saveOnboardingProfile()
+        
+        // Generate personalized message when reaching completion
+        if case .completion = currentScreen {
+            profile.isCompleted = true
+            profile.personalizedMessage = generatePersonalizedMessage()
         }
     }
     
-    func previousQuestion() {
-        switch currentStep {
-        case .question(let index):
-            if index > 0 {
-                navigateTo(.question(index: index - 1))
-            }
-        default:
-            break
-        }
-    }
-    
-    private func navigateTo(_ step: OnboardingStep) {
-        previousStep = currentStep
-        currentStep = step
-    }
-    
-    func goBack() {
-        switch currentStep {
-        case .goals:
-            navigateTo(.question(index: questions.count - 1))
-        case .commitment:
-            navigateTo(.goals)
-        case .completion:
-            navigateTo(.commitment)
-        case .question(let index):
-            if index > 0 {
-                navigateTo(.question(index: index - 1))
-            }
-        }
+    func back() {
+        guard currentIndex > 0 else { return }
+        previousIndex = currentIndex
+        currentIndex -= 1
     }
     
     func selectOption(questionId: Int, optionId: Int, isMultiSelect: Bool = false) {
@@ -108,13 +92,11 @@ class OnboardingManager: ObservableObject {
     }
     
     func canProceed() -> Bool {
-        switch currentStep {
-        case .question(let index):
+        if case .question(let index) = currentScreen {
             let currentQuestion = questions[index]
             return profile.responses.contains { $0.questionId == currentQuestion.id && !$0.selectedOptions.isEmpty }
-        default:
-            return true
         }
+        return true
     }
     
     // MARK: - Goal Selection Methods
@@ -132,16 +114,10 @@ class OnboardingManager: ObservableObject {
     }
     
     // MARK: - Goals View Navigation
-    func completeGoals() {
-        navigateTo(.commitment)
-    }
+    // No longer needed - handled by next() method
 
     // MARK: - Completion
-    func completeCommitment() {
-        profile.isCompleted = true
-        profile.personalizedMessage = generatePersonalizedMessage()
-        navigateTo(.completion)
-    }
+    // No longer needed - handled by next() method
     
     func completeOnboarding() {
         hasCompletedOnboarding = true
@@ -173,8 +149,8 @@ class OnboardingManager: ObservableObject {
     
     func resetOnboarding(goalsStore: GoalsStore? = nil) {
         hasCompletedOnboarding = false
-        currentStep = .question(index: 0)
-        previousStep = nil
+        currentIndex = 0
+        previousIndex = 0
         profile = OnboardingProfile()
         saveOnboardingStatus()
         saveOnboardingProfile()

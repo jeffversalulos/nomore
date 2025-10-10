@@ -18,7 +18,7 @@ struct OnboardingQuestionView: View {
                 // Progress bar
                 HStack {
                     Button(action: {
-                        manager.previousQuestion()
+                        manager.back()
                     }) {
                         Image(systemName: "arrow.left")
                             .font(.title2)
@@ -110,7 +110,7 @@ struct OnboardingQuestionView: View {
                                 if !question.isMultiSelect {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                                         if manager.canProceed() {
-                                            manager.nextQuestion()
+                                            manager.next()
                                         }
                                     }
                                 }

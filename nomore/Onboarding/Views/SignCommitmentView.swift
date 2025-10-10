@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SignCommitmentView: View {
     @ObservedObject var manager: OnboardingManager
-    let onFinish: () -> Void
     
     @State private var signature = Path()
     @State private var currentStroke = Path()
@@ -20,7 +19,7 @@ struct SignCommitmentView: View {
             // Navigation bar
             HStack {
                 Button(action: {
-                    manager.goBack()
+                    manager.back()
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 20, weight: .medium))
@@ -106,7 +105,9 @@ struct SignCommitmentView: View {
             }
             
             // Finish button
-            Button(action: onFinish) {
+            Button(action: {
+                manager.next()
+            }) {
                 Text("Finish")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.white)
@@ -234,10 +235,5 @@ class DrawingView: UIView {
 
 #Preview {
     let manager = OnboardingManager()
-    return SignCommitmentView(
-        manager: manager,
-        onFinish: {
-            print("Finish tapped")
-        }
-    )
+    return SignCommitmentView(manager: manager)
 }

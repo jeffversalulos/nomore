@@ -7,12 +7,26 @@
 
 import SwiftUI
 
-// MARK: - Onboarding Step Enum
-enum OnboardingStep: Equatable {
-    case question(index: Int)
+// MARK: - Onboarding Screen Type Enum
+enum OnboardingScreenType: Equatable {
+    case question(Int)
     case goals
     case commitment
     case completion
+}
+
+// MARK: - Onboarding Flow Definition
+struct OnboardingFlow {
+    static func screenSequence(questionCount: Int) -> [OnboardingScreenType] {
+        var screens: [OnboardingScreenType] = []
+        for i in 0..<questionCount {
+            screens.append(.question(i))
+        }
+        screens.append(.goals)
+        screens.append(.commitment)
+        screens.append(.completion)
+        return screens
+    }
 }
 
 // MARK: - Onboarding Question Model

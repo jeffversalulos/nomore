@@ -17,7 +17,6 @@ struct OnboardingGoal: Identifiable, Equatable {
 
 struct GoalsToTrackView: View {
     @ObservedObject var manager: OnboardingManager
-    let onContinue: (() -> Void)?
 
     private let goalTitles: [String] = [
         "Stronger relationships",
@@ -52,9 +51,8 @@ struct GoalsToTrackView: View {
 
     @EnvironmentObject var goalsStore: GoalsStore
 
-    init(manager: OnboardingManager, onContinue: (() -> Void)? = nil) {
+    init(manager: OnboardingManager) {
         self._manager = ObservedObject(wrappedValue: manager)
-        self.onContinue = onContinue
     }
     
     var body: some View {
@@ -64,7 +62,7 @@ struct GoalsToTrackView: View {
                 VStack(spacing: 12) {
                     HStack {
                         Button(action: {
-                            manager.goBack()
+                            manager.back()
                         }) {
                             Image(systemName: "chevron.left")
                                 .font(.system(size: 18, weight: .medium))
@@ -118,11 +116,9 @@ struct GoalsToTrackView: View {
                 Button(action: {
                     // Transfer selected goals to the store at the end of onboarding
                     transferGoalsToStore()
-
-                    // Call the continue callback if provided
-                    if let onContinue = onContinue {
-                        onContinue()
-                    }
+                    
+                    // Navigate to next screen
+                    manager.next()
                 }) {
                     HStack {
                         Text("Track these goals")
@@ -217,8 +213,6 @@ struct GoalCardSimple: View {
 
 #Preview {
     let manager = OnboardingManager()
-    return GoalsToTrackView(manager: manager) {
-        print("Goals selected and continuing...")
-    }
-    .environmentObject(GoalsStore())
+    return GoalsToTrackView(manager: manager)
+        .environmentObject(GoalsStore())
 }
