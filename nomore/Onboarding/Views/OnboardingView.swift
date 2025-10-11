@@ -26,6 +26,9 @@ struct OnboardingView: View {
             case .commitment:
                 SignCommitmentView(manager: manager)
                 
+            case .reviews:
+                ReviewsView(manager: manager)
+                
             case .completion:
                 OnboardingCompletionView(
                     profile: manager.profile,

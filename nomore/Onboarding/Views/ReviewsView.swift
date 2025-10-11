@@ -9,7 +9,7 @@ import SwiftUI
 import StoreKit
 
 struct ReviewsView: View {
-    let onContinue: () -> Void
+    @ObservedObject var manager: OnboardingManager
     
     @State private var showContent = false
     @State private var animateStars = false
@@ -21,7 +21,9 @@ struct ReviewsView: View {
             VStack(spacing: 24) {
                 // Back button (top left)
                 HStack {
-                    Button(action: {}) {
+                Button(action: {
+                    manager.back()
+                }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 20, weight: .medium))
                             .foregroundColor(.white)
@@ -150,9 +152,9 @@ struct ReviewsView: View {
                 // Show Apple's native review prompt
                 requestReview()
                 
-                // Navigate to completion after a brief delay
+                // Navigate to next screen after a brief delay
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    onContinue()
+                    manager.next()
                 }
             }) {
                 Text("Rate Us!")
@@ -256,7 +258,6 @@ struct ReviewCard: View {
 }
 
 #Preview {
-    ReviewsView {
-        print("Continue to completion")
-    }
+    let manager = OnboardingManager()
+    return ReviewsView(manager: manager)
 }
