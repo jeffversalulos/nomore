@@ -17,137 +17,144 @@ struct ReviewsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Header section
-            VStack(spacing: 24) {
-                // Back button (top left)
-                HStack {
-                Button(action: {
-                    manager.back()
-                }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 20, weight: .medium))
-                            .foregroundColor(.white)
+            // Scrollable content
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Header section
+                    VStack(spacing: 24) {
+                        // Back button (top left)
+                        HStack {
+                        Button(action: {
+                            manager.back()
+                        }) {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 20, weight: .medium))
+                                    .foregroundColor(.white)
+                            }
+                            Spacer()
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.top, 20)
+                        
+                        Spacer()
+                        
+                        // Main title
+                        VStack(spacing: 16) {
+                            Text("Give us a rating")
+                                .font(.system(size: 32, weight: .bold))
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
+                                .opacity(showContent ? 1.0 : 0.0)
+                                .offset(y: showContent ? 0 : 20)
+                                .animation(.easeOut(duration: 0.6).delay(0.3), value: showContent)
+                            
+                            // Decorative stars with leaves
+                            HStack(spacing: 8) {
+                                Image(systemName: "leaf.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white.opacity(0.7))
+                                    .rotationEffect(.degrees(-15))
+                                
+                                ForEach(0..<5, id: \.self) { index in
+                                    Image(systemName: "star.fill")
+                                        .font(.system(size: 28, weight: .medium))
+                                        .foregroundColor(Color(red: 1.0, green: 0.8, blue: 0.0))
+                                        .scaleEffect(animateStars ? 1.03 : 1.0)
+                                        .animation(
+                                            .easeInOut(duration: 1.5)
+                                            .repeatForever(autoreverses: true)
+                                            .delay(Double(index) * 0.15),
+                                            value: animateStars
+                                        )
+                                }
+                                
+                                Image(systemName: "leaf.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white.opacity(0.7))
+                                    .rotationEffect(.degrees(15))
+                            }
+                            .opacity(showContent ? 1.0 : 0.0)
+                            .offset(y: showContent ? 0 : 20)
+                            .animation(.easeOut(duration: 0.6).delay(0.6), value: showContent)
+                        }
+                        
+                        Spacer()
                     }
-                    Spacer()
-                }
-                .padding(.horizontal, 24)
-                .padding(.top, 20)
-                
-                Spacer()
-                
-                // Main title
-                VStack(spacing: 16) {
-                    Text("Give us a rating")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
+                    .frame(height: 300)
+                    
+                    // Content section
+                    VStack(spacing: 32) {
+                        // Subtitle
+                        VStack(spacing: 16) {
+                            Text("This app was designed for people\nlike you.")
+                                .font(.system(size: 22, weight: .medium))
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
+                                .lineSpacing(4)
+                            
+                            // User avatars and count
+                            HStack(spacing: -8) {
+                                ForEach(0..<3, id: \.self) { index in
+                                    Circle()
+                                        .fill(
+                                            LinearGradient(
+                                                colors: [Theme.mint, Theme.aqua],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
+                                        .frame(width: 44, height: 44)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.white.opacity(0.3), lineWidth: 2)
+                                        )
+                                        .overlay(
+                                            Image(systemName: ["person.fill", "heart.fill", "star.fill"][index])
+                                                .font(.system(size: 18, weight: .medium))
+                                                .foregroundColor(.white)
+                                        )
+                                }
+                                
+                                Text("+ 1,000,000 people")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(.white.opacity(0.8))
+                                    .padding(.leading, 16)
+                            }
+                        }
                         .opacity(showContent ? 1.0 : 0.0)
                         .offset(y: showContent ? 0 : 20)
-                        .animation(.easeOut(duration: 0.6).delay(0.3), value: showContent)
-                    
-                    // Decorative stars with leaves
-                    HStack(spacing: 8) {
-                        Image(systemName: "leaf.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(.white.opacity(0.7))
-                            .rotationEffect(.degrees(-15))
+                        .animation(.easeOut(duration: 0.6).delay(0.9), value: showContent)
                         
-                        ForEach(0..<5, id: \.self) { index in
-                            Image(systemName: "star.fill")
-                                .font(.system(size: 28, weight: .medium))
-                                .foregroundColor(Color(red: 1.0, green: 0.8, blue: 0.0))
-                                .scaleEffect(animateStars ? 1.03 : 1.0)
-                                .animation(
-                                    .easeInOut(duration: 1.5)
-                                    .repeatForever(autoreverses: true)
-                                    .delay(Double(index) * 0.15),
-                                    value: animateStars
-                                )
+                        // Reviews section
+                        VStack(spacing: 16) {
+                            ReviewCard(
+                                name: "Michael Stevens",
+                                handle: "@michaels",
+                                review: "\"QUITTR has been a lifesaver for me. The progress tracking and motivational notifications have kept me on track. I haven't watched porn in 3 months and feel more in control of my life.\"",
+                                delay: 1.2
+                            )
+                            
+                            ReviewCard(
+                                name: "Tony Coleman",
+                                handle: "@tcoleman23",
+                                review: "\"I was skeptical at first, but QUITTR's panic button feature has helped me resist temptation when it feels overwhelming. This app actually works.\"",
+                                delay: 1.5,
+                                isPartial: true
+                            )
                         }
-                        
-                        Image(systemName: "leaf.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(.white.opacity(0.7))
-                            .rotationEffect(.degrees(15))
+                        .opacity(showContent ? 1.0 : 0.0)
+                        .offset(y: showContent ? 0 : 30)
+                        .animation(.easeOut(duration: 0.8).delay(1.2), value: showContent)
                     }
-                    .opacity(showContent ? 1.0 : 0.0)
-                    .offset(y: showContent ? 0 : 20)
-                    .animation(.easeOut(duration: 0.6).delay(0.6), value: showContent)
+                    .padding(.horizontal, 24)
                 }
-                
-                Spacer()
             }
-            .frame(height: 300)
             
-            // Content section
-            VStack(spacing: 32) {
-                // Subtitle
-                VStack(spacing: 16) {
-                    Text("This app was designed for people\nlike you.")
-                        .font(.system(size: 22, weight: .medium))
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .lineSpacing(4)
-                    
-                    // User avatars and count
-                    HStack(spacing: -8) {
-                        ForEach(0..<3, id: \.self) { index in
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [Theme.mint, Theme.aqua],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 44, height: 44)
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color.white.opacity(0.3), lineWidth: 2)
-                                )
-                                .overlay(
-                                    Image(systemName: ["person.fill", "heart.fill", "star.fill"][index])
-                                        .font(.system(size: 18, weight: .medium))
-                                        .foregroundColor(.white)
-                                )
-                        }
-                        
-                        Text("+ 1,000,000 people")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.white.opacity(0.8))
-                            .padding(.leading, 16)
-                    }
-                }
-                .opacity(showContent ? 1.0 : 0.0)
-                .offset(y: showContent ? 0 : 20)
-                .animation(.easeOut(duration: 0.6).delay(0.9), value: showContent)
-                
-                // Reviews section
-                VStack(spacing: 16) {
-                    ReviewCard(
-                        name: "Michael Stevens",
-                        handle: "@michaels",
-                        review: "\"QUITTR has been a lifesaver for me. The progress tracking and motivational notifications have kept me on track. I haven't watched porn in 3 months and feel more in control of my life.\"",
-                        delay: 1.2
-                    )
-                    
-                    ReviewCard(
-                        name: "Tony Coleman",
-                        handle: "@tcoleman23",
-                        review: "\"I was skeptical at first, but QUITTR's panic button feature has helped me resist temptation when it feels overwhelming. This app actually works.\"",
-                        delay: 1.5,
-                        isPartial: true
-                    )
-                }
-                .opacity(showContent ? 1.0 : 0.0)
-                .offset(y: showContent ? 0 : 30)
-                .animation(.easeOut(duration: 0.8).delay(1.2), value: showContent)
-            }
-            .padding(.horizontal, 24)
-            
+            // Spacer to create gap between scroll content and button
             Spacer()
+                .frame(height: 20)
             
-            // Next button
+            // Sticky button at bottom
             Button(action: {
                 // Show Apple's native review prompt
                 requestReview()
