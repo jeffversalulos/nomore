@@ -13,6 +13,7 @@ enum OnboardingScreenType: Equatable {
     case goals
     case commitment
     case reviews
+    case motivationalMessages
     case completion
 }
 
@@ -26,6 +27,7 @@ struct OnboardingFlow {
         screens.append(.goals)
         screens.append(.commitment)
         screens.append(.reviews)
+        screens.append(.motivationalMessages)
         screens.append(.completion)
         return screens
     }

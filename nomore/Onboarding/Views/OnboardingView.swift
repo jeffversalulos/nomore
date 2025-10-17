@@ -29,6 +29,11 @@ struct OnboardingView: View {
             case .reviews:
                 ReviewsView(manager: manager)
                 
+            case .motivationalMessages:
+                MotivationalMessagesView {
+                    manager.next()
+                }
+                
             case .completion:
                 OnboardingCompletionView(
                     profile: manager.profile,
