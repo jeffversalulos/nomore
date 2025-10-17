@@ -128,7 +128,7 @@ struct TemptationSheet: View {
                                     ZStack {
                                         // Background track
                                         RoundedRectangle(cornerRadius: 25, style: .continuous)
-                                            .fill(tempIsTempted ? .red.opacity(0.3) : .green.opacity(0.3))
+                                            .fill(tempIsTempted ? .blue.opacity(0.3) : .blue.opacity(0.3))
                                             .frame(width: 60, height: 34)
                                         
                                         // Toggle circle
