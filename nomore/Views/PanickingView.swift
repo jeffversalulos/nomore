@@ -2,6 +2,10 @@ import SwiftUI
 
 struct PanickingView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var streakStore: StreakStore
+    @EnvironmentObject var consistencyStore: ConsistencyStore
+    @State private var showRelapseView = false
+    @State private var selectedTab = 0
     
     var body: some View {
         ZStack {
@@ -75,8 +79,7 @@ struct PanickingView: View {
                 Spacer()
                 PanicBottomButtons(
                     onIRelapsed: {
-                        // TODO: Handle "I Relapsed" action
-                        print("I Relapsed tapped")
+                        showRelapseView = true
                     },
                     onThinkingOfRelapsing: {
                         // TODO: Handle "I'm thinking of relapsing" action
@@ -86,9 +89,16 @@ struct PanickingView: View {
             }
         }
         .navigationBarHidden(true)
+        .fullScreenCover(isPresented: $showRelapseView) {
+            RelapseView(isPresented: $showRelapseView, selectedTab: $selectedTab)
+                .environmentObject(streakStore)
+                .environmentObject(consistencyStore)
+        }
     }
 }
 
 #Preview {
     PanickingView()
+        .environmentObject(StreakStore())
+        .environmentObject(ConsistencyStore())
 }
