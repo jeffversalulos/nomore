@@ -11,6 +11,7 @@ import SwiftUI
 enum OnboardingScreenType: Equatable {
     case question(Int)
     case goals
+    case recoveryAnalysis
     case commitment
     case reviews
     case motivationalMessages
@@ -25,6 +26,7 @@ struct OnboardingFlow {
             screens.append(.question(i))
         }
         screens.append(.goals)
+        screens.append(.recoveryAnalysis)
         screens.append(.commitment)
         screens.append(.reviews)
         screens.append(.motivationalMessages)

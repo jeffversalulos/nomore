@@ -23,6 +23,9 @@ struct OnboardingView: View {
             case .goals:
                 GoalsToTrackView(manager: manager)
                 
+            case .recoveryAnalysis:
+                RecoveryAnalysisView(manager: manager)
+                
             case .commitment:
                 SignCommitmentView(manager: manager)
                 
