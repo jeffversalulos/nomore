@@ -87,12 +87,6 @@ struct OnboardingCompletionView: View {
                         title: "Personal Journal",
                         description: "Private space to process emotions and track triggers"
                     )
-                    
-                    FeatureHighlight(
-                        icon: "target",
-                        title: "Purpose-Driven Goals",
-                        description: "Set meaningful objectives that inspire lasting change"
-                    )
                 }
                 .padding(.horizontal, 24)
                 .padding(.top, 20)

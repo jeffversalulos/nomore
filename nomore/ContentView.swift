@@ -78,7 +78,6 @@ struct ContentView: View {
         .environmentObject(StreakStore())
         .environmentObject(JournalStore())
         .environmentObject(goalsStore)
-        .environmentObject(PurposeStore())
         .environmentObject(OnboardingManager())
         .environmentObject(dailyUsageStore)
         .environmentObject(AchievementStore())

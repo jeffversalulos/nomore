@@ -10,9 +10,7 @@ struct MoreView: View {
             NavigationStack {
                 List {
                     Section("Recovery Tools") {
-                        NavigationLink(destination: PurposeView()) {
-                            Label("Your Purpose", systemImage: "target")
-                        }
+                        // Purpose navigation removed
                     }
                     
                     Section("Coming soon") {
@@ -46,7 +44,6 @@ struct MoreView: View {
         .environmentObject(StreakStore())
         .environmentObject(JournalStore())
         .environmentObject(GoalsStore())
-        .environmentObject(PurposeStore())
         .environmentObject(DailyUsageStore())
 }
 
