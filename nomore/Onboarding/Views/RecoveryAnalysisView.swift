@@ -40,7 +40,7 @@ struct RecoveryAnalysisView: View {
                         .foregroundColor(Theme.textPrimary)
                     
                     // Main Message
-                    Text("We're building your\nrecovery foundation")
+                    Text("We're building your\nfoundation for success!")
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(Theme.textPrimary)
                         .multilineTextAlignment(.center)
@@ -120,10 +120,10 @@ struct RecoveryAnalysisView: View {
                 .padding(.vertical, 24)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.white.opacity(0.1))
+                        .fill(Theme.surface)
                         .overlay(
                             RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                                .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
                         )
                 )
                 .padding(.horizontal, 20)
@@ -139,13 +139,40 @@ struct RecoveryAnalysisView: View {
     }
     
     private func startLoadingAnimation() {
-        // Animate progress gradually over 10 seconds
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
-            if progress < 1.0 {
-                progress += 0.01 // Increment by 1% every 0.1 seconds
-            } else {
+        // Animate progress with realistic varying speeds over 10 seconds
+        var currentProgress: Double = 0.0
+        let totalDuration: Double = 10.0
+        let startTime = Date()
+        
+        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
+            let elapsed = Date().timeIntervalSince(startTime)
+            let normalizedTime = elapsed / totalDuration
+            
+            if normalizedTime >= 1.0 {
+                progress = 1.0
                 timer.invalidate()
+                return
             }
+            
+            // Create realistic progress curve with varying speeds
+            // Visible start, steady middle, gentle end
+            let easedProgress: Double
+            if normalizedTime < 0.2 {
+                // Visible start (0-20%) - linear so you can see the numbers
+                easedProgress = normalizedTime * 1.0
+            } else if normalizedTime < 0.8 {
+                // Steady middle (20-80%)
+                let middleTime = (normalizedTime - 0.2) / 0.6
+                easedProgress = 0.2 + (middleTime * 0.6)
+            } else {
+                // Gentle end (80-100%)
+                let endTime = (normalizedTime - 0.8) / 0.2
+                easedProgress = 0.8 + (endTime * endTime * 0.2)
+            }
+            
+            // Add some randomness to make it feel more realistic
+            let randomVariation = Double.random(in: -0.002...0.002)
+            progress = min(1.0, max(0.0, easedProgress + randomVariation))
         }
         
         // Animate loading messages - each message shows for ~3.3 seconds
