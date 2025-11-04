@@ -8,7 +8,7 @@ struct HeaderView: View {
     var body: some View {
         HStack {
             // Logo/Brand name on the left
-            Text("QUITTR")
+            Text("ANEW")
                 .font(.system(size: 20, weight: .bold, design: .rounded))
                 .foregroundStyle(Theme.textPrimary)
             

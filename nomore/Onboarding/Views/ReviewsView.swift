@@ -130,14 +130,14 @@ struct ReviewsView: View {
                             ReviewCard(
                                 name: "Michael Stevens",
                                 handle: "@michaels",
-                                review: "\"QUITTR has been a lifesaver for me. The progress tracking and motivational notifications have kept me on track. I haven't watched porn in 3 months and feel more in control of my life.\"",
+                                review: "\"ANEW has been a lifesaver for me. The progress tracking and motivational notifications have kept me on track. I haven't watched porn in 3 months and feel more in control of my life.\"",
                                 delay: 1.2
                             )
                             
                             ReviewCard(
                                 name: "Tony Coleman",
                                 handle: "@tcoleman23",
-                                review: "\"I was skeptical at first, but QUITTR's panic button feature has helped me resist temptation when it feels overwhelming. This app actually works.\"",
+                                review: "\"I was skeptical at first, but ANEW's panic button feature has helped me resist temptation when it feels overwhelming. This app actually works.\"",
                                 delay: 1.5,
                                 isPartial: true
                             )

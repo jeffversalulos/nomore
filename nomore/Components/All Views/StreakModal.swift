@@ -70,13 +70,13 @@ struct StreakModal: View {
                                 .foregroundStyle(Theme.textPrimary)
                             
                             // Streak explanation
-                            Text("Consecutive days you've opened QUITTR")
+                            Text("Consecutive days you've opened ANEW")
                                 .font(.system(size: 18, weight: .medium))
                                 .foregroundStyle(Theme.textSecondary)
                                 .multilineTextAlignment(.center)
                             
                             // Motivational message
-                            Text("Gain a streak for every consecutive day you login to QUITTR.")
+                            Text("Gain a streak for every consecutive day you login to ANEW.")
                                 .font(.system(size: 16, weight: .regular))
                                 .foregroundStyle(Theme.textSecondary)
                                 .multilineTextAlignment(.center)

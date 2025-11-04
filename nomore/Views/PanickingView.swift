@@ -26,7 +26,7 @@ struct PanickingView: View {
                     Spacer()
                     
                     VStack(spacing: 4) {
-                        Text("QUITTR")
+                        Text("ANEW")
                             .font(.system(size: 20, weight: .bold))
                             .foregroundColor(.white)
                             .tracking(2)

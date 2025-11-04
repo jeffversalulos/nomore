@@ -23,7 +23,7 @@ struct InternetFilterView: View {
                 // Description and status
                 VStack(spacing: 16) {
                     VStack(spacing: 12) {
-                        Text("QUITTR protects you by managing content restrictions and disabling private browsing.")
+                        Text("ANEW protects you by managing content restrictions and disabling private browsing.")
                             .font(.system(size: 16, weight: .regular))
                             .foregroundColor(Theme.textSecondary)
                             .multilineTextAlignment(.center)
