@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PaywallView: View {
-    @State private var selectedPlan: PricingPlan = .monthly
+    @State private var selectedPlan: PricingPlan = .weekly
     let onContinue: () -> Void
     
     var body: some View {
@@ -57,15 +57,7 @@ struct PaywallView: View {
                 .padding(.bottom, 36)
                 
                 // Pricing Options
-                VStack(spacing: 14) {
-                    // Weekly Plan
-                    PricingBubble(
-                        plan: .weekly,
-                        isSelected: selectedPlan == .weekly
-                    ) {
-                        selectedPlan = .weekly
-                    }
-                    
+                HStack(spacing: 14) {
                     // Monthly Plan
                     PricingBubble(
                         plan: .monthly,
@@ -73,8 +65,17 @@ struct PaywallView: View {
                     ) {
                         selectedPlan = .monthly
                     }
+                    
+                    // Weekly Plan (Yearly)
+                    PricingBubble(
+                        plan: .weekly,
+                        isSelected: selectedPlan == .weekly
+                    ) {
+                        selectedPlan = .weekly
+                    }
                 }
-                .padding(.horizontal, 24)
+                .frame(height: 160)
+                .padding(.horizontal, 18)
                 .padding(.bottom, 28)
                 
                 // CTA Button
@@ -186,7 +187,7 @@ enum PricingPlan {
     
     var price: String {
         switch self {
-        case .weekly: return "$4.99"
+        case .weekly: return "$3.33"
         case .monthly: return "$12.99"
         }
     }
@@ -200,15 +201,15 @@ enum PricingPlan {
     
     var billingDetails: String {
         switch self {
-        case .weekly: return "Billed weekly at $4.99"
+        case .weekly: return "Billed yearly at $39.99"
         case .monthly: return "Billed monthly at $12.99"
         }
     }
     
     var savings: String? {
         switch self {
-        case .weekly: return nil
-        case .monthly: return "35% Off"
+        case .weekly: return "SAVE 35%"
+        case .monthly: return nil
         }
     }
 }
@@ -220,101 +221,123 @@ struct PricingBubble: View {
     let onTap: () -> Void
     
     var body: some View {
-        Button(action: onTap) {
-            HStack(spacing: 16) {
-                VStack(alignment: .leading, spacing: 4) {
-                    // Plan name
-                    Text(plan == .weekly ? "Weekly" : "Monthly")
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundColor(.white)
+        ZStack(alignment: .top) {
+            Button(action: onTap) {
+                // Main content with horizontal layout
+                HStack(alignment: .center, spacing: 0) {
+                    // Left side: Plan info (LEFT-aligned)
+                    VStack(alignment: .leading, spacing: 4) {
+                        // Plan name
+                        Text(plan == .weekly ? "Yearly" : "Monthly")
+                            .font(.system(size: 24, weight: .semibold))
+                            .foregroundColor(.white)
+                        
+                        // Price per period
+                        Text("\(plan.price) /mo")
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundColor(.white.opacity(0.8))
+                    }
                     
-                    // Price per period
-                    Text("\(plan.price)/\(plan.period)")
-                        .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(.white.opacity(0.85))
+                    Spacer()
+                    
+                    // Right side: Selection indicator
+                    ZStack {
+                        Circle()
+                            .strokeBorder(Color.white.opacity(0.5), lineWidth: 2)
+                            .frame(width: 32, height: 32)
+                        
+                        if isSelected {
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 32, height: 32)
+                            
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(.black)
+                        }
+                    }
                 }
-                
-                Spacer()
-                
-                // Savings badge (if applicable)
-                if let savings = plan.savings {
-                    Text(savings)
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(
-                            Capsule()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            Color(red: 0.35, green: 0.25, blue: 0.85),
-                                            Color(red: 0.45, green: 0.15, blue: 0.95)
-                                        ],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
+                .padding(.horizontal, 20)
+                .padding(.vertical, 28)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(
+                            isSelected ?
+                            LinearGradient(
+                                colors: [
+                                    Color(red: 0.45, green: 0.35, blue: 0.88).opacity(0.4),
+                                    Color(red: 0.55, green: 0.25, blue: 0.95).opacity(0.4)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ) :
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.08),
+                                    Color.white.opacity(0.08)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
                         )
-                }
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .strokeBorder(
+                            isSelected ?
+                            LinearGradient(
+                                colors: [
+                                    Color(red: 0.5, green: 0.3, blue: 0.95),
+                                    Color(red: 0.6, green: 0.4, blue: 1.0)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ) :
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.25),
+                                    Color.white.opacity(0.25)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: isSelected ? 2.5 : 1.5
+                        )
+                )
+                .shadow(
+                    color: isSelected ? Color(red: 0.5, green: 0.3, blue: 0.95).opacity(0.4) : Color.clear,
+                    radius: isSelected ? 12 : 0,
+                    x: 0,
+                    y: isSelected ? 4 : 0
+                )
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 22)
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(
-                        isSelected ?
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0.45, green: 0.35, blue: 0.88).opacity(0.4),
-                                Color(red: 0.55, green: 0.25, blue: 0.95).opacity(0.4)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ) :
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.08),
-                                Color.white.opacity(0.08)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+            .buttonStyle(PlainButtonStyle())
+            .animation(.easeInOut(duration: 0.2), value: isSelected)
+            
+            // Savings badge at the top (OUTSIDE button, in front of everything)
+            if let savings = plan.savings {
+                Text(savings)
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 22)
+                    .padding(.vertical, 9)
+                    .background(
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        Color(red: 0.5, green: 0.3, blue: 0.95),
+                                        Color(red: 0.6, green: 0.4, blue: 1.0)
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
                     )
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .strokeBorder(
-                        isSelected ?
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0.5, green: 0.3, blue: 0.95),
-                                Color(red: 0.6, green: 0.4, blue: 1.0)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ) :
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.25),
-                                Color.white.opacity(0.25)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: isSelected ? 3 : 1.5
-                    )
-            )
-            .shadow(
-                color: isSelected ? Color(red: 0.5, green: 0.3, blue: 0.95).opacity(0.4) : Color.clear,
-                radius: isSelected ? 12 : 0,
-                x: 0,
-                y: isSelected ? 4 : 0
-            )
+                    .offset(y: -13)
+            }
         }
-        .buttonStyle(PlainButtonStyle())
-        .animation(.easeInOut(duration: 0.2), value: isSelected)
     }
 }
 
