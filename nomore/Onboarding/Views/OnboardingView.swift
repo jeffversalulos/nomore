@@ -37,6 +37,11 @@ struct OnboardingView: View {
                     manager.next()
                 }
                 
+            case .paywall:
+                PaywallView {
+                    manager.next()
+                }
+                
             case .completion:
                 OnboardingCompletionView(
                     profile: manager.profile,
