@@ -31,30 +31,31 @@ struct PaywallView: View {
                 .padding(.bottom, 36)
                 
                 // Features
-                HStack(spacing: 16) {
+                HStack(spacing: 12) {
                     FeatureCard(
-                        emoji: "📅",
+                        emoji: "📊",
                         title: "DAYS",
                         subtitle: "365",
-                        description: "Track time\nsober"
+                        description: "Track your\nrecovery"
                     )
                     
                     FeatureCard(
-                        emoji: "🐝",
+                        emoji: "🧠",
                         title: "",
                         subtitle: "",
-                        description: "Meet your\nsponsor"
+                        description: "Rewire your\nbrain"
                     )
                     
                     FeatureCard(
-                        emoji: "🌻",
+                        emoji: "🎯",
                         title: "",
                         subtitle: "",
-                        description: "Find sober\nfriends"
+                        description: "Achieve\nyour goals"
                     )
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 16)
                 .padding(.bottom, 36)
+                Spacer()
                 
                 // Pricing Options
                 HStack(spacing: 14) {
@@ -84,7 +85,7 @@ struct PaywallView: View {
                     onContinue()
                 }) {
                     Text("Start Your Journey")
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 56)
@@ -153,7 +154,7 @@ struct FeatureCard: View {
         VStack(spacing: 10) {
             // Icon/Emoji
             Text(emoji)
-                .font(.system(size: 44))
+                .font(.system(size: 52))
             
             // Title and Subtitle (for calendar card)
             if !title.isEmpty {
@@ -169,10 +170,11 @@ struct FeatureCard: View {
             
             // Description
             Text(description)
-                .font(.system(size: 13, weight: .medium))
+                .font(.system(size: 15, weight: .medium))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
                 .lineSpacing(2)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity)
         .frame(height: 140)
