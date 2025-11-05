@@ -30,32 +30,28 @@ struct PaywallView: View {
                 .padding(.horizontal, 32)
                 .padding(.bottom, 36)
                 
-                // Features
-                HStack(spacing: 12) {
-                    FeatureCard(
+                // Features - Simple List
+                VStack(spacing: 20) {
+                    FeatureRow(
                         emoji: "📊",
-                        title: "DAYS",
-                        subtitle: "365",
-                        description: "Track your\nrecovery"
+                        title: "Track your recovery progress",
+                        iconColor: Color(red: 0.4, green: 0.6, blue: 1.0)
                     )
                     
-                    FeatureCard(
+                    FeatureRow(
                         emoji: "🧠",
-                        title: "",
-                        subtitle: "",
-                        description: "Rewire your\nbrain"
+                        title: "Rewire your brain naturally",
+                        iconColor: Color(red: 0.8, green: 0.4, blue: 1.0)
                     )
                     
-                    FeatureCard(
+                    FeatureRow(
                         emoji: "🎯",
-                        title: "",
-                        subtitle: "",
-                        description: "Achieve\nyour goals"
+                        title: "Achieve lasting freedom",
+                        iconColor: Color(red: 1.0, green: 0.5, blue: 0.5)
                     )
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 32)
                 .padding(.bottom, 36)
-                Spacer()
                 
                 // Pricing Options
                 HStack(spacing: 14) {
@@ -143,42 +139,43 @@ struct PaywallView: View {
     }
 }
 
-// MARK: - Feature Card Component
-struct FeatureCard: View {
+// MARK: - Feature Row Component
+struct FeatureRow: View {
     let emoji: String
     let title: String
-    let subtitle: String
-    let description: String
+    let iconColor: Color
     
     var body: some View {
-        VStack(spacing: 10) {
-            // Icon/Emoji
-            Text(emoji)
-                .font(.system(size: 52))
-            
-            // Title and Subtitle (for calendar card)
-            if !title.isEmpty {
-                VStack(spacing: 2) {
-                    Text(title)
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(.white.opacity(0.7))
-                    Text(subtitle)
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(.white)
-                }
+        HStack(spacing: 16) {
+            // Emoji with gradient background
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [iconColor.opacity(0.3), iconColor.opacity(0.15)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 56, height: 56)
+                
+                Text(emoji)
+                    .font(.system(size: 28))
             }
             
-            // Description
-            Text(description)
-                .font(.system(size: 15, weight: .medium))
+            // Title
+            Text(title)
+                .font(.system(size: 17, weight: .medium))
                 .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-                .lineSpacing(2)
-                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.leading)
+            
+            Spacer()
+            
+            // Checkmark
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 24))
+                .foregroundColor(iconColor)
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 140)
-        .padding(.horizontal, 8)
     }
 }
 
