@@ -22,7 +22,7 @@ struct GoalsProgressCard: View {
     
     var body: some View {
         if !selectedGoals.isEmpty {
-            VStack(spacing: 20) {
+            VStack(spacing: 0) {
                 // Header
                 HStack {
                     Text("Your Goals")
@@ -31,27 +31,37 @@ struct GoalsProgressCard: View {
                     Spacer()
                 }
                 .padding(.horizontal, 24)
+                .padding(.top, 20)
+                .padding(.bottom, 16)
                 
-                // Goals container
-                VStack(spacing: 16) {
-                    ForEach(selectedGoals, id: \.self) { goalTitle in
+                // Goals list with dividers
+                VStack(spacing: 0) {
+                    ForEach(Array(selectedGoals.enumerated()), id: \.element) { index, goalTitle in
                         GoalProgressRow(
                             goalTitle: goalTitle,
                             progress: calculateProgress(for: goalTitle),
                             timeRemaining: calculateTimeRemaining(for: goalTitle)
                         )
+                        
+                        // Add divider between goals (but not after the last one)
+                        if index < selectedGoals.count - 1 {
+                            Rectangle()
+                                .fill(Theme.textSecondary.opacity(0.5))
+                                .frame(height: 1)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 4)
+                        }
                     }
                 }
-                .padding(.horizontal, 24)
-                .padding(.vertical, 20)
-                .background(
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Theme.surface)
-                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
-                )
-                .padding(.horizontal, 24)
-                .softShadow()
+                .padding(.bottom, 20)
             }
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Theme.surface)
+                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+            )
+            .padding(.horizontal, 24)
+            .softShadow()
         }
     }
     
@@ -119,7 +129,7 @@ struct GoalProgressRow: View {
     var body: some View {
         VStack(spacing: 12) {
             // Goal header
-            HStack {
+            HStack(alignment: .center, spacing: 12) {
                 // Goal icon
                 if let systemImage = goalIcons[goalTitle] {
                     Image(systemName: systemImage)
@@ -136,22 +146,46 @@ struct GoalProgressRow: View {
                 
                 Spacer()
                 
-                // Time remaining
-                Text(timeRemaining)
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(progress >= 1.0 ? Theme.mint : Theme.textSecondary)
+                // Achievement badge or time remaining
+                if progress >= 1.0 {
+                    HStack(spacing: 4) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(Theme.mint)
+                        
+                        Text("Achieved")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(Theme.mint)
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(
+                        Capsule()
+                            .fill(Theme.mint.opacity(0.15))
+                    )
+                } else {
+                    Text(timeRemaining)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(Theme.textSecondary)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule()
+                                .fill(Theme.surfaceTwo.opacity(0.3))
+                        )
+                }
             }
             
             // Progress bar
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     // Background track
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 6)
                         .fill(Theme.surfaceTwo.opacity(0.3))
-                        .frame(height: 8)
+                        .frame(height: 6)
                     
                     // Progress fill
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 6)
                         .fill(
                             LinearGradient(
                                 colors: progress >= 1.0 ? 
@@ -161,40 +195,23 @@ struct GoalProgressRow: View {
                                 endPoint: .trailing
                             )
                         )
-                        .frame(width: geometry.size.width * progress, height: 8)
+                        .frame(width: geometry.size.width * progress, height: 6)
                         .animation(.easeInOut(duration: 0.5), value: progress)
                 }
             }
-            .frame(height: 8)
+            .frame(height: 6)
             
             // Progress percentage
             HStack {
-                Text("\(Int(progress * 100))% complete")
-                    .font(.system(size: 12, weight: .medium))
+                Text("\(Int(progress * 100))%")
+                    .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Theme.textSecondary)
                 
                 Spacer()
-                
-                if progress >= 1.0 {
-                    HStack(spacing: 4) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(Theme.mint)
-                        
-                        Text("Achieved")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(Theme.mint)
-                    }
-                }
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 24)
         .padding(.vertical, 16)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Theme.surfaceTwo.opacity(0.2))
-                .stroke(progress >= 1.0 ? Theme.mint.opacity(0.3) : Theme.surfaceStroke.opacity(0.5), lineWidth: 1)
-        )
     }
 }
 
