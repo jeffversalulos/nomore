@@ -174,7 +174,7 @@ struct FeatureRow: View {
             // Checkmark
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 24))
-                .foregroundColor(iconColor)
+                .foregroundColor(.green)
         }
     }
 }
