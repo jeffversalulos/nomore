@@ -3,6 +3,7 @@ import SwiftUI
 struct YourProgressSection: View {
     @EnvironmentObject var streakStore: StreakStore
     @State private var currentTime = Date()
+    @State private var hasInitialized = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -84,6 +85,11 @@ struct YourProgressSection: View {
         }
         .onAppear {
             currentTime = Date()
+            // Initialize firstStartDate if needed
+            if UserDefaults.standard.double(forKey: "firstStartDate") == 0 {
+                UserDefaults.standard.set(streakStore.lastRelapseDate.timeIntervalSince1970, forKey: "firstStartDate")
+            }
+            hasInitialized = true
         }
     }
     
@@ -107,30 +113,30 @@ struct YourProgressSection: View {
     }
     
     private var averageStreak: Int {
-        // Calculate average based on total relapses and total days
+        // Calculate average based on total relapses and current streak
         let totalRelapses = UserDefaults.standard.integer(forKey: "totalRelapses")
-        let totalDaysValue = totalDays
         
         if totalRelapses == 0 {
-            return totalDaysValue
+            // No relapses yet, average is the current streak
+            return currentStreakDays
         }
         
-        return totalDaysValue / (totalRelapses + 1)
+        // Average = total days / number of attempts (relapses + 1 for current attempt)
+        return totalDays / (totalRelapses + 1)
     }
     
     private var totalDays: Int {
         // Get the very first start date (when app was first used)
         let firstStartInterval = UserDefaults.standard.double(forKey: "firstStartDate")
         
-        if firstStartInterval == 0 {
-            // First time - set it now
-            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "firstStartDate")
+        guard firstStartInterval > 0 else {
+            // Not initialized yet, return current streak
             return currentStreakDays
         }
         
         let firstStartDate = Date(timeIntervalSince1970: firstStartInterval)
         let secondsSinceFirstStart = currentTime.timeIntervalSince(firstStartDate)
-        return Int(secondsSinceFirstStart / (24 * 3600))
+        return max(Int(secondsSinceFirstStart / (24 * 3600)), currentStreakDays)
     }
 }
 
@@ -148,7 +154,7 @@ struct ProgressStatCard: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [iconColor.opacity(0.3), iconColor.opacity(0.15)],
+                            colors: [iconColor.opacity(0.8), iconColor.opacity(0.6)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -157,7 +163,7 @@ struct ProgressStatCard: View {
                 
                 Image(systemName: icon)
                     .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(iconColor)
+                    .foregroundColor(.white)
             }
             
             // Value
@@ -181,8 +187,8 @@ struct ProgressStatCard: View {
                 .fill(
                     LinearGradient(
                         colors: [
-                            Color.white.opacity(0.08),
-                            Color.white.opacity(0.05)
+                            Color(red: 0.45, green: 0.35, blue: 0.88).opacity(0.4),
+                            Color(red: 0.55, green: 0.25, blue: 0.95).opacity(0.4)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -194,24 +200,18 @@ struct ProgressStatCard: View {
                 .strokeBorder(
                     LinearGradient(
                         colors: [
-                            Color.white.opacity(0.3),
-                            Color.white.opacity(0.2)
+                            Color(red: 0.5, green: 0.3, blue: 0.95),
+                            Color(red: 0.6, green: 0.4, blue: 1.0)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),
-                    lineWidth: 1.5
+                    lineWidth: 2.5
                 )
         )
         .shadow(
-            color: iconColor.opacity(0.2),
-            radius: 16,
-            x: 0,
-            y: 6
-        )
-        .shadow(
-            color: Color.black.opacity(0.15),
-            radius: 8,
+            color: Color(red: 0.5, green: 0.3, blue: 0.95).opacity(0.4),
+            radius: 12,
             x: 0,
             y: 4
         )
@@ -223,4 +223,5 @@ struct ProgressStatCard: View {
         .environmentObject(StreakStore())
         .appBackground()
 }
+
 
