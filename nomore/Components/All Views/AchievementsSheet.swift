@@ -4,7 +4,6 @@ struct AchievementsSheet: View {
     @EnvironmentObject var achievementStore: AchievementStore
     @EnvironmentObject var streakStore: StreakStore
     @Binding var isPresented: Bool
-    @State private var showingResetAlert = false
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -91,28 +90,10 @@ struct AchievementsSheet: View {
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                 }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingResetAlert = true
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(.white)
-                    }
-                }
             }
         }
         .onReceive(timer) { value in
             now = value
-        }
-        .alert("Reset Achievements", isPresented: $showingResetAlert) {
-            Button("Cancel", role: .cancel) { }
-            Button("Reset", role: .destructive) {
-                achievementStore.resetAchievements()
-            }
-        } message: {
-            Text("Are you sure you want to reset your achievement progress? This action cannot be undone.")
         }
     }
 }
