@@ -15,6 +15,20 @@ final class StreakStore: ObservableObject {
 
     /// Resets the streak starting point to a given date (defaults to now).
     func resetRelapseDate(to date: Date = Date()) {
+        // Track the current streak before resetting
+        let currentStreak = Int(date.timeIntervalSince(lastRelapseDate) / (24 * 3600))
+        
+        // Update longest streak if current is longer
+        let longestStreak = UserDefaults.standard.integer(forKey: "personalBestStreak")
+        if currentStreak > longestStreak {
+            UserDefaults.standard.set(currentStreak, forKey: "personalBestStreak")
+        }
+        
+        // Increment total relapses counter
+        let totalRelapses = UserDefaults.standard.integer(forKey: "totalRelapses")
+        UserDefaults.standard.set(totalRelapses + 1, forKey: "totalRelapses")
+        
+        // Reset the date
         lastRelapseDate = date
         objectWillChange.send()
     }

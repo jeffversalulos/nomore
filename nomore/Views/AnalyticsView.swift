@@ -27,6 +27,10 @@ struct AnalyticsView: View {
                     VStack(spacing: 48) {
                         Spacer(minLength: 20)
                         
+                        // Your Progress Section - New glowing cards
+                        YourProgressSection()
+                            .environmentObject(streakStore)
+                        
                         // Recovery Progress Circle - Using extracted component
                         RecoveryProgressCard(currentTime: now)
                             .environmentObject(streakStore)
@@ -46,10 +50,6 @@ struct AnalyticsView: View {
                         // Consistency Score - Using extracted component
                         ConsistencyScoreCard()
                             .environmentObject(consistencyStore)
-                        
-                        // Analytics Day Memory Section - Using extracted component
-                        AnalyticsDayMemory()
-                            .environmentObject(streakStore)
                         
                         // Add some bottom padding for better scrolling experience
                         Spacer(minLength: 50)
