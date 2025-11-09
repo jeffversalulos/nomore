@@ -19,13 +19,17 @@ struct WeeklyProgressTracker: View {
                                 .frame(width: 38, height: 38)
                                 .overlay(
                                     Circle()
-                                        .stroke(
-                                            weekDay.isToday ? Theme.accent.opacity(0.6) : 
-                                            getCircleStrokeColor(for: weekDay),
-                                            lineWidth: weekDay.isToday ? 2 : 1
+                                        .strokeBorder(
+                                            getCircleStrokeBorder(for: weekDay),
+                                            lineWidth: (weekDay.isToday || weekDay.isCompleted) ? 2.5 : 1.5
                                         )
                                 )
-                                .softShadow()
+                                .shadow(
+                                    color: getCircleShadowColor(for: weekDay),
+                                    radius: (weekDay.isCompleted || weekDay.isToday) ? 12 : 0,
+                                    x: 0,
+                                    y: (weekDay.isCompleted || weekDay.isToday) ? 4 : 0
+                                )
                             
                             if weekDay.isFuture {
                                 // Future days remain empty
@@ -111,21 +115,55 @@ struct WeeklyProgressTracker: View {
         return dailyUsageStore.hasUsageOnDate(date)
     }
     
-    private func getCircleFillColor(for weekDay: WeekDay) -> Color {
+    private func getCircleFillColor(for weekDay: WeekDay) -> LinearGradient {
         if weekDay.isFuture {
-            return Theme.surface
+            return LinearGradient(
+                colors: [Theme.surface, Theme.surface],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         } else if weekDay.isCompleted {
-            return Theme.accent
+            return LinearGradient(
+                colors: [
+                    Color(red: 0.45, green: 0.35, blue: 0.88).opacity(0.6),
+                    Color(red: 0.55, green: 0.25, blue: 0.95).opacity(0.6)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         } else {
-            return Theme.surface
+            return LinearGradient(
+                colors: [Theme.surface, Theme.surface],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         }
     }
     
-    private func getCircleStrokeColor(for weekDay: WeekDay) -> Color {
-        if weekDay.isCompleted {
-            return Theme.accent
+    private func getCircleStrokeBorder(for weekDay: WeekDay) -> LinearGradient {
+        if weekDay.isCompleted || weekDay.isToday {
+            return LinearGradient(
+                colors: [
+                    Color(red: 0.5, green: 0.3, blue: 0.95),
+                    Color(red: 0.6, green: 0.4, blue: 1.0)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         } else {
-            return Theme.surfaceStroke
+            return LinearGradient(
+                colors: [Theme.surfaceStroke, Theme.surfaceStroke],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        }
+    }
+    
+    private func getCircleShadowColor(for weekDay: WeekDay) -> Color {
+        if weekDay.isCompleted || weekDay.isToday {
+            return Color(red: 0.5, green: 0.3, blue: 0.95).opacity(0.4)
+        } else {
+            return Color.clear
         }
     }
 }
@@ -145,3 +183,4 @@ struct WeekDay {
         .padding()
         .appBackground()
 }
+

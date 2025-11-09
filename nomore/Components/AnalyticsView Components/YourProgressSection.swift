@@ -7,28 +7,8 @@ struct YourProgressSection: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            // Header with icon
-            HStack(spacing: 12) {
-                // Icon
-                ZStack {
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0.4, green: 0.6, blue: 1.0).opacity(0.3),
-                                    Color(red: 0.4, green: 0.6, blue: 1.0).opacity(0.15)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 48, height: 48)
-                    
-                    Image(systemName: "chart.line.uptrend.xyaxis")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(Color(red: 0.4, green: 0.6, blue: 1.0))
-                }
-                
+            // Header
+            HStack {
                 Text("Your Progress")
                     .font(.system(size: 28, weight: .bold))
                     .foregroundStyle(Theme.textPrimary)

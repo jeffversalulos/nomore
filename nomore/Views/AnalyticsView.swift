@@ -20,16 +20,13 @@ struct AnalyticsView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 24)
-                .padding(.top, 8)
+                .padding(.top, 5)
+                .padding(.bottom, 20)
                 
                 // Scrollable content
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 48) {
-                        Spacer(minLength: 20)
-                        
-                        // Your Progress Section - New glowing cards
-                        YourProgressSection()
-                            .environmentObject(streakStore)
+                        Spacer(minLength: 8)
                         
                         // Recovery Progress Circle - Using extracted component
                         RecoveryProgressCard(currentTime: now)
@@ -48,8 +45,12 @@ struct AnalyticsView: View {
                         MotivationalMessageCard()
                         
                         // Consistency Score - Using extracted component
-                        ConsistencyScoreCard()
-                            .environmentObject(consistencyStore)
+                        //ConsistencyScoreCard()
+                            //.environmentObject(consistencyStore)
+                        
+                        // Your Progress Section - New glowing cards
+                        YourProgressSection()
+                            .environmentObject(streakStore)
                         
                         // Add some bottom padding for better scrolling experience
                         Spacer(minLength: 50)
