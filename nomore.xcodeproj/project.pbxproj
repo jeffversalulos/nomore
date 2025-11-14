@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		00672C892EC39C37001FD4BA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00672C882EC39C37001FD4BA /* StoreKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		00DB39992E25CF9300EB215D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00672C882EC39C37001FD4BA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		00DB398B2E25CF9200EB215D /* nomore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nomore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00DB39982E25CF9300EB215D /* nomoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nomoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00DB39A22E25CF9300EB215D /* nomoreUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nomoreUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00672C892EC39C37001FD4BA /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +78,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00672C872EC39C37001FD4BA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				00672C882EC39C37001FD4BA /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		00DB39822E25CF9200EB215D = {
 			isa = PBXGroup;
 			children = (
 				00DB398D2E25CF9200EB215D /* nomore */,
 				00DB399B2E25CF9300EB215D /* nomoreTests */,
 				00DB39A52E25CF9300EB215D /* nomoreUITests */,
+				00672C872EC39C37001FD4BA /* Frameworks */,
 				00DB398C2E25CF9200EB215D /* Products */,
 			);
 			sourceTree = "<group>";
