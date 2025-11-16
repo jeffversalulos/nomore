@@ -39,12 +39,21 @@ struct DailyReflectionCard: View {
             .padding(20)
             .frame(maxWidth: .infinity)
             .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Theme.surface)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Theme.surfaceStroke.opacity(0.5), lineWidth: 1)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Theme.surface)
+                    
+                    LinearGradient(
+                        colors: [Color.blue.opacity(0.15), Color.clear],
+                        startPoint: .leading,
+                        endPoint: .trailing
                     )
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(Theme.surfaceStroke.opacity(0.5), lineWidth: 1)
+                )
             )
         }
         .buttonStyle(ReflectionCardButtonStyle())
