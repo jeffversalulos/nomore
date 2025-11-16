@@ -69,9 +69,19 @@ struct AchievementProgressRing: View {
             } label: {
                 if let currentAchievement = progressData.current {
                     // Show the most recent achievement icon
-                    Image(systemName: currentAchievement.iconName)
-                        .font(.system(size: 40, weight: .medium))
-                        .foregroundStyle(Theme.textPrimary)
+                    // Check if it's a custom asset or SF Symbol
+                    if currentAchievement.iconName.contains(" ") || currentAchievement.iconName.contains(".png") {
+                        // Custom image asset
+                        Image(currentAchievement.iconName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 120, height: 120)
+                    } else {
+                        // SF Symbol
+                        Image(systemName: currentAchievement.iconName)
+                            .font(.system(size: 40, weight: .medium))
+                            .foregroundStyle(Theme.textPrimary)
+                    }
                 } else {
                     // Show grayed-out lock if no achievements unlocked yet
                     Image(systemName: "lock.fill")

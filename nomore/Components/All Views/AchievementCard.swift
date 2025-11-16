@@ -18,9 +18,19 @@ struct AchievementCard: View {
                     )
                 
                 if isUnlocked {
-                    Image(systemName: achievement.iconName)
-                        .font(.system(size: 24, weight: .medium))
-                        .foregroundStyle(Theme.mint)
+                    // Check if it's a custom asset or SF Symbol
+                    if achievement.iconName.contains(" ") || achievement.iconName.contains(".png") {
+                        // Custom image asset
+                        Image(achievement.iconName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32, height: 32)
+                    } else {
+                        // SF Symbol
+                        Image(systemName: achievement.iconName)
+                            .font(.system(size: 24, weight: .medium))
+                            .foregroundStyle(Theme.mint)
+                    }
                 } else {
                     Image(systemName: "lock.fill")
                         .font(.system(size: 20, weight: .medium))

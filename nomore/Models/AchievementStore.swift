@@ -99,7 +99,7 @@ final class AchievementStore: ObservableObject {
                 title: "Unstoppable Force",
                 description: "Seventy days of relentless progress. You've become an unstoppable force of positive change. Nothing can break your momentum now.",
                 daysRequired: 70,
-                iconName: "tornado",
+                iconName: "Bagde look",
                 unlockNumber: 10
             ),
             Achievement(
