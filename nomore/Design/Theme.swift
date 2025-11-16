@@ -28,6 +28,15 @@ enum Theme {
             endPoint: .bottom
         )
     }
+    
+    // Bubble overlay gradient
+    static var bubbleGradient: LinearGradient {
+        LinearGradient(
+            colors: [Color.blue.opacity(0.11), Color.clear],
+            startPoint: .leading,
+            endPoint: .trailing
+        )
+    }
 }
 
 extension View {

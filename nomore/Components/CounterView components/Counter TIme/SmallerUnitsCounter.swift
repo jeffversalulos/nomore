@@ -154,12 +154,17 @@ struct SmallerUnitsCounter: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(.white.opacity(0.06))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(.white.opacity(0.12), lineWidth: 0.5)
-                )
+            ZStack {
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(.white.opacity(0.06))
+                
+                Theme.bubbleGradient
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .stroke(.white.opacity(0.12), lineWidth: 0.5)
+            )
         )
         .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
     }

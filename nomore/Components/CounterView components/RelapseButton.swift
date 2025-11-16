@@ -12,12 +12,20 @@ struct RelapseButton: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .padding(.horizontal, 24)
-                .background(Theme.surface)
-                .foregroundStyle(.white.opacity(0.7))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+                .background(
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(Theme.surface)
+                        
+                        Theme.bubbleGradient
+                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+                    )
                 )
+                .foregroundStyle(.white.opacity(0.7))
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
         .padding(.horizontal)

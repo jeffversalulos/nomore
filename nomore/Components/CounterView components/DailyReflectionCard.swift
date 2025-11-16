@@ -43,12 +43,8 @@ struct DailyReflectionCard: View {
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .fill(Theme.surface)
                     
-                    LinearGradient(
-                        colors: [Color.blue.opacity(0.15), Color.clear],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    Theme.bubbleGradient
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 16, style: .continuous)

@@ -31,10 +31,18 @@ struct TemptationCard: View {
             .frame(maxWidth: .infinity, maxHeight: 110)
             .padding(.horizontal, 12)
             .padding(.vertical, 16)
-            .background(Theme.surface)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+            .background(
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(Theme.surface)
+                    
+                    Theme.bubbleGradient
+                        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+                )
             )
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             
