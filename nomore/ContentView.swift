@@ -14,7 +14,7 @@ struct ContentView: View {
         ZStack(alignment: .bottom) {
             // Main content with fade transition
             ZStack {
-                // Only one view is visible at a time with fade transition
+                //  Only one view is visible at a time with fade transition
                 Group {
                     if selectedTab == 0 {
                         CounterView(selectedTab: $selectedTab)
