@@ -22,8 +22,12 @@ struct BrainRewiringProgressBar: View {
                 ZStack(alignment: .leading) {
                     // Background track
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Theme.surface)
+                        .fill(Color.white.opacity(0.08))
                         .frame(height: 8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .stroke(Color.white.opacity(0.15), lineWidth: 0.5)
+                        )
                     
                     // Progress fill
                     RoundedRectangle(cornerRadius: 8, style: .continuous)

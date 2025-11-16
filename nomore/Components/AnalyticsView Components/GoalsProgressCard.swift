@@ -181,8 +181,12 @@ struct GoalProgressRow: View {
                 ZStack(alignment: .leading) {
                     // Background track
                     RoundedRectangle(cornerRadius: 6)
-                        .fill(Theme.surfaceTwo.opacity(0.3))
+                        .fill(Color.white.opacity(0.08))
                         .frame(height: 6)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Color.white.opacity(0.15), lineWidth: 0.5)
+                        )
                     
                     // Progress fill
                     RoundedRectangle(cornerRadius: 6)
