@@ -72,6 +72,7 @@ struct AchievementProgressRing: View {
             } label: {
                 LottieView(animation: .named("MainCircle"))
                     .playing(loopMode: .loop)
+                    .animationSpeed(0.5)
                     .frame(width: 317, height: 317)
             }
         }
