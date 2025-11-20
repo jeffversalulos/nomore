@@ -1,4 +1,5 @@
 import SwiftUI
+import Lottie
 
 struct StreakModal: View {
     @EnvironmentObject var appStreakStore: AppStreakStore
@@ -39,26 +40,10 @@ struct StreakModal: View {
                     // Centered content area
                     VStack(spacing: 32) {
                         // Fire icon
-                        ZStack {
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [Color.orange.opacity(0.8), Color.red.opacity(0.6)],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 140, height: 140)
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color.orange.opacity(0.3), lineWidth: 2)
-                                )
-                            
-                            Image(systemName: "flame.fill")
-                                .font(.system(size: 60, weight: .medium))
-                                .foregroundStyle(.white)
-                        }
-                        .softShadow()
+                        LottieView(animation: .named("Fire"))
+                            .playing(loopMode: .loop)
+                            .animationSpeed(0.8)
+                            .frame(width: 200, height: 200)
                         
                         // Streak information
                         VStack(spacing: 16) {
