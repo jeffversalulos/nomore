@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		000C3C2C2ECE945800E06601 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 000C3C2B2ECE945800E06601 /* Lottie */; };
 		00672C892EC39C37001FD4BA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00672C882EC39C37001FD4BA /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00672C892EC39C37001FD4BA /* StoreKit.framework in Frameworks */,
+				000C3C2C2ECE945800E06601 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +129,7 @@
 			);
 			name = nomore;
 			packageProductDependencies = (
+				000C3C2B2ECE945800E06601 /* Lottie */,
 			);
 			productName = nomore;
 			productReference = 00DB398B2E25CF9200EB215D /* nomore.app */;
@@ -210,6 +213,9 @@
 			);
 			mainGroup = 00DB39822E25CF9200EB215D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				000C3C2A2ECE945800E06601 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 00DB398C2E25CF9200EB215D /* Products */;
 			projectDirPath = "";
@@ -571,6 +577,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		000C3C2A2ECE945800E06601 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		000C3C2B2ECE945800E06601 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 000C3C2A2ECE945800E06601 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 00DB39832E25CF9200EB215D /* Project object */;
 }
