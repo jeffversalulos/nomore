@@ -12,6 +12,7 @@ struct AchievementProgressRing: View {
     let daysSinceLastRelapse: Double // Changed to Double for fractional days
     let achievementStore: AchievementStore
     @Binding var showingAchievementsSheet: Bool
+    @State private var isGlowing = false
     
     private var progressData: (current: Achievement?, next: Achievement?, progress: Double) {
         let unlockedAchievements = achievementStore.achievements.filter { 
@@ -76,6 +77,13 @@ struct AchievementProgressRing: View {
                     .frame(width: 317, height: 317)
                     .blur(radius: 2)
                     .saturation(1.3)
+                    .scaleEffect(isGlowing ? 1.05 : 1.0)
+                    .shadow(color: Theme.accent.opacity(isGlowing ? 0.6 : 0.3), radius: isGlowing ? 30 : 10)
+            }
+        }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
+                isGlowing = true
             }
         }
     }
