@@ -16,6 +16,7 @@ struct StreakCounter: View {
                 .font(.system(size: 17, weight: .medium))
                 .foregroundStyle(.white.opacity(0.75))
                 .tracking(0.3)
+                .padding(.bottom, -12)
             
             // Main counter display - ultra clean and minimal
             MainTimeCounter(components: components)
