@@ -33,7 +33,7 @@ struct PanicButton: View {
                 }
                 .padding(.leading, 20)
                 
-                Text("Panic Mode")
+                Text("Panic Button")
                     .font(.system(size: 22, weight: .bold))
                     .foregroundStyle(.white)
                 
@@ -62,9 +62,26 @@ struct PanicButton: View {
                     // Deep dark background
                     Color(red: 0.02, green: 0.05, blue: 0.1)
                     
-                    // Subtle inner glow
+                    // Dynamic fill gradient that rotates with the border lights
+                    // It creates a subtle sheen connecting the two light points
+                    AngularGradient(
+                        gradient: Gradient(colors: [
+                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.0),
+                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.15), // Peak 1
+                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.0),
+                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.0),
+                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.15), // Peak 2 (opposite)
+                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.0)
+                        ]),
+                        center: .center,
+                        startAngle: .degrees(rotation),
+                        endAngle: .degrees(rotation + 360)
+                    )
+                    .blur(radius: 10) // Blur to make it a soft internal glow
+                    
+                    // Subtle inner glow for depth
                     RadialGradient(
-                        gradient: Gradient(colors: [Color(red: 0.1, green: 0.15, blue: 0.3).opacity(0.5), .clear]),
+                        gradient: Gradient(colors: [Color(red: 0.1, green: 0.15, blue: 0.3).opacity(0.3), .clear]),
                         center: .center,
                         startRadius: 0,
                         endRadius: 150
@@ -73,36 +90,39 @@ struct PanicButton: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
             .overlay(
-                // Static Border
+                // Static Border Base
                 RoundedRectangle(cornerRadius: 32, style: .continuous)
                     .stroke(Color.white.opacity(0.1), lineWidth: 1)
             )
             .overlay(
-                // Traveling Light Border - Made More Subtle
+                // Dual Traveling Light Border
                 RoundedRectangle(cornerRadius: 32, style: .continuous)
                     .strokeBorder(
                         AngularGradient(
                             gradient: Gradient(colors: [
                                 .clear,
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.1),
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.8), // Light Point 1
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.1),
+                                .clear,
                                 .clear,
                                 Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.1),
-                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.6), // Reduced opacity for subtlety
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.8), // Light Point 2 (Opposite)
                                 Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.1),
-                                .clear,
                                 .clear
                             ]),
                             center: .center,
                             startAngle: .degrees(rotation),
                             endAngle: .degrees(rotation + 360)
                         ),
-                        lineWidth: 1.5 // Slightly thinner
+                        lineWidth: 2
                     )
             )
             .shadow(color: Color.black.opacity(0.4), radius: 10, x: 0, y: 4)
         }
         .buttonStyle(HighEndButtonStyle())
         .onAppear {
-            withAnimation(.linear(duration: 4).repeatForever(autoreverses: false)) {
+            withAnimation(.linear(duration: 6).repeatForever(autoreverses: false)) {
                 rotation = 360
             }
         }
