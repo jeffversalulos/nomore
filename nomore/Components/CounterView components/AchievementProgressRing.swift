@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct AchievementProgressRing: View {
     let daysSinceLastRelapse: Double // Changed to Double for fractional days
@@ -48,7 +49,8 @@ struct AchievementProgressRing: View {
         ZStack {
             // Background ring
             Circle()
-                .stroke(Color.white.opacity(0.25), lineWidth: 22)
+                .stroke(Color.white.opacity(0.25), lineWidth: 18)
+                .frame(width: 192, height: 192)
             
             // Progress ring with same gradient as SobrietyRing
             Circle()
@@ -58,39 +60,21 @@ struct AchievementProgressRing: View {
                         gradient: Gradient(colors: [Theme.aqua, Theme.accent, Theme.aqua]),
                         center: .center
                     ),
-                    style: StrokeStyle(lineWidth: 22, lineCap: .round)
+                    style: StrokeStyle(lineWidth: 18, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 0.3), value: progressData.progress)
+                .frame(width: 192, height: 192)
             
             // Center achievement icon - clickable
             Button {
                 showingAchievementsSheet = true
             } label: {
-                if let currentAchievement = progressData.current {
-                    // Show the most recent achievement icon
-                    // Check if it's a custom asset or SF Symbol
-                    if currentAchievement.iconName.contains(" ") || currentAchievement.iconName.contains(".png") {
-                        // Custom image asset
-                        Image(currentAchievement.iconName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 120, height: 120)
-                    } else {
-                        // SF Symbol
-                        Image(systemName: currentAchievement.iconName)
-                            .font(.system(size: 40, weight: .medium))
-                            .foregroundStyle(Theme.textPrimary)
-                    }
-                } else {
-                    // Show grayed-out lock if no achievements unlocked yet
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 40, weight: .medium))
-                        .foregroundStyle(Color.white.opacity(0.4))
-                }
+                LottieView(animation: .named("MainCircle"))
+                    .playing(loopMode: .loop)
+                    .frame(width: 317, height: 317)
             }
         }
-        .frame(width: 200, height: 200)
     }
 }
 
