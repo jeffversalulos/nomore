@@ -74,6 +74,7 @@ struct AchievementProgressRing: View {
                     .playing(loopMode: .loop)
                     .animationSpeed(0.5)
                     .frame(width: 317, height: 317)
+                    .blur(radius: 3)
             }
         }
     }
