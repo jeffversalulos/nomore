@@ -167,8 +167,8 @@ struct ProgressStatCard: View {
                 .fill(
                     LinearGradient(
                         colors: [
-                            Color(red: 0.45, green: 0.35, blue: 0.88).opacity(0.3),
-                            Color(red: 0.55, green: 0.25, blue: 0.95).opacity(0.3)
+                            Color(red: 0.45, green: 0.35, blue: 0.88).opacity(0.4),
+                            Color(red: 0.55, green: 0.25, blue: 0.95).opacity(0.4)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -180,20 +180,20 @@ struct ProgressStatCard: View {
                 .strokeBorder(
                     LinearGradient(
                         colors: [
-                            Color(red: 0.5, green: 0.3, blue: 0.95).opacity(0.8),
-                            Color(red: 0.6, green: 0.4, blue: 1.0).opacity(0.8)
+                            Color(red: 0.5, green: 0.3, blue: 0.95),
+                            Color(red: 0.6, green: 0.4, blue: 1.0)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),
-                    lineWidth: 2
+                    lineWidth: 2.5
                 )
         )
         .shadow(
-            color: Color(red: 0.5, green: 0.3, blue: 0.95).opacity(0.25),
-            radius: 8,
+            color: Color(red: 0.5, green: 0.3, blue: 0.95).opacity(0.4),
+            radius: 12,
             x: 0,
-            y: 3
+            y: 4
         )
     }
 }
