@@ -60,7 +60,7 @@ struct AchievementProgressRing: View {
                         gradient: Gradient(colors: [Theme.aqua, Theme.accent, Theme.aqua]),
                         center: .center
                     ),
-                    style: StrokeStyle(lineWidth: 15, lineCap: .round)
+                    style: StrokeStyle(lineWidth: 14, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 0.3), value: progressData.progress)
@@ -72,9 +72,10 @@ struct AchievementProgressRing: View {
             } label: {
                 LottieView(animation: .named("MainCircle"))
                     .playing(loopMode: .loop)
-                    .animationSpeed(0.5)
+                    .animationSpeed(0.7)
                     .frame(width: 317, height: 317)
-                    .blur(radius: 3)
+                    .blur(radius: 2)
+                    .saturation(1.3)
             }
         }
     }
