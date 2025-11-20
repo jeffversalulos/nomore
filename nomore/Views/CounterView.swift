@@ -31,7 +31,7 @@ struct CounterView: View {
                 // Scrollable content
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 32) {
-                        Spacer(minLength: 1)
+                        Spacer(minLength: 0.5)
                         
                         // Weekly Progress Tracker
                         WeeklyProgressTracker()

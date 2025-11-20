@@ -13,7 +13,7 @@ struct StreakCounter: View {
     var body: some View {
         VStack(spacing: 24) {
             Text("You've been porn-free for:")
-                .font(.system(size: 17, weight: .medium))
+                .font(.system(size: 19, weight: .medium))
                 .foregroundStyle(.white.opacity(0.75))
                 .tracking(0.3)
                 .padding(.bottom, -12)
