@@ -49,7 +49,7 @@ struct AchievementProgressRing: View {
         ZStack {
             // Background ring
             Circle()
-                .stroke(Color.white.opacity(0.25), lineWidth: 18)
+                .stroke(Color.black.opacity(0.3), lineWidth: 18)
                 .frame(width: 192, height: 192)
             
             // Progress ring with same gradient as SobrietyRing
@@ -60,7 +60,7 @@ struct AchievementProgressRing: View {
                         gradient: Gradient(colors: [Theme.aqua, Theme.accent, Theme.aqua]),
                         center: .center
                     ),
-                    style: StrokeStyle(lineWidth: 18, lineCap: .round)
+                    style: StrokeStyle(lineWidth: 15, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 0.3), value: progressData.progress)
