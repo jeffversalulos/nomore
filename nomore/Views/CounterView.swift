@@ -62,7 +62,7 @@ struct CounterView: View {
                         }
                         .padding(.horizontal)
 
-                        // Relapse button - more subtle and refined
+                        // Relapse button
                         RelapseButton {
                             showingRelapseView = true
                         }
