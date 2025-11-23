@@ -46,6 +46,40 @@ struct AchievementProgressRing: View {
         return (currentAchievement, next, min(max(progress, 0.0), 1.0))
     }
     
+    @ViewBuilder
+    private var currentAchievementVisual: some View {
+        // Display the visual for the current unlocked achievement, or default if none
+        switch progressData.current?.title {
+        case "First Steps":
+            MainCircleVisual_FirstSteps()
+        case "Momentum Builder":
+            MainCircleVisual_MomentumBuilder()
+        case "Breakthrough":
+            MainCircleVisual_Breakthrough()
+        case "Mind Shift":
+            MainCircleVisual_MindShift()
+        case "Foundation":
+            MainCircleVisual_Foundation()
+        case "Transformation":
+            MainCircleVisual_Transformation()
+        case "Resilient Spirit":
+            MainCircleVisual_ResilientSpirit()
+        case "Golden Milestone":
+            MainCircleVisual_GoldenMilestone()
+        case "Mindful Mastery":
+            MainCircleVisual_MindfulMastery()
+        case "Unstoppable Force":
+            MainCircleVisual_UnstoppableForce()
+        case "Phoenix Rising":
+            MainCircleVisual_PhoenixRising()
+        case "Summit Conqueror":
+            MainCircleVisual_SummitConqueror()
+        default:
+            // Default visual for when no achievement is unlocked yet
+            MainCircleVisual()
+        }
+    }
+    
     var body: some View {
         ZStack {
             // Background ring
@@ -71,12 +105,7 @@ struct AchievementProgressRing: View {
             Button {
                 showingAchievementsSheet = true
             } label: {
-                LottieView(animation: .named("MainCircle"))
-                    .playing(loopMode: .loop)
-                    .animationSpeed(0.6)
-                    .frame(width: 317, height: 317)
-                    .blur(radius: 2)
-                    .saturation(1.3)
+                currentAchievementVisual
                     .shadow(color: Theme.accent.opacity(isGlowing ? 0.6 : 0.3), radius: isGlowing ? 30 : 10)
             }
         }

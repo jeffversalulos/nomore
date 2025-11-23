@@ -1,9 +1,52 @@
 import SwiftUI
+import Lottie
 
 struct AchievementCard: View {
     let achievement: Achievement
     let isUnlocked: Bool
     let daysSinceLastRelapse: Int
+    
+    private var achievementColor: Color {
+        // Return the color for each achievement
+        switch achievement.title {
+        case "First Steps":
+            return .cyan
+        case "Momentum Builder":
+            return .green
+        case "Breakthrough":
+            return .yellow
+        case "Mind Shift":
+            return .purple
+        case "Foundation":
+            return .blue
+        case "Transformation":
+            return .mint
+        case "Resilient Spirit":
+            return .indigo
+        case "Golden Milestone":
+            return .orange
+        case "Mindful Mastery":
+            return Color(red: 0.85, green: 0.5, blue: 1.0) // Bright lavender
+        case "Unstoppable Force":
+            return .pink
+        case "Phoenix Rising":
+            return .red
+        case "Summit Conqueror":
+            return .white
+        default:
+            return .white
+        }
+    }
+    
+    @ViewBuilder
+    private var achievementVisual: some View {
+        LottieView(animation: .named("MainCircle"))
+            .playing(loopMode: .loop)
+            .animationSpeed(0.6)
+            .blur(radius: 1)
+            .saturation(1.3)
+            .colorMultiply(achievementColor)
+    }
     
     var body: some View {
         HStack(spacing: 16) {
@@ -18,19 +61,9 @@ struct AchievementCard: View {
                     )
                 
                 if isUnlocked {
-                    // Check if it's a custom asset or SF Symbol
-                    if achievement.iconName.contains(" ") || achievement.iconName.contains(".png") {
-                        // Custom image asset
-                        Image(achievement.iconName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 32, height: 32)
-                    } else {
-                        // SF Symbol
-                        Image(systemName: achievement.iconName)
-                            .font(.system(size: 24, weight: .medium))
-                            .foregroundStyle(Theme.mint)
-                    }
+                    achievementVisual
+                        .frame(width: 60, height: 60)
+                        .clipShape(Circle())
                 } else {
                     Image(systemName: "lock.fill")
                         .font(.system(size: 20, weight: .medium))
