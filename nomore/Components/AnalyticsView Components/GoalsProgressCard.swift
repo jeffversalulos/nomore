@@ -5,6 +5,8 @@ struct GoalsProgressCard: View {
     @EnvironmentObject var streakStore: StreakStore
     let currentTime: Date
     
+    @State private var rotation: Double = 0
+    
     // Goal completion timeframes based on recovery research (in days)
     private let goalTimeframes: [String: Int] = [
         "Stronger relationships": 90,        // 3 months for relationship improvements
@@ -27,11 +29,11 @@ struct GoalsProgressCard: View {
                 HStack {
                     Text("Your Goals")
                         .font(.system(size: 24, weight: .bold))
-                        .foregroundStyle(Theme.textPrimary)
+                        .foregroundStyle(.white)
                     Spacer()
                 }
                 .padding(.horizontal, 24)
-                .padding(.top, 20)
+                .padding(.top, 24)
                 .padding(.bottom, 16)
                 
                 // Goals list with dividers
@@ -46,22 +48,61 @@ struct GoalsProgressCard: View {
                         // Add divider between goals (but not after the last one)
                         if index < selectedGoals.count - 1 {
                             Rectangle()
-                                .fill(Theme.textSecondary.opacity(0.5))
+                                .fill(Color.white.opacity(0.1))
                                 .frame(height: 1)
                                 .padding(.horizontal, 16)
-                                .padding(.vertical, 4)
+                                .padding(.vertical, 12)
                         }
                     }
                 }
-                .padding(.bottom, 20)
+                .padding(.bottom, 24)
             }
             .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Theme.surface)
-                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+                ZStack {
+                    // Deep rich background base - using a very dark purple/black
+                    Color(red: 0.03, green: 0.02, blue: 0.08)
+                    
+                    // Dynamic fill gradient that rotates
+                    AngularGradient(
+                        gradient: Gradient(colors: [
+                            Theme.purple.opacity(0.0),
+                            Theme.purple.opacity(0.2), // Peak 1
+                            Theme.purple.opacity(0.0),
+                            Theme.purple.opacity(0.0),
+                            Theme.accent.opacity(0.15), // Peak 2
+                            Theme.purple.opacity(0.0)
+                        ]),
+                        center: .center,
+                        startAngle: .degrees(rotation),
+                        endAngle: .degrees(rotation + 360)
+                    )
+                    .blur(radius: 20)
+                    
+                    // Subtle inner glow for depth
+                    RadialGradient(
+                        gradient: Gradient(colors: [
+                            Theme.indigo.opacity(0.3),
+                            Color.clear
+                        ]),
+                        center: .topLeading,
+                        startRadius: 0,
+                        endRadius: 400
+                    )
+                }
             )
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .overlay(
+                // Static Border for Definition (Glass Effect)
+                RoundedRectangle(cornerRadius: 24, style: .continuous)
+                    .stroke(Color.white.opacity(0.1), lineWidth: 1)
+            )
+            .shadow(color: Color.black.opacity(0.5), radius: 15, x: 0, y: 8)
             .padding(.horizontal, 24)
-            .softShadow()
+            .onAppear {
+                withAnimation(.linear(duration: 15).repeatForever(autoreverses: false)) {
+                    rotation = 360
+                }
+            }
         }
     }
     
@@ -132,16 +173,25 @@ struct GoalProgressRow: View {
             HStack(alignment: .center, spacing: 12) {
                 // Goal icon
                 if let systemImage = goalIcons[goalTitle] {
-                    Image(systemName: systemImage)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(Theme.accent)
-                        .frame(width: 24, height: 24)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Theme.purple.opacity(0.5))
+                            .frame(width: 32, height: 32)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                            )
+                        
+                        Image(systemName: systemImage)
+                            .font(.system(size: 14))
+                            .foregroundStyle(Color(red: 0.8, green: 0.6, blue: 1.0)) // Light lilac
+                    }
                 }
                 
                 // Goal title
                 Text(goalTitle)
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
+                    .foregroundStyle(.white.opacity(0.9))
                     .multilineTextAlignment(.leading)
                 
                 Spacer()
@@ -166,12 +216,12 @@ struct GoalProgressRow: View {
                 } else {
                     Text(timeRemaining)
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(Theme.textSecondary)
+                        .foregroundStyle(.white.opacity(0.6))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 4)
                         .background(
                             Capsule()
-                                .fill(Theme.surfaceTwo.opacity(0.3))
+                                .fill(Color.white.opacity(0.1))
                         )
                 }
             }
@@ -180,42 +230,39 @@ struct GoalProgressRow: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     // Background track
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(Color.white.opacity(0.08))
-                        .frame(height: 6)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(Color.white.opacity(0.15), lineWidth: 0.5)
-                        )
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(Color.white.opacity(0.06))
+                        .frame(height: 8)
                     
                     // Progress fill
-                    RoundedRectangle(cornerRadius: 6)
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
                         .fill(
                             LinearGradient(
                                 colors: progress >= 1.0 ? 
                                     [Theme.mint, Theme.mint.opacity(0.8)] :
-                                    [Theme.accent, Theme.aqua],
+                                    [Theme.accent, Color(red: 0.9, green: 0.6, blue: 0.9)],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
-                        .frame(width: geometry.size.width * progress, height: 6)
+                        .frame(width: geometry.size.width * progress, height: 8)
                         .animation(.easeInOut(duration: 0.5), value: progress)
+                        .shadow(color: progress >= 1.0 ? Theme.mint.opacity(0.5) : Theme.accent.opacity(0.5), radius: 8, x: 0, y: 0)
                 }
             }
-            .frame(height: 6)
+            .frame(height: 8)
             
             // Progress percentage
             HStack {
                 Text("\(Int(progress * 100))%")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(Theme.textSecondary)
+                    .foregroundStyle(.white.opacity(0.5))
                 
                 Spacer()
             }
         }
         .padding(.horizontal, 24)
-        .padding(.vertical, 16)
+        .padding(.vertical, 8)
     }
 }
 

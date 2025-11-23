@@ -77,7 +77,6 @@ struct AchievementProgressRing: View {
                     .frame(width: 317, height: 317)
                     .blur(radius: 2)
                     .saturation(1.3)
-                    .scaleEffect(isGlowing ? 1.05 : 1.0)
                     .shadow(color: Theme.accent.opacity(isGlowing ? 0.6 : 0.3), radius: isGlowing ? 30 : 10)
             }
         }
