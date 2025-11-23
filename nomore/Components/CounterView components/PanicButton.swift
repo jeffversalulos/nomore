@@ -25,7 +25,7 @@ struct PanicButton: View {
                             Circle()
                                 .stroke(Color.white.opacity(0.2), lineWidth: 1)
                         )
-                        .shadow(color: Color(red: 0.0, green: 0.5, blue: 1.0).opacity(0.5), radius: 8, x: 0, y: 0)
+                        .shadow(color: Color(red: 0.0, green: 0.5, blue: 1.0).opacity(0.3), radius: 5, x: 0, y: 0)
                     
                     Image(systemName: "exclamationmark.shield.fill")
                         .font(.system(size: 24, weight: .semibold))
@@ -67,21 +67,21 @@ struct PanicButton: View {
                     AngularGradient(
                         gradient: Gradient(colors: [
                             Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.0),
-                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.15), // Peak 1
+                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.09), // Peak 1
                             Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.0),
                             Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.0),
-                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.15), // Peak 2 (opposite)
+                            Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.09), // Peak 2 (opposite)
                             Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.0)
                         ]),
                         center: .center,
                         startAngle: .degrees(rotation),
                         endAngle: .degrees(rotation + 360)
                     )
-                    .blur(radius: 10) // Blur to make it a soft internal glow
+                    .blur(radius: 6) // Blur to make it a soft internal glow
                     
                     // Subtle inner glow for depth
                     RadialGradient(
-                        gradient: Gradient(colors: [Color(red: 0.1, green: 0.15, blue: 0.3).opacity(0.3), .clear]),
+                        gradient: Gradient(colors: [Color(red: 0.1, green: 0.15, blue: 0.3).opacity(0.18), .clear]),
                         center: .center,
                         startRadius: 0,
                         endRadius: 150
@@ -101,14 +101,14 @@ struct PanicButton: View {
                         AngularGradient(
                             gradient: Gradient(colors: [
                                 .clear,
-                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.1),
-                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.8), // Light Point 1
-                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.1),
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.04),
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.34), // Light Point 1
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.04),
                                 .clear,
                                 .clear,
-                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.1),
-                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.8), // Light Point 2 (Opposite)
-                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.1),
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.04),
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.34), // Light Point 2 (Opposite)
+                                Color(red: 0.0, green: 0.8, blue: 1.0).opacity(0.04),
                                 .clear
                             ]),
                             center: .center,
@@ -118,7 +118,7 @@ struct PanicButton: View {
                         lineWidth: 2
                     )
             )
-            .shadow(color: Color.black.opacity(0.4), radius: 10, x: 0, y: 4)
+            .shadow(color: Color.black.opacity(0.24), radius: 6, x: 0, y: 4)
         }
         .buttonStyle(HighEndButtonStyle())
         .onAppear {
