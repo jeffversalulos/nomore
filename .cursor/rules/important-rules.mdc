@@ -1,0 +1,112 @@
+---
+description: This document defines standards and expectations for how Cursor should assist in building and maintaining this SwiftUI iOS app.
+The goal is to ensure the codebase is clean, maintainable, and scalable, while the UI is polished, intuitive, and professional.
+Cursor should always assume the developer may not be highly technical, and therefore must provide clear explanations and helpful recommendations, going beyond what it might normally offer.
+General Principles
+Prioritize clarity, readability, and maintainability over cleverness.
+All code should follow Swift API Design Guidelines and official Apple standards.
+Favor progressive enhancement: start simple, then refine.
+Cursor should always explain the reasoning behind architectural or design suggestions.
+Cursor should recommend best practices proactively, even if not explicitly requested.
+Documentation Reference
+Cursor must always check and align recommendations with the following official resources before answering or suggesting changes:
+Apple Human Interface Guidelines (HIG)
+Swift Language Documentation
+SwiftUI Documentation
+If a conflict arises between user code and these sources, Cursor should reference the official documentation and explain why a recommended adjustment is preferable.
+Project Organization
+The project must remain modular and easy to navigate. Suggested folder structure:
+Views/ → Entire screens and container-level SwiftUI views
+Components/ → Smaller reusable building blocks (buttons, pills, rings, etc.)
+Models/ → Data structures and entities
+ViewModels/ → ObservableObjects, state management, and business logic
+Services/ → Persistence, networking, background tasks
+Utilities/ → Extensions, helpers, formatters
+Standards:
+No file should grow excessively large; if a view or object becomes too complex, split it into smaller parts.
+Each file should have a single responsibility.
+SwiftUI Coding Standards
+Use SwiftUI idioms correctly:
+@State for local view state.
+@Binding for two-way state between parent and child.
+@ObservedObject for models passed into views.
+@StateObject for owned observable objects.
+@EnvironmentObject for global/shared state.
+Avoid business logic inside View bodies. Extract to computed properties or ViewModels.
+Use ViewModifiers for reusable styling patterns.
+Ensure every view supports Dark Mode by default.
+Use PreviewProviders consistently for testing and iteration.
+Data Persistence
+Use @AppStorage for small pieces of state such as booleans, counters, or preferences.
+Wrap UserDefaults in a typed helper if needed, never use it raw.
+Use Core Data or SwiftData for structured data persistence. Keep persistence logic outside views.
+Ensure any persistence layer is testable and does not mix with UI code.
+Security and Privacy
+Do not store sensitive data in plain text.
+Use Keychain for secure storage (e.g., credentials or sensitive flags).
+Do not expose sensitive data in logs, debug output, or analytics.
+Internationalization
+Do not hardcode user-facing strings in views; place them in Localizable.strings.
+Prefer SF Symbols for icons because they automatically adapt across languages and regions.
+Testing
+Logic-heavy code (e.g., streak tracking, timers, or calculations) must have unit tests.
+Avoid time-based tests that are flaky; inject a clock or calendar for testability.
+SwiftUI previews should be used for every major view and component with representative mock data.
+Performance
+Use LazyVStack/LazyHStack/List for large collections.
+Avoid expensive computations inside the body. Precompute with properties or ViewModels.
+Optimize images: use the Asset Catalog and avoid oversized assets.
+For animations, prefer SwiftUI’s built-in .animation and .transition.
+State Management
+Use the simplest tool possible (@State, @Binding) before escalating to larger patterns.
+For multi-screen state, use @EnvironmentObject or dedicated ViewModels.
+Avoid deeply nested bindings and state chains; prefer ViewModels with clearly defined properties.
+Keep ViewModels free of UI code; they should manage state and business logic only.
+Error Handling
+Always handle errors explicitly using throws or Result.
+User-facing errors should be clear and non-technical.
+Do not expose raw system error messages in the UI.
+Use assert for programmer errors during development, but handle runtime errors gracefully.
+App Lifecycle and Background
+Respond to app lifecycle events using scenePhase.
+Save state when entering the background so users do not lose progress.
+Do not run unnecessary background tasks that drain the battery.
+Developer Experience
+Cursor should recommend refactorings proactively if code smells appear.
+When offering multiple approaches, Cursor must explain tradeoffs in plain language.
+Always assume the developer may not know a best practice exists; suggest it if it will improve long-term maintainability.
+UI and UX Standards
+Layouts must work across all device sizes, including iPhone SE and iPad.
+Use SwiftUI’s adaptive layout system (VStack, HStack, ZStack, Spacer, GeometryReader) appropriately.
+Padding, spacing, and alignment must create a balanced, readable UI.
+Typography should use the system font and support Dynamic Type.
+Use consistent styling across components. Extract colors, fonts, and spacing into a theme file.
+Minimize clutter: each screen should have a clear primary action.
+Cursor should always suggest improvements that enhance usability, clarity, and polish, referencing the Human Interface Guidelines when relevant.
+Common SwiftUI Pitfalls (Cursor must guard against these)
+@State resetting on re-render – Suggest using @StateObject or moving state higher if persistence is required.
+Infinite view updates – Avoid putting side effects (like updating state) inside body.
+GeometryReader misuse – Ensure it doesn’t force views to expand unexpectedly; wrap with fixedSize or alignment when needed.
+Using ForEach with non-Identifiable data – Always provide stable, unique identifiers.
+NavigationStack quirks – Be explicit with path bindings for predictable behavior.
+EnvironmentObject crashes – Ensure injected before usage. Suggest safer patterns when possible.
+Animations not applying – Ensure .animation is applied to the correct property and not to the body globally.
+Preview crashes – Always provide mock data and avoid force unwrapping in previews.
+What Cursor Should Not Do
+Do not decide app feature content — that comes from the developer.
+Do not add third-party dependencies unless explicitly approved.
+Do not over-engineer; prefer simplicity and clarity over unnecessary abstraction.
+Future Considerations
+Consider iCloud/CloudKit for cross-device sync if needed.
+Maintain modular code so scaling the app is straightforward.
+Design should remain modern, minimal, and consistent with Apple’s Human Interface Guidelines.
+Reminder for Cursor
+Cursor must be more helpful than it believes it can be. Code quality must be top-tier, and explanations must always clarify why a choice is made.
+Before suggesting or generating any code, Cursor must:
+Reference Apple’s Human Interface Guidelines.
+Reference Swift Documentation.
+Reference SwiftUI Documentation.
+The ultimate goal is to produce a high-quality, user-friendly, and maintainable app.
+globs:
+alwaysApply: false
+---

@@ -1,147 +1,94 @@
 import Foundation
 import SwiftUI
 
-struct Goal: Identifiable, Codable, Equatable {
-    let id: UUID
-    var title: String
-    var description: String
-    var systemImage: String?
-    var customImageData: Data?
-    var isSelected: Bool
-    var dateCreated: Date
-    
-    init(
-        id: UUID = UUID(),
-        title: String,
-        description: String,
-        systemImage: String? = nil,
-        customImageData: Data? = nil,
-        isSelected: Bool = false,
-        dateCreated: Date = Date()
-    ) {
-        self.id = id
-        self.title = title
-        self.description = description
-        self.systemImage = systemImage
-        self.customImageData = customImageData
-        self.isSelected = isSelected
-        self.dateCreated = dateCreated
-    }
+// Old Goal structure for migration purposes only
+private struct OldGoal: Codable {
+    let title: String
+    let isSelected: Bool
 }
 
-/// Manages user's recovery goals and motivations
+/// Manages goals selected during onboarding (simple tracking goals)
 final class GoalsStore: ObservableObject {
-    @Published private(set) var goals: [Goal] = []
+    @Published private(set) var selectedGoals: [String] = []
     
-    private let defaultsKey = "recoveryGoalsJSON"
+    private let defaultsKey = "selectedOnboardingGoals"
     private let defaults = UserDefaults.standard
-    
-    private let encoder: JSONEncoder = {
-        let e = JSONEncoder()
-        e.dateEncodingStrategy = .iso8601
-        return e
-    }()
-    
-    private let decoder: JSONDecoder = {
-        let d = JSONDecoder()
-        d.dateDecodingStrategy = .iso8601
-        return d
-    }()
     
     init() {
         load()
-        if goals.isEmpty {
-            setupDefaultGoals()
-        }
     }
     
     private func load() {
-        guard let json = defaults.string(forKey: defaultsKey),
-              let data = json.data(using: .utf8) else {
-            goals = []
-            return
+        // First try to load from new key
+        selectedGoals = defaults.stringArray(forKey: defaultsKey) ?? []
+        
+        // If empty, try to migrate from old GoalsStore format
+        if selectedGoals.isEmpty {
+            migrateFromOldGoalsStore()
         }
-        goals = (try? decoder.decode([Goal].self, from: data)) ?? []
+        
+    }
+    
+    private func migrateFromOldGoalsStore() {
+        let oldKey = "recoveryGoalsJSON"
+        guard let json = defaults.string(forKey: oldKey),
+              let data = json.data(using: .utf8) else { return }
+        
+        // Try to decode old Goal objects
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        
+        do {
+            let oldGoals = try decoder.decode([OldGoal].self, from: data)
+            let selectedTitles = oldGoals.filter { $0.isSelected }.map { $0.title }
+            
+            if !selectedTitles.isEmpty {
+                selectedGoals = selectedTitles
+                persist()
+                
+                // Clean up old data
+                defaults.removeObject(forKey: oldKey)
+            }
+        } catch {
+            // Migration failed, that's okay
+        }
     }
     
     private func persist() {
-        guard let data = try? encoder.encode(goals),
-              let json = String(data: data, encoding: .utf8) else { return }
-        defaults.set(json, forKey: defaultsKey)
+        defaults.set(selectedGoals, forKey: defaultsKey)
     }
     
-    private func setupDefaultGoals() {
-        let defaultGoals = [
-            Goal(
-                title: "Better Health",
-                description: "Improve my physical and mental wellbeing",
-                systemImage: "heart.fill"
-            ),
-            Goal(
-                title: "Financial Freedom",
-                description: "Save money and build a better future",
-                systemImage: "dollarsign.circle.fill"
-            ),
-            Goal(
-                title: "Family & Relationships",
-                description: "Strengthen bonds with loved ones",
-                systemImage: "figure.2.and.child.holdinghands"
-            ),
-            Goal(
-                title: "Career Growth",
-                description: "Focus on professional development",
-                systemImage: "briefcase.fill"
-            ),
-            Goal(
-                title: "Mental Clarity",
-                description: "Think clearer and make better decisions",
-                systemImage: "brain.head.profile"
-            ),
-            Goal(
-                title: "Self-Respect",
-                description: "Rebuild confidence and self-worth",
-                systemImage: "person.fill.checkmark"
-            ),
-            Goal(
-                title: "Better Sleep",
-                description: "Improve sleep quality and energy levels",
-                systemImage: "bed.double.fill"
-            ),
-            Goal(
-                title: "Fitness Goals",
-                description: "Get back in shape and stay active",
-                systemImage: "figure.run"
-            )
-        ]
-        
-        goals = defaultGoals
-        persist()
-    }
-    
-    func toggleGoalSelection(_ goal: Goal) {
-        if let index = goals.firstIndex(where: { $0.id == goal.id }) {
-            goals[index].isSelected.toggle()
+    func addGoal(_ goalTitle: String) {
+        if !selectedGoals.contains(goalTitle) {
+            selectedGoals.append(goalTitle)
             persist()
         }
     }
     
-    func addCustomGoal(title: String, description: String, imageData: Data? = nil) {
-        let newGoal = Goal(
-            title: title,
-            description: description,
-            customImageData: imageData,
-            isSelected: true
-        )
-        goals.append(newGoal)
+    func removeGoal(_ goalTitle: String) {
+        selectedGoals.removeAll { $0 == goalTitle }
         persist()
     }
     
-    func deleteGoal(_ goal: Goal) {
-        goals.removeAll { $0.id == goal.id }
+    func isGoalSelected(_ goalTitle: String) -> Bool {
+        selectedGoals.contains(goalTitle)
+    }
+    
+    func toggleGoalSelection(_ goalTitle: String) {
+        if isGoalSelected(goalTitle) {
+            removeGoal(goalTitle)
+        } else {
+            addGoal(goalTitle)
+        }
+    }
+    
+    func clearAllSelections() {
+        selectedGoals.removeAll()
         persist()
     }
     
-    var selectedGoals: [Goal] {
-        goals.filter { $0.isSelected }
+    func setGoals(_ goals: [String]) {
+        selectedGoals = goals
+        persist()
     }
 }

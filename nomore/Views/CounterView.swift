@@ -1,165 +1,209 @@
 import SwiftUI
 
-struct TimeComponents {
-    let months: Int
-    let days: Int
-    let hours: Int
-    let minutes: Int
-}
-
-/// Calculates rough calendar-based difference between two dates in months, days, hours, minutes.
-private func calculateTimeComponents(from startDate: Date, to endDate: Date = Date(), calendar: Calendar = .current) -> TimeComponents {
-    var from = startDate
-    var months = 0
-    var days = 0
-    var hours = 0
-    var minutes = 0
-
-    // Count months by adding months until we exceed endDate
-    while let next = calendar.date(byAdding: .month, value: 1, to: from), next <= endDate {
-        from = next
-        months += 1
-    }
-
-    // Days
-    while let next = calendar.date(byAdding: .day, value: 1, to: from), next <= endDate {
-        from = next
-        days += 1
-    }
-
-    // Hours
-    while let next = calendar.date(byAdding: .hour, value: 1, to: from), next <= endDate {
-        from = next
-        hours += 1
-    }
-
-    // Minutes
-    while let next = calendar.date(byAdding: .minute, value: 1, to: from), next <= endDate {
-        from = next
-        minutes += 1
-    }
-
-    return TimeComponents(months: months, days: days, hours: hours, minutes: minutes)
-}
-
-private struct StreakRingView: View {
-    let progress: Double // 0...1
-
-    var body: some View {
-        ZStack {
-            Circle()
-                .stroke(Color.white.opacity(0.25), lineWidth: 22)
-
-            Circle()
-                .trim(from: 0, to: max(0.001, min(progress, 1)))
-                .stroke(
-                    AngularGradient(
-                        gradient: Gradient(colors: [
-                            Color.purple,
-                            Color(#colorLiteral(red: 0.388, green: 0.145, blue: 0.78, alpha: 1)),
-                            Color.blue
-                        ]),
-                        center: .center
-                    ),
-                    style: StrokeStyle(lineWidth: 22, lineCap: .round)
-                )
-                .rotationEffect(.degrees(-90))
-        }
-        .frame(width: 220, height: 220)
-    }
-}
-
 struct CounterView: View {
     @EnvironmentObject var streakStore: StreakStore
+    @EnvironmentObject var onboardingManager: OnboardingManager
+    @EnvironmentObject var journalStore: JournalStore
+    @EnvironmentObject var goalsStore: GoalsStore
+    @EnvironmentObject var dailyUsageStore: DailyUsageStore
+    @EnvironmentObject var achievementStore: AchievementStore
+    @EnvironmentObject var appStreakStore: AppStreakStore
+    @EnvironmentObject var consistencyStore: ConsistencyStore
     @Binding var selectedTab: Int
-
+    
+    @State private var showingMoreView = false
+    @State private var showingStreakModal = false
+    @State private var showingAchievementsSheet = false
+    @State private var showingJournalView = false
+    @State private var showingPanickingView = false
+    @State private var showingRelapseView = false
     @State private var now: Date = Date()
-    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ZStack {
-            Theme.backgroundGradient.ignoresSafeArea()
+            VStack {
+                // Fixed header at top
+                HeaderView(showingStreakModal: $showingStreakModal, showingAchievementsSheet: $showingAchievementsSheet)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 8)
+                
+                // Scrollable content
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 32) {
+                        Spacer(minLength: 0.5)
+                        
+                        // Weekly Progress Tracker
+                        WeeklyProgressTracker()
+                            .padding(.horizontal, 24)
 
-            VStack(spacing: 28) {
-                Spacer(minLength: 24)
-
-                // Decorative progress ring (30-day horizon)
-                let secondsSince = now.timeIntervalSince(streakStore.lastRelapseDate)
-                let progress = min(max(secondsSince / (30 * 24 * 3600), 0), 1)
-                StreakRingView(progress: progress)
-                    .padding(.top, 16)
-
-                VStack(spacing: 10) {
-                    Text("Your streak")
-                        .font(.title2.weight(.semibold))
-                        .foregroundStyle(Theme.textSecondary)
+                    // Achievement progress ring
+                    let achievementSeconds = now.timeIntervalSince(streakStore.lastRelapseDate)
+                    let achievementDays = achievementSeconds / (24 * 3600) // Keep as Double for fractional days
+                    AchievementProgressRing(daysSinceLastRelapse: achievementDays, achievementStore: achievementStore, showingAchievementsSheet: $showingAchievementsSheet)
+                        .padding(.vertical, -28)
 
                     let components = calculateTimeComponents(from: streakStore.lastRelapseDate, to: now)
-                    HStack(spacing: 16) {
-                        CounterPill(value: components.months, unit: "Months")
-                        CounterPill(value: components.days, unit: "Days")
-                        CounterPill(value: components.hours, unit: "Hours")
-                        CounterPill(value: components.minutes, unit: "Minutes")
+                    StreakCounter(components: components)
+                    
+                    // Brain Rewiring Progress Bar (100-day goal)
+                    let secondsSinceRelapse = now.timeIntervalSince(streakStore.lastRelapseDate)
+                    let daysSinceRelapse = secondsSinceRelapse / (24 * 3600)
+                    let brainRewiringProgress = min(max(daysSinceRelapse / 100.0, 0), 1)
+                    BrainRewiringProgressBar(progress: brainRewiringProgress)
+                        .padding(.horizontal, 24)
+
+                    // Action buttons section
+                    VStack(spacing: 16) {
+                        // Panic Button
+                        PanicButton {
+                            // Show PanickingView as sheet
+                            showingPanickingView = true
+                        }
+                        .padding(.horizontal)
+
+                        // Relapse button
+                        RelapseButton {
+                            showingRelapseView = true
+                        }
                     }
-                    .padding(.horizontal)
-                }
+                    .padding(.top, 32)
+                    
+                    // Tracking Cards Section
+                    TrackingCards(startDate: streakStore.lastRelapseDate)
+                        .padding(.top, 24)
 
-                Button {
-                    streakStore.resetRelapseDate()
-                    selectedTab = 1
-                } label: {
-                    Text("Relapse")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Theme.surface)
-                        .foregroundStyle(Theme.textPrimary)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .stroke(Theme.surfaceStroke, lineWidth: 1)
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                }
-                .padding(.horizontal)
+                    // Analytics Section
+                    VStack(spacing: 16) {
+                        // View Analytics Heading
+                        HStack {
+                            Text("View Analytics")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundStyle(Theme.textPrimary)
+                            Spacer()
+                        }
+                        .padding(.horizontal, 24)
+                        
+                        // Chart Image Button
+                        Button {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                selectedTab = 1
+                            }
+                        } label: {
+                            Image("Chart FIgma")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 150)
+                                .offset(y: -4)
+                                .background(Theme.surface)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                        .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        }
+                        .padding(.horizontal, 24)
+                    }
+                    .padding(.top, 32)
 
+                    // Internet Filter Section
+                    InternetFilterCard(selectedTab: $selectedTab)
+                        .padding(.top, 32)
+
+                    // Daily Reflection Component
+                    DailyReflectionCard(showingJournalView: $showingJournalView)
+                        .padding(.horizontal, 24)
+                        .padding(.top, 20)
+
+                    // Add some bottom padding for better scrolling experience
+                    Spacer(minLength: 50)
+                }
+                    .padding(.bottom, 20)
+            }
+            }
+            
+            // More button in top right - positioned above ScrollView
+            VStack {
+                HStack {
+                    Spacer()
+                    Button {
+                        showingMoreView = true
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.system(size: 22))
+                            .foregroundStyle(Theme.textPrimary)
+                            .padding(8)
+                            .background(Theme.surface)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
+                            )
+                    }
+                    .padding(.trailing, 16)
+                }
+                .padding(.top, 8)
                 Spacer()
             }
         }
+        .appBackground()
         .onReceive(timer) { value in
-            now = value
+            withAnimation(.easeInOut(duration: 0.3)) {
+                now = value
+            }
         }
-    }
-}
-
-private struct CounterPill: View {
-    let value: Int
-    let unit: String
-
-    var body: some View {
-        VStack(spacing: 4) {
-            Text("\(value)")
-                .font(.system(size: 28, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
-            Text(unit)
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.8))
+        .sheet(isPresented: $showingMoreView) {
+            MoreView()
+                .environmentObject(onboardingManager)
+                .environmentObject(streakStore)
+                .environmentObject(journalStore)
+                .environmentObject(goalsStore)
+                .environmentObject(dailyUsageStore)
         }
-        .frame(width: 78, height: 78)
-        .background(.white.opacity(0.1))
         .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Color.white.opacity(0.2), lineWidth: 1)
+            // Streak modal overlay
+            showingStreakModal ? StreakModal(isPresented: $showingStreakModal)
+                .environmentObject(appStreakStore) : nil
         )
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .fullScreenCover(isPresented: $showingAchievementsSheet) {
+            AchievementsSheet(isPresented: $showingAchievementsSheet)
+                .environmentObject(streakStore)
+                .environmentObject(achievementStore)
+        }
+        .sheet(isPresented: $showingJournalView) {
+            JournalView()
+                .environmentObject(journalStore)
+        }
+        .sheet(isPresented: $showingPanickingView) {
+            PanickingView()
+        }
+        .fullScreenCover(isPresented: $showingRelapseView) {
+            RelapseView(isPresented: $showingRelapseView, selectedTab: $selectedTab)
+                .environmentObject(streakStore)
+                .environmentObject(consistencyStore)
+        }
     }
 }
+
+
 
 #Preview {
     @State var tab = 0
     let store = StreakStore()
+    let achievementStore = AchievementStore()
+    let dailyUsageStore = DailyUsageStore()
+    let appStreakStore = AppStreakStore(dailyUsageStore: dailyUsageStore)
     return CounterView(selectedTab: .constant(0))
         .environmentObject(store)
-        .padding()
+        .environmentObject(OnboardingManager())
+        .environmentObject(JournalStore())
+        .environmentObject(GoalsStore())
+        .environmentObject(dailyUsageStore)
+        .environmentObject(achievementStore)
+        .environmentObject(appStreakStore)
+        .environmentObject(ConsistencyStore())
+        
 }
 
 

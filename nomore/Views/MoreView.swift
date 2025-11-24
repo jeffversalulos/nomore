@@ -1,16 +1,16 @@
 import SwiftUI
 
 struct MoreView: View {
+    @EnvironmentObject var onboardingManager: OnboardingManager
+    @EnvironmentObject var goalsStore: GoalsStore
+    
     var body: some View {
         ZStack {
-            Theme.backgroundGradient.ignoresSafeArea()
 
             NavigationStack {
                 List {
                     Section("Recovery Tools") {
-                        NavigationLink(destination: GoalsView()) {
-                            Label("Your Goals", systemImage: "target")
-                        }
+                        // Purpose navigation removed
                     }
                     
                     Section("Coming soon") {
@@ -18,6 +18,15 @@ struct MoreView: View {
                         Label("Insights", systemImage: "chart.xyaxis.line")
                         Label("Settings", systemImage: "gear")
                     }
+                    
+                    #if DEBUG
+                    Section("Debug") {
+                        Button("Reset Onboarding") {
+                            onboardingManager.resetOnboarding(goalsStore: goalsStore)
+                        }
+                        .foregroundColor(.red)
+                    }
+                    #endif
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(.insetGrouped)
@@ -25,11 +34,17 @@ struct MoreView: View {
                 .navigationTitle("More")
             }
         }
+        .appBackground()
     }
 }
 
 #Preview {
     MoreView()
+        .environmentObject(OnboardingManager())
+        .environmentObject(StreakStore())
+        .environmentObject(JournalStore())
+        .environmentObject(GoalsStore())
+        .environmentObject(DailyUsageStore())
 }
 
 

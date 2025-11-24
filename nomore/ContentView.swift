@@ -10,36 +10,78 @@ import SwiftUI
 struct ContentView: View {
     @State private var selectedTab: Int = 0
 
-    init() {
-        // Force unselected tabs to be gray instead of default blue
-        UITabBar.appearance().unselectedItemTintColor = UIColor.lightGray.withAlphaComponent(0.7)
-    }
-
     var body: some View {
-        TabView(selection: $selectedTab) {
-            CounterView(selectedTab: $selectedTab)
-                .tabItem { Label("Counter", systemImage: "timer") }
-                .tag(0)
-
-            JournalView()
-                .tabItem { Label("Journal", systemImage: "square.and.pencil") }
-                .tag(1)
-
-            MeditationView()
-                .tabItem { Label("Meditate", systemImage: "brain.head.profile") }
-                .tag(2)
-
-            GoalsView()
-                .tabItem { Label("Purpose", systemImage: "ellipsis.circle") }
-                .tag(3)
+        ZStack(alignment: .bottom) {
+            // Main content with fade transition
+            ZStack {
+                //  Only one view is visible at a time with fade transition
+                Group {
+                    if selectedTab == 0 {
+                        CounterView(selectedTab: $selectedTab)
+                            .transition(.opacity)
+                    } else if selectedTab == 1 {
+                        AnalyticsView()
+                            .transition(.opacity)
+                    } else if selectedTab == 2 {
+                        MeditationView()
+                            .transition(.opacity)
+                    } else if selectedTab == 3 {
+                        InternetFilterView()
+                            .transition(.opacity)
+                    }
+                }
+                .animation(.easeInOut(duration: 0.2), value: selectedTab)
+            }
+            
+            // Gradient overlay to fade content behind tab bar
+            VStack {
+                Spacer()
+                LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: .clear, location: 0.0),
+                        .init(color: .black.opacity(0.4), location: 0.3),
+                        .init(color: .black.opacity(0.8), location: 0.7),
+                        .init(color: .black.opacity(0.95), location: 1.0)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: 150)
+                .allowsHitTesting(false)
+            }
+            .ignoresSafeArea(.all, edges: .bottom)
+            
+            // Custom floating tab bar
+            CustomTabBar(selectedTab: $selectedTab)
+                .padding(.bottom, 10)
         }
-        .tint(.white)
+        .appBackground()
     }
 }
 
+
+
 #Preview {
-    ContentView()
+    let dailyUsageStore = DailyUsageStore()
+    let appStreakStore = AppStreakStore(dailyUsageStore: dailyUsageStore)
+    let goalsStore = GoalsStore()
+    
+    // Add some sample goals for preview
+    goalsStore.setGoals([
+        "Stronger relationships",
+        "Improved self-confidence",
+        "More energy and motivation",
+        "Improved focus and clarity"
+    ])
+    
+    return ContentView()
         .environmentObject(StreakStore())
         .environmentObject(JournalStore())
-        .environmentObject(GoalsStore())
+        .environmentObject(goalsStore)
+        .environmentObject(OnboardingManager())
+        .environmentObject(dailyUsageStore)
+        .environmentObject(AchievementStore())
+        .environmentObject(appStreakStore)
+        .environmentObject(AppRestrictionsStore())
+        .environmentObject(ConsistencyStore())
 }

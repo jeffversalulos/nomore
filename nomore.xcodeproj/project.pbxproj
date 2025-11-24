@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		000C3C2C2ECE945800E06601 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 000C3C2B2ECE945800E06601 /* Lottie */; };
+		00672C892EC39C37001FD4BA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00672C882EC39C37001FD4BA /* StoreKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		00DB39992E25CF9300EB215D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00672C882EC39C37001FD4BA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		00DB398B2E25CF9200EB215D /* nomore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nomore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00DB39982E25CF9300EB215D /* nomoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nomoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00DB39A22E25CF9300EB215D /* nomoreUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nomoreUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00672C892EC39C37001FD4BA /* StoreKit.framework in Frameworks */,
+				000C3C2C2ECE945800E06601 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +80,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00672C872EC39C37001FD4BA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				00672C882EC39C37001FD4BA /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		00DB39822E25CF9200EB215D = {
 			isa = PBXGroup;
 			children = (
 				00DB398D2E25CF9200EB215D /* nomore */,
 				00DB399B2E25CF9300EB215D /* nomoreTests */,
 				00DB39A52E25CF9300EB215D /* nomoreUITests */,
+				00672C872EC39C37001FD4BA /* Frameworks */,
 				00DB398C2E25CF9200EB215D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +129,7 @@
 			);
 			name = nomore;
 			packageProductDependencies = (
+				000C3C2B2ECE945800E06601 /* Lottie */,
 			);
 			productName = nomore;
 			productReference = 00DB398B2E25CF9200EB215D /* nomore.app */;
@@ -195,6 +213,9 @@
 			);
 			mainGroup = 00DB39822E25CF9200EB215D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				000C3C2A2ECE945800E06601 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 00DB398C2E25CF9200EB215D /* Products */;
 			projectDirPath = "";
@@ -393,8 +414,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = nomore/nomore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZS8KF24379;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -402,6 +425,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -420,8 +444,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = nomore/nomore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZS8KF24379;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -429,6 +455,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -550,6 +577,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		000C3C2A2ECE945800E06601 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		000C3C2B2ECE945800E06601 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 000C3C2A2ECE945800E06601 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 00DB39832E25CF9200EB215D /* Project object */;
 }
