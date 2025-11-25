@@ -82,35 +82,78 @@ struct AchievementProgressRing: View {
     
     var body: some View {
         ZStack {
-            // Background ring
+            // 1. Refined Background Track
+            // Outer soft glow for the track itself to separate from background
             Circle()
-                .stroke(Color.black.opacity(0.3), lineWidth: 18)
+                .stroke(Color.black.opacity(0.1), lineWidth: 24)
+                .blur(radius: 2)
                 .frame(width: 192, height: 192)
             
-            // Progress ring with same gradient as SobrietyRing
+            // The physical track groove
+            Circle()
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.black.opacity(0.3), Color.black.opacity(0.1)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 20
+                )
+                .frame(width: 192, height: 192)
+
+            // 2. Neon Glow Layer (Behind the main progress)
             Circle()
                 .trim(from: 0, to: max(0.001, min(progressData.progress, 1)))
                 .stroke(
                     AngularGradient(
-                        gradient: Gradient(colors: [Theme.aqua, Theme.accent, Theme.aqua]),
+                        gradient: Gradient(colors: [Theme.aqua, Theme.mint, Theme.accent, Theme.aqua]),
                         center: .center
                     ),
-                    style: StrokeStyle(lineWidth: 14, lineCap: .round)
+                    style: StrokeStyle(lineWidth: 22, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
-                .animation(.easeInOut(duration: 0.3), value: progressData.progress)
+                .blur(radius: 12)
+                .opacity(0.6)
                 .frame(width: 192, height: 192)
+            
+            // 3. Main Premium Progress Ring
+            Circle()
+                .trim(from: 0, to: max(0.001, min(progressData.progress, 1)))
+                .stroke(
+                    AngularGradient(
+                        gradient: Gradient(colors: [Theme.aqua, Theme.mint, Theme.accent, Theme.aqua]),
+                        center: .center
+                    ),
+                    style: StrokeStyle(lineWidth: 16, lineCap: .round)
+                )
+                .rotationEffect(.degrees(-90))
+                .animation(.spring(response: 0.6, dampingFraction: 0.7), value: progressData.progress)
+                .frame(width: 192, height: 192)
+            
+            // 4. Glowing Tip Indicator
+            // Only show if progress > 0
+            if progressData.progress > 0 {
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: 8, height: 8)
+                    .shadow(color: Theme.aqua, radius: 4, x: 0, y: 0)
+                    .shadow(color: .white, radius: 2, x: 0, y: 0)
+                    .offset(y: -96) // Radius of the ring
+                    .rotationEffect(.degrees(progressData.progress * 360))
+                    .animation(.spring(response: 0.6, dampingFraction: 0.7), value: progressData.progress)
+            }
             
             // Center achievement icon - clickable
             Button {
                 showingAchievementsSheet = true
             } label: {
                 currentAchievementVisual
-                    .shadow(color: Theme.accent.opacity(isGlowing ? 0.6 : 0.3), radius: isGlowing ? 30 : 10)
+                    .scaleEffect(isGlowing ? 1.02 : 1.0)
+                    .shadow(color: Theme.accent.opacity(isGlowing ? 0.5 : 0.2), radius: isGlowing ? 25 : 10)
             }
         }
         .onAppear {
-            withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
+            withAnimation(.easeInOut(duration: 3.0).repeatForever(autoreverses: true)) {
                 isGlowing = true
             }
         }
