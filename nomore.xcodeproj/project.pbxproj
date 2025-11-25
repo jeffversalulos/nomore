@@ -35,9 +35,22 @@
 		00DB39A22E25CF9300EB215D /* nomoreUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nomoreUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		00E4329F2ED66DE400A7BFC9 /* Exceptions for "nomore" folder in "nomore" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 00DB398A2E25CF9200EB215D /* nomore */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		00DB398D2E25CF9200EB215D /* nomore */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				00E4329F2ED66DE400A7BFC9 /* Exceptions for "nomore" folder in "nomore" target */,
+			);
 			path = nomore;
 			sourceTree = "<group>";
 		};
@@ -420,8 +433,10 @@
 				DEVELOPMENT_TEAM = ZS8KF24379;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = nomore/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PureQuit;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "   This app uses your front camera for self-reflection.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -452,8 +467,10 @@
 				DEVELOPMENT_TEAM = ZS8KF24379;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = nomore/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PureQuit;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "   This app uses your front camera for self-reflection.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
