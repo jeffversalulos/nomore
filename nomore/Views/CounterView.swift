@@ -14,6 +14,7 @@ struct CounterView: View {
     @State private var showingMoreView = false
     @State private var showingStreakModal = false
     @State private var showingAchievementsSheet = false
+    @State private var showingSettingsView = false
     @State private var showingJournalView = false
     @State private var showingPanickingView = false
     @State private var showingRelapseView = false
@@ -24,9 +25,13 @@ struct CounterView: View {
         ZStack {
             VStack {
                 // Fixed header at top
-                HeaderView(showingStreakModal: $showingStreakModal, showingAchievementsSheet: $showingAchievementsSheet)
-                    .padding(.horizontal, 24)
-                    .padding(.top, 8)
+                HeaderView(
+                    showingStreakModal: $showingStreakModal,
+                    showingAchievementsSheet: $showingAchievementsSheet,
+                    showingSettingsView: $showingSettingsView
+                )
+                .padding(.horizontal, 24)
+                .padding(.top, 8)
                 
                 // Scrollable content
                 ScrollView(.vertical, showsIndicators: false) {
@@ -182,6 +187,9 @@ struct CounterView: View {
             RelapseView(isPresented: $showingRelapseView, selectedTab: $selectedTab)
                 .environmentObject(streakStore)
                 .environmentObject(consistencyStore)
+        }
+        .fullScreenCover(isPresented: $showingSettingsView) {
+            SettingsView(isPresented: $showingSettingsView)
         }
     }
 }

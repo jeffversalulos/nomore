@@ -4,6 +4,7 @@ struct HeaderView: View {
     @EnvironmentObject var appStreakStore: AppStreakStore
     @Binding var showingStreakModal: Bool
     @Binding var showingAchievementsSheet: Bool
+    @Binding var showingSettingsView: Bool
     
     var body: some View {
         HStack {
@@ -39,6 +40,15 @@ struct HeaderView: View {
                         .font(.system(size: 18, weight: .medium))
                         .foregroundStyle(Theme.mint)
                 }
+                
+                // Settings symbol - tappable
+                Button {
+                    showingSettingsView = true
+                } label: {
+                    Image(systemName: "gearshape.fill")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(Theme.textSecondary)
+                }
             }
         }
         .padding(.horizontal, 20)
@@ -50,8 +60,12 @@ struct HeaderView: View {
     let dailyUsageStore = DailyUsageStore()
     let appStreakStore = AppStreakStore(dailyUsageStore: dailyUsageStore)
     
-    return HeaderView(showingStreakModal: .constant(false), showingAchievementsSheet: .constant(false))
-        .environmentObject(appStreakStore)
-        .padding()
-        .appBackground()
+    return HeaderView(
+        showingStreakModal: .constant(false),
+        showingAchievementsSheet: .constant(false),
+        showingSettingsView: .constant(false)
+    )
+    .environmentObject(appStreakStore)
+    .padding()
+    .appBackground()
 }
