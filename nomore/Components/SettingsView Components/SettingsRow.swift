@@ -4,65 +4,55 @@ struct SettingsRow: View {
     let icon: String
     let iconColor: Color
     let title: String
-    let subtitle: String?
+    let showDivider: Bool
     let action: () -> Void
     
     init(
         icon: String,
         iconColor: Color = Theme.textPrimary,
         title: String,
-        subtitle: String? = nil,
+        showDivider: Bool = true,
         action: @escaping () -> Void
     ) {
         self.icon = icon
         self.iconColor = iconColor
         self.title = title
-        self.subtitle = subtitle
+        self.showDivider = showDivider
         self.action = action
     }
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 16) {
-                // Icon container
-                ZStack {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(iconColor.opacity(0.15))
-                        .frame(width: 40, height: 40)
-                    
+            VStack(spacing: 0) {
+                HStack(spacing: 14) {
+                    // Icon
                     Image(systemName: icon)
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 20, weight: .medium))
                         .foregroundStyle(iconColor)
-                }
-                
-                // Text content
-                VStack(alignment: .leading, spacing: 2) {
+                        .frame(width: 28)
+                    
+                    // Title
                     Text(title)
-                        .font(.system(size: 17, weight: .medium))
+                        .font(.system(size: 17, weight: .regular))
                         .foregroundStyle(Theme.textPrimary)
                     
-                    if let subtitle = subtitle {
-                        Text(subtitle)
-                            .font(.system(size: 13, weight: .regular))
-                            .foregroundStyle(Theme.textSecondary)
-                    }
+                    Spacer()
+                    
+                    // Chevron
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(Theme.textSecondary.opacity(0.5))
                 }
+                .padding(.vertical, 14)
                 
-                Spacer()
-                
-                // Chevron
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Theme.textSecondary.opacity(0.6))
+                // Divider
+                if showDivider {
+                    Rectangle()
+                        .fill(Theme.textSecondary.opacity(0.15))
+                        .frame(height: 0.5)
+                        .padding(.leading, 42)
+                }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .background(Theme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
-            )
         }
         .buttonStyle(.plain)
     }
@@ -73,74 +63,72 @@ struct SettingsToggleRow: View {
     let icon: String
     let iconColor: Color
     let title: String
-    let subtitle: String?
+    let showDivider: Bool
     @Binding var isOn: Bool
     
     init(
         icon: String,
         iconColor: Color = Theme.textPrimary,
         title: String,
-        subtitle: String? = nil,
+        showDivider: Bool = true,
         isOn: Binding<Bool>
     ) {
         self.icon = icon
         self.iconColor = iconColor
         self.title = title
-        self.subtitle = subtitle
+        self.showDivider = showDivider
         self._isOn = isOn
     }
     
     var body: some View {
-        HStack(spacing: 16) {
-            // Icon container
-            ZStack {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(iconColor.opacity(0.15))
-                    .frame(width: 40, height: 40)
-                
+        VStack(spacing: 0) {
+            HStack(spacing: 14) {
+                // Icon
                 Image(systemName: icon)
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 20, weight: .medium))
                     .foregroundStyle(iconColor)
-            }
-            
-            // Text content
-            VStack(alignment: .leading, spacing: 2) {
+                    .frame(width: 28)
+                
+                // Title
                 Text(title)
-                    .font(.system(size: 17, weight: .medium))
+                    .font(.system(size: 17, weight: .regular))
                     .foregroundStyle(Theme.textPrimary)
                 
-                if let subtitle = subtitle {
-                    Text(subtitle)
-                        .font(.system(size: 13, weight: .regular))
-                        .foregroundStyle(Theme.textSecondary)
-                }
+                Spacer()
+                
+                // Toggle
+                Toggle("", isOn: $isOn)
+                    .labelsHidden()
+                    .tint(Theme.mint)
             }
+            .padding(.vertical, 14)
             
-            Spacer()
-            
-            // Toggle
-            Toggle("", isOn: $isOn)
-                .labelsHidden()
-                .tint(Theme.mint)
+            // Divider
+            if showDivider {
+                Rectangle()
+                    .fill(Theme.textSecondary.opacity(0.15))
+                    .frame(height: 0.5)
+                    .padding(.leading, 42)
+            }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Theme.surfaceStroke, lineWidth: Theme.borderThickness)
-        )
     }
 }
 
 #Preview {
-    VStack(spacing: 12) {
+    VStack(spacing: 0) {
         SettingsRow(
             icon: "doc.text.fill",
             iconColor: Theme.aqua,
-            title: "Terms of Service",
-            subtitle: "Read our terms"
+            title: "Terms of Service"
+        ) {
+            // Action
+        }
+        
+        SettingsRow(
+            icon: "lock.shield.fill",
+            iconColor: Theme.accent,
+            title: "Privacy Policy",
+            showDivider: false
         ) {
             // Action
         }
@@ -149,11 +137,11 @@ struct SettingsToggleRow: View {
             icon: "bell.fill",
             iconColor: Color.orange,
             title: "Notifications",
-            subtitle: "Enable push notifications",
+            showDivider: false,
             isOn: .constant(true)
         )
     }
-    .padding()
+    .padding(.horizontal, 24)
     .appBackground()
 }
 

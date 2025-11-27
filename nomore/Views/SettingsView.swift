@@ -43,22 +43,21 @@ struct SettingsView: View {
                 
                 // Scrollable content
                 ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 24) {
+                    VStack(spacing: 32) {
                         // Account Section
-                        VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text("Account")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(Theme.textSecondary)
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(Theme.textSecondary.opacity(0.7))
                                 .textCase(.uppercase)
-                                .tracking(1)
-                                .padding(.leading, 4)
+                                .tracking(0.5)
                             
-                            VStack(spacing: 10) {
+                            VStack(spacing: 0) {
                                 SettingsRow(
                                     icon: "creditcard.fill",
                                     iconColor: Theme.mint,
                                     title: "Manage Subscription",
-                                    subtitle: "View and manage your plan"
+                                    showDivider: false
                                 ) {
                                     // TODO: Implement subscription management
                                 }
@@ -66,40 +65,37 @@ struct SettingsView: View {
                         }
                         
                         // Preferences Section
-                        VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text("Preferences")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(Theme.textSecondary)
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(Theme.textSecondary.opacity(0.7))
                                 .textCase(.uppercase)
-                                .tracking(1)
-                                .padding(.leading, 4)
+                                .tracking(0.5)
                             
-                            VStack(spacing: 10) {
+                            VStack(spacing: 0) {
                                 SettingsToggleRow(
                                     icon: "bell.fill",
                                     iconColor: Color.orange,
                                     title: "Notifications",
-                                    subtitle: "Enable push notifications",
+                                    showDivider: false,
                                     isOn: $notificationsEnabled
                                 )
                             }
                         }
                         
                         // Legal Section
-                        VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text("Legal")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(Theme.textSecondary)
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(Theme.textSecondary.opacity(0.7))
                                 .textCase(.uppercase)
-                                .tracking(1)
-                                .padding(.leading, 4)
+                                .tracking(0.5)
                             
-                            VStack(spacing: 10) {
+                            VStack(spacing: 0) {
                                 SettingsRow(
                                     icon: "doc.text.fill",
                                     iconColor: Theme.aqua,
-                                    title: "Terms of Service",
-                                    subtitle: "Read our terms and conditions"
+                                    title: "Terms of Service"
                                 ) {
                                     // TODO: Implement Terms of Service
                                 }
@@ -108,7 +104,7 @@ struct SettingsView: View {
                                     icon: "lock.shield.fill",
                                     iconColor: Theme.accent,
                                     title: "Privacy Policy",
-                                    subtitle: "Learn how we protect your data"
+                                    showDivider: false
                                 ) {
                                     // TODO: Implement Privacy Policy
                                 }
@@ -116,16 +112,16 @@ struct SettingsView: View {
                         }
                         
                         // App Info
-                        VStack(spacing: 8) {
+                        VStack(spacing: 6) {
                             Text("ANEW")
-                                .font(.system(size: 16, weight: .bold, design: .rounded))
-                                .foregroundStyle(Theme.textPrimary)
+                                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Theme.textSecondary.opacity(0.6))
                             
                             Text("Version 1.0.0")
-                                .font(.system(size: 13, weight: .regular))
-                                .foregroundStyle(Theme.textSecondary)
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundStyle(Theme.textSecondary.opacity(0.4))
                         }
-                        .padding(.top, 32)
+                        .padding(.top, 40)
                         .padding(.bottom, 50)
                     }
                     .padding(.horizontal, 24)
